@@ -108,7 +108,7 @@
                         }
 
                         // calculate alternative distance
-                        var alt = minNode.distance + graph.weight(minNode._id);
+                        var alt = minNode.distance + minNode.weight;
 
                         // use this path instead, if alternative distance is shorter
                         if (alt < dist[n._id]) {
