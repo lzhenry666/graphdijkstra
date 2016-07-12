@@ -1,16 +1,13 @@
-/*
+/**
  * dijkstra.js
  * 06/01/16
  *
  * runs Dijkstra's shortest path algorithm on a graph
  /*---------------------------------------------------------------------------*/
-
-var MinHeap = require('./min_heap');
-
 (function() {
     'use strict';
 
-    /* @ngInject */
+    var MinHeap = require('./min_heap.js');
     var Dijkstra = function() {
         var service = {
             // the previously run search (caching)

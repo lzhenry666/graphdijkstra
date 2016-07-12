@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var Graphing = require('./graph.js');
+  var Graphing = require('./graphing.js');
   var Dijkstra = require('./dijkstra.js');
 
   /* global angular */

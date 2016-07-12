@@ -7,53 +7,22 @@
 (function() {
     'use strict';
 
-    var Graphing = function($http) {
-        var URL = 'data/graph.json'; // constant
-
-        var service = {
-            graph: null,
-
-            createGraph: createGraph
-        };
-
-        return service;
-
-        //------------------------------------------------//
-
-        function createGraph(debug) {
-            debug = debug || false; // default to false
-            $http.get(URL)
-                .success(function(data) {
-                    service.graph = new Graph(data, debug);
-
-                    return service.graph;
-                })
-                .error(function(error) {
-                    console.error(error || 'Request failed');
-                });
-        }
-    };
-
-    Graphing.$inject = ['$http'];
-    module.exports = Graphing;
-
-    //------------------------------------------------//
-
     /**
      * Graph
      * @graph: (optional) a JSON representation of the graph to initialize
      * @debug: only verify if debug is set to true (defaults to false)
      */
-    function Graph(graph, debug) {
+    var Graph = function(graph, debug) {
         debug = debug || false;
-        this._nodes = graph ? graph._nodes : {}; // set of nodes in graph
-        this._nodeCount = graph ? graph._nodeCount : 0; // number of nodes
-        this._edgeCount = graph ? graph._edgeCount : 0; // number of edges
+        this._nodes = !!graph ? graph._nodes : {}; // set of nodes in graph
+        this._nodeCount = !!graph ? graph._nodeCount : 0; // number of nodes
+        this._edgeCount = !!graph ? graph._edgeCount : 0; // number of edges
 
-        if (debug && graph) {
+        // verify the graph if debug is true
+        if (debug && !!graph) {
             _verify(this);
         }
-    }
+    };
 
     /**
      * Graph define properties
@@ -201,6 +170,8 @@
 
         return node;
     };
+
+    module.exports = Graph;
 
     /**
      * _verify: ensure that the graph is consistent (debugging)
