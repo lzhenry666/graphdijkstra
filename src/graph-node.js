@@ -23,13 +23,13 @@
     Object.defineProperties(Node.prototype, {
         // id
         id: {
-            get: function() { // getter
+            get: function() {
                 return this._id;
             },
         },
         // neighbors
         neighbors: {
-            get: function() { // getter
+            get: function() {
                 return this._neighbors;
             },
             set: function(value) {
@@ -38,7 +38,7 @@
         },
         // weight
         weight: {
-            get: function() { // getter
+            get: function() {
                 return this._weight;
             },
             set: function(value) {
@@ -47,7 +47,7 @@
         },
         // nType
         nType: {
-            get: function() { // getter
+            get: function() {
                 return this._nType;
             },
             set: function(value) {

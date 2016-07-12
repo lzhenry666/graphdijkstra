@@ -188,19 +188,17 @@
 
     /**
      * Node
-     * create a new node with @id, @neighbors, @weight, and @nType
-     * @neighbors: list of node ids that are the neighbors
-     * @nType: is an integer that represents the type of nodes (e.g., an enumeration)
+     * create a new node with @id @neighbors, @weight, and @nType
+     * @props: object of properties for the node (optional), valid keys are:
+     *    @weight: the weight of the node to create (i.e., distance in path algorithm)
+     *    @neighbors: list of node ids that are the neighbors
+     *    @nType:  an integer that represents the type of nodes (e.g., an enumeration)
      */
-    var Node = function(id, neighbors, weight, nType) {
-        // var node = {}; // create a new node
-
-        this._id = id; // node's ID
-        this._neighbors = neighbors || []; // neighbors of this node (i.e., list of node IDs)
-        this._weight = weight || 0; // weight of this node (e.g., distance)
-        this._nType = nType || 0; // node's type (an enumeration)
-
-        // return node;
+    var Node = function(id, props) {
+        this._id = id;
+        this._weight = props.weight || 0;
+        this._neighbors = props.neighbors || [];
+        this._nType = props.nType || 0;
     };
 
     /**
@@ -209,13 +207,13 @@
     Object.defineProperties(Node.prototype, {
         // id
         id: {
-            get: function() { // getter
+            get: function() {
                 return this._id;
             },
         },
         // neighbors
         neighbors: {
-            get: function() { // getter
+            get: function() {
                 return this._neighbors;
             },
             set: function(value) {
@@ -224,7 +222,7 @@
         },
         // weight
         weight: {
-            get: function() { // getter
+            get: function() {
                 return this._weight;
             },
             set: function(value) {
@@ -233,7 +231,7 @@
         },
         // nType
         nType: {
-            get: function() { // getter
+            get: function() {
                 return this._nType;
             },
             set: function(value) {
@@ -258,17 +256,26 @@
 
     /**
      * Graph
-     * @debug: only verify if debug is set to true (defaults to false)
-     * @graph: (optional) a JSON representation of the graph to initialize
+     * @params: (optional) object of parameters for initializing graph, valid keys are:
+     *    @debug: only verify if debug is set to true (defaults to false)
+     *    @graph: a JSON representation of the graph to initialize
      */
-    var Graph = function(debug, graph) {
-        debug = debug || false;
-        this._nodes = !!graph ? graph.nodes : {}; // set of nodes in graph
-        this._nodeCount = !!graph ? graph.nodeCount : 0; // number of nodes
-        this._edgeCount = !!graph ? graph.edgeCount : 0; // number of edges
+    var Graph = function(params) {
+        var debug = params.debug || false;
+        this._nodes = {}; // initialize nodes
+        this._nodeCount = !!params.graph ? params.graph.nodeCount : 0; // number of nodes
+        this._edgeCount = !!params.graph ? params.graph.edgeCount : 0; // number of edges
+
+        // add each of the nodes
+        for (var id in params.graph.nodes) {
+            if (params.graph.nodes.hasOwnProperty(id)) {
+                var nodeVals = params.graph.nodes[id];
+                this.addNode(nodeVals.id, nodeVals.props);
+            }
+        }
 
         // verify the graph if debug is true
-        if (debug && !!graph) {
+        if (debug && !!params.graph) {
             _verify(this);
         }
     };
@@ -279,21 +286,30 @@
     Object.defineProperties(Graph.prototype, {
         // nodeCount
         nodeCount: {
-            get: function() { // getter
+            get: function() {
                 return this._nodeCount;
             },
+            set: function(value) {
+                this._nodeCount = value;
+            }
         },
         // edgeCount
         edgeCount: {
-            get: function() { // getter
+            get: function() {
                 return this._edgeCount;
             },
+            set: function(value) {
+                this._edgeCount = value;
+            }
         },
         // nodes
         nodes: {
-            get: function() { // getter
+            get: function() {
                 return this._nodes;
             },
+            set: function(value) {
+                this._nodes = value;
+            }
         },
     });
 
@@ -329,7 +345,6 @@
         if (!this.exists(id)) {
             // create & add new node
             var node = new Node(id, props.neighbors, props.weight, props.nType);
-
             // add this node as a neighbor of all of its neighbors
             for (var i = 0; i < node.neighbors.length; i++) {
                 var n = this.nodes[node.neighbors[i]]; // get node
@@ -438,10 +453,13 @@
 
         // verify each node
         var numEdges = 0;
-        var keys = Object.keys(graph.nodes);
-        // for (var i in keys) {
-        for (var i = 0; i < keys.length; i++) {
-            var n = graph.nodes[keys[i]];
+        // var keys = Object.keys(graph.nodes);
+        // for (var i = 0; i < keys.length; i++) {
+        for (var id in graph.nodes) {
+            if (!graph.nodes.hasOwnProperty(id)) {
+                continue;
+            }
+            var n = graph.nodes[id];
             // should have non-negative weight and type between 1 and 6
             _assert(n.weight >= 0, 'Negative Weight (' + n.weight + ')');
             _assert(n.nType > 0 && n.nType <= 9, 'Irregular Type (' +
@@ -452,7 +470,7 @@
                 numEdges++; // count number of edges (should be double)
                 var k = graph.nodes[n.neighbors[j]];
 
-                _assert(k._id !== n.id, 'Cannot have self edge (' +
+                _assert(k.id !== n.id, 'Cannot have self edge (' +
                     n.id + ')');
 
                 _assert(k._neighbors.includes(n.id), 'Inconsisent Edge (' +
@@ -505,10 +523,12 @@
         //------------------------------------------------//
 
         function createGraph(url, debug) {
-            debug = debug || false; // default to false
             $http.get(url)
                 .success(function(data) {
-                    service.graph = new Graph(debug, data);
+                    service.graph = new Graph({
+                        graph: data,
+                        debug: debug || false // default to false
+                    });
 
                     return service.graph;
                 })

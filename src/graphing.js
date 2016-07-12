@@ -20,10 +20,12 @@
         //------------------------------------------------//
 
         function createGraph(url, debug) {
-            debug = debug || false; // default to false
             $http.get(url)
                 .success(function(data) {
-                    service.graph = new Graph(debug, data);
+                    service.graph = new Graph({
+                        graph: data,
+                        debug: debug || false // default to false
+                    });
 
                     return service.graph;
                 })
