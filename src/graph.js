@@ -159,6 +159,7 @@
     /**
      * Node
      */
+
     Graph.Node = function(id, weight, nType) {
         var node = {}; // create a new node
 

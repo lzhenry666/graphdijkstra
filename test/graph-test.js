@@ -13,13 +13,15 @@ describe('empty graphing tests', () => {
 
   after(() => graph = undefined);
 
-  it('it should initially have 0 nodes', () => {
+  it('it should initially have no nodes', () => {
     expect(graph.nodeCount).to.equal(0);
+    expect(graph.nodes).to.equal({});
   });
 
   it('it should initially have 0 edges', () => {
     expect(graph.edgeCount).to.equal(0);
   });
+
 
   it('getAge', () => {
     expect(developer.getAge()).to.equal('99');
