@@ -12,7 +12,7 @@ We follow Vincent Driessen's [branching model](http://nvie.com/posts/a-successfu
 
 Fork, then clone the repo:
 
-    git clone git@github.com:your-username/lincoln-gps.git
+    git clone git@github.com:your-username/angular-graph-dijkstra.git
 
 Set up your machine:
 
@@ -27,7 +27,7 @@ Make your change. Test your change. Make sure everything is working as intended.
 
 Push to your fork and [submit a pull request][pr].
 
-[pr]: https://github.com/LincolnTechOpenSource/lincoln-gps/compare
+[pr]: https://github.com/LincolnTechOpenSource/angular-graph-dijkstra/compare
 
 Now you are waiting on us to review your changes. After looking through and testing
 your updates, we may suggest some changes, improvements, or alternatives.
@@ -35,7 +35,7 @@ your updates, we may suggest some changes, improvements, or alternatives.
 Some things that will increase the chance that your pull request is accepted:
 
 * Write tests.
-* Follow [John Papa's Angular Style Guide][style].
+* Follow [John Papa's Angular Style Guide][style] where appropriate.
 * Write a [good commit message][commit].
 
 [style]: https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md
