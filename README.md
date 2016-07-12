@@ -3,7 +3,7 @@
 An angular wrapper for an undirected graph that allows for finding the shortest
 path via Dijkstra's algorithm.
 
-## Usage
+## Installation & Usage
 
 1. Install via npm
    * `$ npm install --save-dev https://github.com/LincolnTechOpenSource/angular-graph-dijkstra`
@@ -14,22 +14,21 @@ path via Dijkstra's algorithm.
 
 ## Public API
 
+TODO: Detail API
 
-
-## How to run locally installed gulp
-
-```
-$ node_modules/gulp/bin/gulp.js
-```
 
 ## Important!
 
-I commented out `dist/` folder in my ignore file on purpose just for this example project.
-For a real project you do not want to push `dist/` folder to your repo.
+This project is tailored for use in the [Lincoln Employee Locator ] and may not yet
+be optimally portable. We encourage and appreciate any contributions that aim to
+enhance the generality of this module.
+
+[Lincoln Employee Locator]: https://github.com/LincolnTechOpenSource/lincoln-gps
+
 
 ## How to Contribute
 
-Please see [CONTRIBUTING.md](CONTRIBUTING.md).
+Please see [CONTRIBUTING.md](CONTRIBUTING.md)
 
 
 ## Credits
