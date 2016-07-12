@@ -9,14 +9,14 @@
 
     /**
      * Graph
-     * @graph: (optional) a JSON representation of the graph to initialize
      * @debug: only verify if debug is set to true (defaults to false)
+     * @graph: (optional) a JSON representation of the graph to initialize
      */
-    var Graph = function(graph, debug) {
+    var Graph = function(debug, graph) {
         debug = debug || false;
-        this._nodes = !!graph ? graph._nodes : {}; // set of nodes in graph
-        this._nodeCount = !!graph ? graph._nodeCount : 0; // number of nodes
-        this._edgeCount = !!graph ? graph._edgeCount : 0; // number of edges
+        this._nodes = !!graph ? graph.nodes : {}; // set of nodes in graph
+        this._nodeCount = !!graph ? graph.nodeCount : 0; // number of nodes
+        this._edgeCount = !!graph ? graph.edgeCount : 0; // number of edges
 
         // verify the graph if debug is true
         if (debug && !!graph) {
@@ -53,7 +53,7 @@
      * @id: the ID of the node to find
      */
     Graph.prototype.find = function(id) {
-        return this._nodes[id];
+        return this.nodes[id];
     };
 
     /**
@@ -61,7 +61,7 @@
      * @id: the ID of the node to check
      */
     Graph.prototype.exists = function(id) {
-        return this._nodes[id] !== undefined;
+        return this.nodes[id] !== undefined;
     };
 
     /**
@@ -74,10 +74,10 @@
         // only add node if it does not already exist (TODO: might change)
         if (!this.exists(id)) {
             // create & add new node
-            this._nodes[id] = new Graph.Node(id, weight, nType);
-            ++this._nodeCount;
+            this.nodes[id] = new Graph.Node(id, weight, nType);
+            ++this.nodeCount;
         }
-        return this._nodes[id];
+        return this.nodes[id];
     };
 
     /**
@@ -88,18 +88,18 @@
         // only remove if it exists
         if (this.exists(id)) {
             // remove all incident edges
-            for (var i = 0; i < this._nodes[id]._neighbors.length; i++) {
-                var n = this._nodes[this._nodes[id]._neighbors[i]]; // get node
+            for (var i = 0; i < this.nodes[id]._neighbors.length; i++) {
+                var n = this.nodes[this.nodes[id]._neighbors[i]]; // get node
                 var index = n._neighbors.indexOf(id); // index n's neighbors w/ id
 
                 if (index > -1) {
                     n._neighbors.splice(index, 1);
-                    --this._edgeCount;
+                    --this.edgeCount;
                 }
             }
             // remove from nodes
-            delete this._nodes[id];
-            --this._nodeCount;
+            delete this.nodes[id];
+            --this.nodeCount;
 
             return true;
         }
@@ -120,7 +120,7 @@
         // add each node to the other's edge list
         s._neighbors.push(t._id);
         t._neighbors.push(s._id);
-        ++this._edgeCount;
+        ++this.edgeCount;
 
         return true;
     };
@@ -131,8 +131,8 @@
      * @target: ID of the other end of the edge to delete
      */
     Graph.prototype.deleteEdge = function(source, target) {
-        var s = this._nodes[source]; // the node corresponding to source ID
-        var t = this._nodes[target]; // the node corresponding to target ID
+        var s = this.nodes[source]; // the node corresponding to source ID
+        var t = this.nodes[target]; // the node corresponding to target ID
 
         // ensure they exist
         if (s === undefined || t === undefined) {
@@ -142,19 +142,18 @@
         // delete from neighbor array
         s._neighbors.splice(s._neighbors.indexOf(target), 1);
         t._neighbors.splice(t._neighbors.indexOf(source), 1);
-        --this._edgeCount;
+        --this.edgeCount;
 
         return true;
     };
 
     /**
-     * Graph.edgeWeight: return the weight of the specified edge
-     * the weight of the edge is defined as the weight of the source node
-     * @source: ID of one end of the edge
-     * @target:ID of the other end of the edge
+     * Graph.weight: return the weight of the specified edge/node
+     * the weight of an edge is defined as the weight of the source node
+     * @source: ID of the node to check
      */
-    Graph.prototype.edgeWeight = function(source, target) {
-        return this._nodes[source]._weight;
+    Graph.prototype.weight = function(source) {
+        return this.nodes[source]._weight;
     };
 
     /**

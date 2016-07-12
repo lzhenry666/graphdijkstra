@@ -5,16 +5,20 @@
 import {expect} from 'chai';
 import Graph from '../dist/graph.js';
 
-describe('graphing tests', () => {
+describe('empty graphing tests', () => {
 
   let graph;
 
-  before(() => developer = new Developer('Alex', '99'));
+  before(() => graph = new Graph(true));
 
-  after(() => developer = undefined);
+  after(() => graph = undefined);
 
-  it('getName', () => {
-    expect(developer.getName()).to.equal('Alex');
+  it('it should initially have 0 nodes', () => {
+    expect(graph.nodeCount).to.equal(0);
+  });
+
+  it('it should initially have 0 edges', () => {
+    expect(graph.edgeCount).to.equal(0);
   });
 
   it('getAge', () => {

@@ -23,7 +23,7 @@
             debug = debug || false; // default to false
             $http.get(url)
                 .success(function(data) {
-                    service.graph = new Graph(data, debug);
+                    service.graph = new Graph(debug, data);
 
                     return service.graph;
                 })

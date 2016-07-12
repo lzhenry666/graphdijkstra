@@ -17,7 +17,7 @@
     "plusplus": false,
     "quotmark": "single",
     "undef": true,
-    "unused": false,
+    "unused": true,
     "strict": false,
     "maxparams": 10,
     "maxdepth": 5,
@@ -29,7 +29,7 @@
     "boss": false,
     "debug": false,
     "eqnull": true,
-    "esnext": false,
+    "esnext": true,
     "evil": false,
     "expr": false,
     "funcscope": false,
@@ -55,6 +55,14 @@
     "node": true,
 
     "globals": {
+        "after": false,
+        "afterEach": false,
+        "before": false,
+        "beforeEach": false,
+        "context": false,
+        "describe": false,
+        "it": false,
+        "window": false,
         "angular": false,
         "$": false
     }
