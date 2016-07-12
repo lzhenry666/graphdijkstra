@@ -9,6 +9,7 @@ import browserify from 'browserify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import rename from 'gulp-rename';
+import uglify from 'gulp-uglify';
 
 var config = {
   paths: {
@@ -28,7 +29,7 @@ gulp.task('clean', () =>
   del(config.paths.js.dist)
 );
 
-gulp.task('browserify', function() {
+gulp.task('browserify', ['lint-src'], function() {
   return browserify({
       entries: './src/stand-alone.js'
     })
@@ -39,12 +40,10 @@ gulp.task('browserify', function() {
     })
     .pipe(source('./graph-dijkstra.js'))
     .pipe(buffer())
-    // .pipe(header(banner, {pkg: pkg}))
     .pipe(gulp.dest('./dist/'))
     .pipe(rename('graph-dijkstra.min.js'))
-    // .pipe(uglify())
-    // .pipe(header(banner, {pkg: pkg}))
-    .pipe(gulp.dest('./dist/'))
+    .pipe(uglify())
+    .pipe(gulp.dest('./dist/'));
 });
 
 gulp.task('babel', ['babel-src', 'babel-test']);
@@ -88,5 +87,5 @@ gulp.task('test', ['babel'], () =>
 
 // Default Task
 gulp.task('default', () =>
-  runSequence('clean', ['babel', 'test'])
+  runSequence('clean', ['browserify'])
 );
