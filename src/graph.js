@@ -7,7 +7,6 @@
 (function() {
     'use strict';
 
-    /* @ngInject */
     var Graphing = function($http) {
         var URL = 'data/graph.json'; // constant
 
@@ -35,7 +34,10 @@
         }
     };
 
+    Graphing.$inject = ['$http'];
     module.exports = Graphing;
+
+    //------------------------------------------------//
 
     /**
      * Graph

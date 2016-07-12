@@ -36,7 +36,7 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md)
 **Authors:** Matthew Vasseur and David Tahvildaran
 
 **Adapted Resources:**
-   1. [Min Heap with Decrease Key](https://github.com/rombdn/js-binaryheap-decreasekey)
+   * [Min Heap with Decrease Key](https://github.com/rombdn/js-binaryheap-decreasekey)
 
 
 ## License
