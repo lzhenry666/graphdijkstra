@@ -7,6 +7,8 @@
 (function() {
     'use strict';
 
+    var Node = require('./graph-node.js');
+
     /**
      * Graph
      * @debug: only verify if debug is set to true (defaults to false)
@@ -66,15 +68,19 @@
 
     /**
      * Graph.addNode: add a new node to the graph
-     * @id: the node's ID (a number)
-     * @weight: the weight of the node to create
-     * @nType: the type of the node to create
+     * @id: the node's ID (a number) (required)
+     * @props: object of properties for the node (optional), valid keys are:
+     *    @neighbors: the neighbors of the node to add
+     *    @weight: the weight of the node to create
+     *    @nType: the type of the node to create
      */
-    Graph.prototype.addNode = function(id, weight, nType) {
+    Graph.prototype.addNode = function(id, props) {
+        _assert(!!id, 'Cannot create a node without an id');
+
         // only add node if it does not already exist (TODO: might change)
         if (!this.exists(id)) {
             // create & add new node
-            this.nodes[id] = new Graph.Node(id, weight, nType);
+            this.nodes[id] = new Node(id, props.neighbors, props.weight, props.nType);
             ++this.nodeCount;
         }
         return this.nodes[id];
@@ -154,21 +160,6 @@
      */
     Graph.prototype.weight = function(source) {
         return this.nodes[source]._weight;
-    };
-
-    /**
-     * Node
-     */
-
-    Graph.Node = function(id, weight, nType) {
-        var node = {}; // create a new node
-
-        node._id = id; // node's ID
-        node._neighbors = []; // neighbors of this node (i.e., list of node IDs)
-        node._weight = weight || 0; // weight of this node (e.g., distance)
-        node._nType = nType || 0; // node's type (an enumeration)
-
-        return node;
     };
 
     module.exports = Graph;
