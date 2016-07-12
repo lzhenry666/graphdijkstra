@@ -4,19 +4,17 @@
 
     /**
      * Node
-     * create a new node with @id, @neighbors, @weight, and @nType
-     * @neighbors: list of node ids that are the neighbors
-     * @nType: is an integer that represents the type of nodes (e.g., an enumeration)
+     * create a new node with @id @neighbors, @weight, and @nType
+     * @props: object of properties for the node (optional), valid keys are:
+     *    @weight: the weight of the node to create (i.e., distance in path algorithm)
+     *    @neighbors: list of node ids that are the neighbors
+     *    @nType:  an integer that represents the type of nodes (e.g., an enumeration)
      */
-    var Node = function(id, neighbors, weight, nType) {
-        // var node = {}; // create a new node
-
-        this._id = id; // node's ID
-        this._neighbors = neighbors || []; // neighbors of this node (i.e., list of node IDs)
-        this._weight = weight || 0; // weight of this node (e.g., distance)
-        this._nType = nType || 0; // node's type (an enumeration)
-
-        // return node;
+    var Node = function(id, props) {
+        this._id = id;
+        this._weight = props.weight || 0;
+        this._neighbors = props.neighbors || [];
+        this._nType = props.nType || 0;
     };
 
     /**
@@ -31,23 +29,29 @@
         },
         // neighbors
         neighbors: {
-            writable: true,
             get: function() { // getter
                 return this._neighbors;
             },
+            set: function(value) {
+                this._neighbors = value;
+            }
         },
         // weight
         weight: {
-            writable: true,
             get: function() { // getter
                 return this._weight;
             },
+            set: function(value) {
+                this._weight = value;
+            }
         },
         // nType
         nType: {
-            writable: true,
             get: function() { // getter
                 return this._nType;
+            },
+            set: function(value) {
+                this._nType = value;
             }
         }
     });

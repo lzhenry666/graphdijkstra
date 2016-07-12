@@ -109,7 +109,7 @@
                         }
 
                         // calculate alternative distance
-                        var alt = minNode.distance + graph.weight(minNode._id);
+                        var alt = minNode.distance + minNode.weight;
 
                         // use this path instead, if alternative distance is shorter
                         if (alt < dist[n._id]) {
@@ -167,7 +167,7 @@
         }
     }
 })();
-},{"./min_heap.js":5}],2:[function(require,module,exports){
+},{"./min_heap.js":6}],2:[function(require,module,exports){
 // graph-dijkstra.js
 (function() {
   'use strict';
@@ -181,7 +181,70 @@
     .factory('Dijkstra', Dijkstra);
 
 })();
-},{"./dijkstra.js":1,"./graphing.js":4}],3:[function(require,module,exports){
+},{"./dijkstra.js":1,"./graphing.js":5}],3:[function(require,module,exports){
+// graph-node.js
+(function() {
+    'use strict';
+
+    /**
+     * Node
+     * create a new node with @id, @neighbors, @weight, and @nType
+     * @neighbors: list of node ids that are the neighbors
+     * @nType: is an integer that represents the type of nodes (e.g., an enumeration)
+     */
+    var Node = function(id, neighbors, weight, nType) {
+        // var node = {}; // create a new node
+
+        this._id = id; // node's ID
+        this._neighbors = neighbors || []; // neighbors of this node (i.e., list of node IDs)
+        this._weight = weight || 0; // weight of this node (e.g., distance)
+        this._nType = nType || 0; // node's type (an enumeration)
+
+        // return node;
+    };
+
+    /**
+     * Node define properties
+     */
+    Object.defineProperties(Node.prototype, {
+        // id
+        id: {
+            get: function() { // getter
+                return this._id;
+            },
+        },
+        // neighbors
+        neighbors: {
+            get: function() { // getter
+                return this._neighbors;
+            },
+            set: function(value) {
+                this._neighbors = value;
+            }
+        },
+        // weight
+        weight: {
+            get: function() { // getter
+                return this._weight;
+            },
+            set: function(value) {
+                this._weight = value;
+            }
+        },
+        // nType
+        nType: {
+            get: function() { // getter
+                return this._nType;
+            },
+            set: function(value) {
+                this._nType = value;
+            }
+        }
+    });
+
+    module.exports = Node;
+})();
+},{}],4:[function(require,module,exports){
 /**
  * graph.js
  * 05/31/16
@@ -190,6 +253,8 @@
  /*---------------------------------------------------------------------------*/
 (function() {
     'use strict';
+
+    var Node = require('./graph-node.js');
 
     /**
      * Graph
@@ -250,45 +315,63 @@
 
     /**
      * Graph.addNode: add a new node to the graph
-     * @id: the node's ID (a number)
-     * @weight: the weight of the node to create
-     * @nType: the type of the node to create
+     * @id: the node's ID (a number) (required)
+     * @props: object of properties for the node (optional), valid keys are:
+     *    @neighbors: the neighbors of the node to add
+     *    @weight: the weight of the node to create
+     *    @nType: the type of the node to create
+     * return the added (or existing) node with @id
      */
-    Graph.prototype.addNode = function(id, weight, nType) {
+    Graph.prototype.addNode = function(id, props) {
+        _assert(!!id, 'Cannot create a node without an id');
+
         // only add node if it does not already exist (TODO: might change)
         if (!this.exists(id)) {
             // create & add new node
-            this.nodes[id] = new Graph.Node(id, weight, nType);
-            ++this._nodeCount;
+            var node = new Node(id, props.neighbors, props.weight, props.nType);
+
+            // add this node as a neighbor of all of its neighbors
+            for (var i = 0; i < node.neighbors.length; i++) {
+                var n = this.nodes[node.neighbors[i]]; // get node
+                n.neighbors.push(id);
+            }
+
+            this.nodes[id] = node;
+            ++this.nodeCount;
         }
         return this.nodes[id];
     };
 
     /**
      * Graph.deleteNode: delete a node from the graph. true if successful
-     * @id: the ID of the node to delete
+     * @id: the ID of the node to delete (required)
+     * return the node that was deleted or null if it does not exist
      */
     Graph.prototype.deleteNode = function(id) {
+         _assert(!!id, 'Cannot delete a node without an id');
+
         // only remove if it exists
         if (this.exists(id)) {
+            var node = this.nodes[id]; // node to delete
+
             // remove all incident edges
-            for (var i = 0; i < this.nodes[id]._neighbors.length; i++) {
-                var n = this.nodes[this.nodes[id]._neighbors[i]]; // get node
-                var index = n._neighbors.indexOf(id); // index n's neighbors w/ id
+            for (var i = 0; i < node.neighbors.length; i++) {
+                var n = this.nodes[node.neighbors[i]]; // get node
+                var index = n.neighbors.indexOf(id); // index n's neighbors w/ id
 
                 if (index > -1) {
-                    n._neighbors.splice(index, 1);
-                    --this._edgeCount;
+                    n.neighbors.splice(index, 1);
+                    --this.edgeCount;
                 }
             }
             // remove from nodes
             delete this.nodes[id];
-            --this._nodeCount;
+            --this.nodeCount;
 
-            return true;
+            return node;
         }
 
-        return false;
+        return null;
     };
 
     /**
@@ -297,20 +380,20 @@
      * @target: ID of the other end of the edge
      */
     Graph.prototype.addEdge = function(source, target) {
-        // create the source & target nodes
+        // create (or find) the source & target nodes
         var s = this.addNode(source);
         var t = this.addNode(target);
 
         // add each node to the other's edge list
-        s._neighbors.push(t._id);
-        t._neighbors.push(s._id);
-        ++this._edgeCount;
+        s.neighbors.push(t.id);
+        t.neighbors.push(s.id);
+        ++this.edgeCount;
 
         return true;
     };
 
     /**
-     * Graph.deleteEdge: delete an edge from the graph. true if successful
+     * Graph.deleteEdge: delete an edge from the graph. true if successful, false otherwise
      * @source: ID of one end of the edge to delete
      * @target: ID of the other end of the edge to delete
      */
@@ -323,36 +406,22 @@
             return false;
         }
 
-        // delete from neighbor array
-        s._neighbors.splice(s._neighbors.indexOf(target), 1);
-        t._neighbors.splice(t._neighbors.indexOf(source), 1);
-        --this._edgeCount;
+        // delete from neighbor arrays
+        s.neighbors.splice(s.neighbors.indexOf(target), 1);
+        t.neighbors.splice(t.neighbors.indexOf(source), 1);
+        --this.edgeCount;
 
         return true;
     };
 
-    /**
-     * Graph.weight: return the weight of the specified edge/node
-     * the weight of an edge is defined as the weight of the source node
-     * @source: ID of the node to check
-     */
-    Graph.prototype.weight = function(source) {
-        return this.nodes[source]._weight;
-    };
-
-    /**
-     * Node
-     */
-    Graph.Node = function(id, weight, nType) {
-        var node = {}; // create a new node
-
-        node._id = id; // node's ID
-        node._neighbors = []; // neighbors of this node (i.e., list of node IDs)
-        node._weight = weight || 0; // weight of this node (e.g., distance)
-        node._nType = nType || 0; // node's type (an enumeration)
-
-        return node;
-    };
+    // /**
+    //  * Graph.weight: return the weight of the specified edge/node
+    //  * the weight of an edge is defined as the weight of the source node
+    //  * @source: ID of the node to check
+    //  */
+    // Graph.prototype.weight = function(source) {
+    //     return this.nodes[source].weight;
+    // };
 
     module.exports = Graph;
 
@@ -374,20 +443,20 @@
         for (var i = 0; i < keys.length; i++) {
             var n = graph.nodes[keys[i]];
             // should have non-negative weight and type between 1 and 6
-            _assert(n._weight >= 0, 'Negative Weight (' + n._weight + ')');
-            _assert(n._nType > 0 && n._nType <= 9, 'Irregular Type (' +
-                n._nType + ')');
+            _assert(n.weight >= 0, 'Negative Weight (' + n.weight + ')');
+            _assert(n.nType > 0 && n.nType <= 9, 'Irregular Type (' +
+                n.nType + ')');
 
             // should have consistent edges and no self edges
-            for (var j = 0; j < n._neighbors.length; j++) {
+            for (var j = 0; j < n.neighbors.length; j++) {
                 numEdges++; // count number of edges (should be double)
-                var k = graph.nodes[n._neighbors[j]];
+                var k = graph.nodes[n.neighbors[j]];
 
-                _assert(k._id !== n._id, 'Cannot have self edge (' +
-                    n._id + ')');
+                _assert(k._id !== n.id, 'Cannot have self edge (' +
+                    n.id + ')');
 
-                _assert(k._neighbors.includes(n._id), 'Inconsisent Edge (' +
-                    n._id + ',' + k._id + ')');
+                _assert(k._neighbors.includes(n.id), 'Inconsisent Edge (' +
+                    n.id + ',' + k.id + ')');
             }
         }
         // number of edges should be same as the edgeCount
@@ -413,7 +482,7 @@
     }
 })();
 /*----------------------------------------------------------------------------*/
-},{}],4:[function(require,module,exports){
+},{"./graph-node.js":3}],5:[function(require,module,exports){
 /**
  * graphing.js
  * 05/31/16
@@ -453,7 +522,7 @@
     module.exports = Graphing;
 })();
 /*----------------------------------------------------------------------------*/
-},{"./graph.js":3}],5:[function(require,module,exports){
+},{"./graph.js":4}],6:[function(require,module,exports){
 /*
  * min_heap.js
  * adapted from https://github.com/rombdn/js-binaryheap-decreasekey
@@ -597,9 +666,9 @@ BinaryHeap code may be freely distributed under the MIT License
 
     module.exports = MinHeap;
 })();
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 // stand-alone.js
 // needed for browserify to inject required resources
 require('./graph-dijkstra.js');
 
-},{"./graph-dijkstra.js":2}]},{},[6]);
+},{"./graph-dijkstra.js":2}]},{},[7]);

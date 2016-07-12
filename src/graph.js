@@ -11,17 +11,18 @@
 
     /**
      * Graph
-     * @debug: only verify if debug is set to true (defaults to false)
-     * @graph: (optional) a JSON representation of the graph to initialize
+     * @props: object of properties for the graph (optional), valid keys are:
+     *    @debug: only verify if debug is set to true (defaults to false)
+     *    @graph: a JSON representation of the graph to initialize
      */
-    var Graph = function(debug, graph) {
-        debug = debug || false;
-        this._nodes = !!graph ? graph.nodes : {}; // set of nodes in graph
-        this._nodeCount = !!graph ? graph.nodeCount : 0; // number of nodes
-        this._edgeCount = !!graph ? graph.edgeCount : 0; // number of edges
+    var Graph = function(props) {
+        props.debug = props.debug || false;
+        this._nodes = !!props.graph ? props.graph.nodes : {}; // set of nodes in graph
+        this._nodeCount = !!props.graph ? props.graph.nodeCount : 0; // number of nodes
+        this._edgeCount = !!props.graph ? props.graph.edgeCount : 0; // number of edges
 
         // verify the graph if debug is true
-        if (debug && !!graph) {
+        if (props.debug && !!props.graph) {
             _verify(this);
         }
     };
