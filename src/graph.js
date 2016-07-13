@@ -103,7 +103,9 @@
             // add this node as a neighbor of all of its neighbors
             for (var i = 0; i < node.neighbors.length; i++) {
                 var n = this.nodes[node.neighbors[i]]; // get node
-                n.neighbors.push(id);
+                if (!n.neighbors[id]) {
+                    n.neighbors.push(id);
+                }
             }
 
             this.nodes[id] = node;
@@ -154,10 +156,13 @@
         var s = this.addNode(source);
         var t = this.addNode(target);
 
-        // add each node to the other's edge list
-        s.neighbors.push(t.id);
-        t.neighbors.push(s.id);
-        ++this.edgeCount;
+        // do not add redundant edges (edges should always be consistent)
+        if (!s.neighbors[t.id] && !t.neighbors[s.id]) {
+            // add each node to the other's edge list
+            s.neighbors.push(t.id);
+            t.neighbors.push(s.id);
+            ++this.edgeCount;
+        }
 
         return true;
     };
