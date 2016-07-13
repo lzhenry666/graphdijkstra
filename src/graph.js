@@ -17,8 +17,9 @@
      */
     var Graph = function(params) {
         var debug = params.debug || false;
-        this._nodes = {}; // initialize nodes
-        this._nodeCount = !!params.graph ? params.graph.nodeCount : 0; // number of nodes
+        this._nodes = {}; // initialize nodes to empty
+        // this._nodeCount = !!params.graph ? params.graph.nodeCount : 0; // number of nodes
+        this._nodeCount = 0; // initialize node count to 0
         this._edgeCount = !!params.graph ? params.graph.edgeCount : 0; // number of edges
 
         // add each of the nodes
@@ -150,6 +151,7 @@
      * Graph.addEdge: connect two nodes (undirected edges)
      * @source: ID of one end of the edge
      * @target: ID of the other end of the edge
+     * return true if able to add edge, false otherwise
      */
     Graph.prototype.addEdge = function(source, target) {
         // create (or find) the source & target nodes
@@ -159,18 +161,21 @@
         // continue if invalid edge (i.e., either source or target does not exist)
         if (!s || !t) {
             console.log('Unable to add edge (' + source + ',' + target + '): node does not exist');
-            continue;
+            return false;
         }
 
-        // do not add redundant edges (edges should always be consistent)
+        // do not add redundant edges (but fix edge if inconsistent)
         if (!s.neighbors[t.id] && !t.neighbors[s.id]) {
             // add each node to the other's edge list
             s.neighbors.push(t.id);
             t.neighbors.push(s.id);
             ++this.edgeCount;
+        } else if (!s.neighbors[t.id]) {
+            s.neighbors.push(t.id); // fix consistency in source
+        } else if (!t.neighbors[s.id]) {
+            t.neighbors.push(s.id); // fix consistency in target
         }
-
-        return true;
+        return true; // return true even if it is redundant
     };
 
     /**
@@ -223,7 +228,7 @@
         // for (var i = 0; i < keys.length; i++) {
         for (var id in graph.nodes) {
             if (!graph.nodes.hasOwnProperty(id)) {
-                continue;
+                continue; // ensure we are getting the right property
             }
             var n = graph.nodes[id];
             // should have non-negative weight and type between 1 and 6

@@ -48,7 +48,7 @@
                     return e.distance;
                 },
                 function(e) {
-                    return e._id;
+                    return e.id;
                 },
                 'distance'
             );
@@ -62,20 +62,21 @@
 
             // Initialization
             dist[source] = 0; // source is distance 0 from source
-            var keys = Object.keys(graph.nodes);
-            // for (var i in keys) {
-            for (var i = 0; i < keys.length; i++) {
-                // for each node in the graph...
-                var node = graph.nodes[keys[i]];
+            // for each node in the graph...
+            for (var id in graph.nodes) {
+                if (!graph.nodes.hasOwnProperty(id)) {
+                    continue; // ensure we are getting the right property
+                }
+                var node = graph.nodes[id];
 
-                if (node._id !== parseInt(source, 10)) {
-                    prev[node._id] = null; // set previous to undefined
-                    dist[node._id] = Infinity; // set distance to Infinity
+                if (node.id !== parseInt(source, 10)) {
+                    prev[node.id] = null; // set previous to undefined
+                    dist[node.id] = Infinity; // set distance to Infinity
                 }
                 // push node to unvisited with distance Infinity
                 unvisited.push({
-                    _id: node._id,
-                    distance: dist[node._id]
+                    id: node.id,
+                    distance: dist[node.id]
                 });
             }
 
@@ -98,12 +99,12 @@
                     var minNode = unvisited.pop(); // get minimum node dist and ID
 
                     // for each neighbor of minNode that is in the unvisited queue
-                    for (i = 0; i < graph.nodes[minNode._id]._neighbors.length; i++) {
-                        var n = graph.nodes[graph.nodes[minNode._id]._neighbors[i]];
+                    for (i = 0; i < graph.nodes[minNode.id].neighbors.length; i++) {
+                        var n = graph.nodes[graph.nodes[minNode.id].neighbors[i]];
 
                         // ensure node is in unvisited and it is a PATH
-                        if (!unvisited.exists(n) || (n._nType !== pathType &&
-                                n._id !== parseInt(target, 10))) {
+                        if (!unvisited.exists(n) || (n.nType !== pathType &&
+                                n.id !== parseInt(target, 10))) {
                             continue;
                         }
 
@@ -111,10 +112,10 @@
                         var alt = minNode.distance + minNode.weight;
 
                         // use this path instead, if alternative distance is shorter
-                        if (alt < dist[n._id]) {
-                            dist[n._id] = alt;
-                            prev[n._id] = minNode._id;
-                            unvisited.decreaseKey(n._id, alt); // update key
+                        if (alt < dist[n.id]) {
+                            dist[n.id] = alt;
+                            prev[n.id] = minNode.id;
+                            unvisited.decreaseKey(n.id, alt); // update key
                         }
                     }
                 }
