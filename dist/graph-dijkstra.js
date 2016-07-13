@@ -242,6 +242,7 @@
 
     module.exports = Node;
 })();
+
 },{}],4:[function(require,module,exports){
 /**
  * graph.js
@@ -344,11 +345,13 @@
         // only add node if it does not already exist (TODO: might change)
         if (!this.exists(id)) {
             // create & add new node
-            var node = new Node(id, props.neighbors, props.weight, props.nType);
+            var node = new Node(id, props);
             // add this node as a neighbor of all of its neighbors
             for (var i = 0; i < node.neighbors.length; i++) {
                 var n = this.nodes[node.neighbors[i]]; // get node
-                n.neighbors.push(id);
+                if (!!n && !n.neighbors[id]) {
+                    n.neighbors.push(id);
+                }
             }
 
             this.nodes[id] = node;
@@ -399,10 +402,13 @@
         var s = this.addNode(source);
         var t = this.addNode(target);
 
-        // add each node to the other's edge list
-        s.neighbors.push(t.id);
-        t.neighbors.push(s.id);
-        ++this.edgeCount;
+        // do not add redundant edges (edges should always be consistent)
+        if (!s.neighbors[t.id] && !t.neighbors[s.id]) {
+            // add each node to the other's edge list
+            s.neighbors.push(t.id);
+            t.neighbors.push(s.id);
+            ++this.edgeCount;
+        }
 
         return true;
     };
@@ -500,6 +506,7 @@
     }
 })();
 /*----------------------------------------------------------------------------*/
+
 },{"./graph-node.js":3}],5:[function(require,module,exports){
 /**
  * graphing.js

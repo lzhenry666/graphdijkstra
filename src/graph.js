@@ -99,14 +99,14 @@
         // only add node if it does not already exist (TODO: might change)
         if (!this.exists(id)) {
             // create & add new node
-            var node = new Node(id, props.neighbors, props.weight, props.nType);
-            // add this node as a neighbor of all of its neighbors
-            for (var i = 0; i < node.neighbors.length; i++) {
-                var n = this.nodes[node.neighbors[i]]; // get node
-                if (!n.neighbors[id]) {
-                    n.neighbors.push(id);
-                }
-            }
+            var node = new Node(id, props);
+            // // add this node as a neighbor of all of its neighbors
+            // for (var i = 0; i < node.neighbors.length; i++) {
+            //     var n = this.nodes[node.neighbors[i]]; // get node
+            //     if (!!n && !n.neighbors[id]) {
+            //         n.neighbors.push(id);
+            //     }
+            // }
 
             this.nodes[id] = node;
             ++this.nodeCount;
@@ -155,6 +155,12 @@
         // create (or find) the source & target nodes
         var s = this.addNode(source);
         var t = this.addNode(target);
+
+        // continue if invalid edge (i.e., either source or target does not exist)
+        if (!s || !t) {
+            console.log('Unable to add edge (' + source + ',' + target + '): node does not exist');
+            continue;
+        }
 
         // do not add redundant edges (edges should always be consistent)
         if (!s.neighbors[t.id] && !t.neighbors[s.id]) {
