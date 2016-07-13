@@ -4,7 +4,7 @@
 /* jshint expr: true */
 
 import {expect} from 'chai';
-import Graph from '../dist/graph.js';
+import Graph from './graph.js';
 
 // initialize empty graph tests
 describe('empty graph tests', () => {

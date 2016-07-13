@@ -13,9 +13,17 @@ import uglify from 'gulp-uglify';
 
 var config = {
   paths: {
+    build: {
+      src: 'src/browserify.js',
+      dist: 'dist'
+    },
     js: {
-      src: 'src/**/*.js',
-      dist: 'dist/'
+      src: [
+        'src/**/*.js',
+        '!src/**/browserify.js',
+        '!src/**/graph-dijkstra.js'
+      ],
+      dist: 'test-dist/'
     },
     test: {
       src: 'test/**/*.js',
@@ -31,7 +39,7 @@ gulp.task('clean', () =>
 
 gulp.task('browserify', ['lint-src'], function() {
   return browserify({
-      entries: './src/browserify.js'
+      entries: config.paths.build.src
     })
     .bundle()
     .on('error', function(err) {
@@ -40,10 +48,10 @@ gulp.task('browserify', ['lint-src'], function() {
     })
     .pipe(source('./graph-dijkstra.js'))
     .pipe(buffer())
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest(config.paths.build.dist))
     .pipe(rename('graph-dijkstra.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest('./dist/'));
+    .pipe(gulp.dest(config.paths.build.dist));
 });
 
 gulp.task('babel', ['babel-src', 'babel-test']);

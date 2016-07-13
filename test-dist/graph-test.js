@@ -5,7 +5,7 @@
 
 var _chai = require('chai');
 
-var _graph = require('../dist/graph.js');
+var _graph = require('./graph.js');
 
 var _graph2 = _interopRequireDefault(_graph);
 

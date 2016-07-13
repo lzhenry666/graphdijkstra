@@ -4,7 +4,7 @@
 
 var _chai = require('chai');
 
-var _person = require('../dist/person.js');
+var _person = require('./person.js');
 
 var _person2 = _interopRequireDefault(_person);
 
