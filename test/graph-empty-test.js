@@ -7,7 +7,7 @@ import {expect} from 'chai';
 import Graph from './src/graph.js';
 
 // initialize empty graph tests
-describe('empty graph tests', () => {
+describe('graph tests (initially empty)', () => {
 
     let graph;
     let props;
@@ -23,7 +23,7 @@ describe('empty graph tests', () => {
         };
 
         // initialize empty graph
-        expect(graph.nodes).to.empty;
+        expect(graph.nodes).to.be.empty;
         expect(graph.nodeCount).to.equal(0);
         expect(graph.edgeCount).to.equal(0);
     });
@@ -204,10 +204,12 @@ describe('empty graph tests', () => {
         graph.addNode(2, props2);
 
         var node = graph.deleteNode(1);
+        expect(node).to.not.be.null;
         expect(graph.nodeCount).to.equal(1);
         _nodeHelper(node.id, props, node);
 
         node = graph.deleteNode(2);
+        expect(node).to.not.be.null;
         expect(graph.nodeCount).to.equal(0);
         _nodeHelper(node.id, props2, node);
     });
@@ -219,10 +221,54 @@ describe('empty graph tests', () => {
         expect(node).to.be.null;
 
         graph.addNode(2, props);
+
         node = graph.deleteNode(1);
+        expect(node).to.be.null;
 
         expect(graph.nodeCount).to.equal(1);
-        expect(node).to.be.null;
+    });
+
+    it('it should delete nodes with edges, maintaining consistency', () => {
+        props.neighbors = [2, 3, 4];
+        graph.addNode(1, props);
+        graph.addEdge(2, 3);
+
+        expect(graph.nodeCount).to.equal(4);
+        expect(graph.edgeCount).to.equal(4);
+        _testEdge(1, 2);
+        _testEdge(1, 3);
+        _testEdge(1, 4);
+        _testEdge(2, 3);
+
+        expect(graph.deleteNode(1)).to.not.be.null;
+        expect(graph.nodeCount).to.equal(3);
+        expect(graph.edgeCount).to.equal(1);
+
+        expect(graph.connected(1, 2)).to.be.false;
+        expect(graph.connected(1, 3)).to.be.false;
+        expect(graph.connected(1, 4)).to.be.false;
+        expect(graph.connected(2, 3)).to.be.true;
+    });
+
+    it('it should delete edges', () => {
+        props.neighbors = [2, 3, 4];
+        graph.addNode(1, props);
+
+        expect(graph.deleteEdge(1, 2)).to.be.true;
+
+        expect(graph.edgeCount).to.equal(2);
+        expect(graph.connected(1, 2)).to.be.false;
+    });
+
+    it('it should handle deletion if edge does not exist', () => {
+        props.neighbors = [2, 3, 4];
+        graph.addNode(1, props);
+
+        expect(graph.deleteEdge(1, 2)).to.be.true;
+        expect(graph.edgeCount).to.equal(2);
+
+        expect(graph.deleteEdge(2, 3)).to.be.false;
+        expect(graph.edgeCount).to.equal(2);
     });
 
     //------------------------------------------
@@ -253,6 +299,7 @@ describe('empty graph tests', () => {
 
     function _testEdge(s, t) {
         expect(graph.connected(s, t)).to.be.true;
+        expect(graph.connected(t, s)).to.be.true;
         expect(graph.find(s).neighbors).to.include.members([t]);
         expect(graph.find(t).neighbors).to.include.members([s]);
     }

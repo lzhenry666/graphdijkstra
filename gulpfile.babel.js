@@ -34,7 +34,7 @@ var config = {
 };
 
 gulp.task('clean', () =>
-    del(config.paths.js.dist)
+    del(config.paths.test.dist)
 );
 
 gulp.task('build', ['lint-src'], function() {
