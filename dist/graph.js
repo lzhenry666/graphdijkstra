@@ -96,7 +96,7 @@
      * Graph.addNode: add a new node to the graph
      * @id: the node's ID (a number) (required)
      * @props: object of properties for the node (optional), valid keys are:
-     *    @neighbors: the neighbors of the node to add
+     *    @neighbors: the neighbors of the node to add (create node if it does not exist)
      *    @weight: the weight of the node to create
      *    @nType: the type of the node to create
      * return the added (or existing) node with @id
@@ -104,17 +104,19 @@
     Graph.prototype.addNode = function (id, props) {
         _assert(!!id, 'Cannot create a node without an id');
 
-        // only add node if it does not already exist (TODO: might change)
+        // only add node if it does not already exist
+        // do not overwrite existing properties (TODO: might change)
         if (!this.exists(id)) {
             // create & add new node
             var node = new Node(id, props);
-            // // add this node as a neighbor of all of its neighbors
-            // for (var i = 0; i < node.neighbors.length; i++) {
-            //     var n = this.nodes[node.neighbors[i]]; // get node
-            //     if (!!n && !n.neighbors[id]) {
-            //         n.neighbors.push(id);
-            //     }
-            // }
+            // ensure consistency of graph by adding necessary edges to specifeid neighbors
+            for (var i = 0; i < node.neighbors.length; i++) {
+                var neigh = this.addNode(node.neighbors[i]); // create/find neighbor
+                neigh.neighbors.push(id); // add id to neighbor's neighbors
+                ++this.edgeCount; // one more edge!
+
+                // this.addEdge(id, node.neighbors[i]); // create edge between new node and the neighbor
+            }
 
             this.nodes[id] = node;
             ++this.nodeCount;
@@ -155,40 +157,41 @@
     };
 
     /**
-     * Graph.addEdge: connect two nodes (undirected edges)
+     * Graph.addEdge: connect two nodes (undirected edges) that exist
      * @source: ID of one end of the edge
      * @target: ID of the other end of the edge
      * return true if able to add edge, false otherwise
      */
     Graph.prototype.addEdge = function (source, target) {
-        // create (or find) the source & target nodes
-        var s = this.addNode(source);
-        var t = this.addNode(target);
+        // find the source & target nodes
+        var s = this.find(source);
+        var t = this.find(target);
 
         // continue if invalid edge (i.e., either source or target does not exist)
         if (!s || !t) {
-            console.log('Unable to add edge (' + source + ',' + target + '): node does not exist');
+            // console.log('Unable to add edge (' + source + ',' + target + '): node does not exist');
             return false;
         }
 
         // do not add redundant edges (but fix edge if inconsistent)
-        if (!s.neighbors[t.id] && !t.neighbors[s.id]) {
+        if (s.neighbors.indexOf(t.id) < 0 && t.neighbors.indexOf(s.id) < 0) {
             // add each node to the other's edge list
             s.neighbors.push(t.id);
             t.neighbors.push(s.id);
             ++this.edgeCount;
-        } else if (!s.neighbors[t.id]) {
+        } else if (s.neighbors.indexOf(t.id) < 0) {
             s.neighbors.push(t.id); // fix consistency in source
-        } else if (!t.neighbors[s.id]) {
+        } else if (t.neighbors.indexOf(s.id) < 0) {
             t.neighbors.push(s.id); // fix consistency in target
         }
         return true; // return true even if it is redundant
     };
 
     /**
-     * Graph.deleteEdge: delete an edge from the graph. true if successful, false otherwise
+     * Graph.deleteEdge: delete an edge from the graph
      * @source: ID of one end of the edge to delete
      * @target: ID of the other end of the edge to delete
+     * return true if successful, false otherwise
      */
     Graph.prototype.deleteEdge = function (source, target) {
         var s = this.nodes[source]; // the node corresponding to source ID
@@ -205,6 +208,15 @@
         --this.edgeCount;
 
         return true;
+    };
+
+    /**
+     * Graph.connected: return whether there is a consistent edge connecting
+     * the @source and @target (note only returns true if it is consistent)
+     * return true is yes, false if no
+     */
+    Graph.prototype.connected = function (source, target) {
+        return this.find(source).neighbors.indexOf(target) >= 0 && this.find(target).neighbors.indexOf(source) >= 0;
     };
 
     // /**
