@@ -4,7 +4,7 @@
 /* jshint expr: true */
 
 import {expect} from 'chai';
-import Graph from './graph.js';
+import Graph from './src/graph.js';
 
 // initialize empty graph tests
 describe('empty graph tests', () => {
@@ -205,19 +205,11 @@ describe('empty graph tests', () => {
 
         var node = graph.deleteNode(1);
         expect(graph.nodeCount).to.equal(1);
-
-        expect(node.id).to.equal(1);
-        expect(node.neighbors).to.eql(props.neighbors);
-        expect(node.weight).to.equal(props.weight);
-        expect(node.nType).to.equal(props.nType);
+        _nodeHelper(node.id, props, node);
 
         node = graph.deleteNode(2);
         expect(graph.nodeCount).to.equal(0);
-
-        expect(node.id).to.equal(2);
-        expect(node.neighbors).to.eql(props2.neighbors);
-        expect(node.weight).to.equal(props2.weight);
-        expect(node.nType).to.equal(props2.nType);
+        _nodeHelper(node.id, props2, node);
     });
 
     it('it should handle deletion if node does not exist', () => {
@@ -235,29 +227,23 @@ describe('empty graph tests', () => {
 
     //------------------------------------------
 
-    /** ensure all tests start with an empty graph */
-    // function _testEmptyGraph(graph) {
-    //     expect(graph.nodes).to.empty;
-    //     expect(graph.nodeCount).to.equal(0);
-    //     expect(graph.edgeCount).to.equal(0);
-    // }
-
     function _testNode(id, props, node) {
-        var found = graph.find(id);
-
         expect(graph.exists(id)).to.be.true;
 
+        var found = graph.find(id);
         expect(found).to.eql(node);
-        expect(found).to.eql({
+
+        _nodeHelper(id, props, node);
+        _nodeHelper(id, props, found);
+    }
+
+    function _nodeHelper(id, props, node) {
+        expect(node).to.eql({
             _id: id,
             _neighbors: props.neighbors,
             _weight: props.weight,
             _nType: props.nType
         });
-        expect(found.id).to.equal(id);
-        expect(found.neighbors).to.eql(props.neighbors);
-        expect(found.weight).to.equal(props.weight);
-        expect(found.nType).to.equal(props.nType);
 
         expect(node.id).to.equal(id);
         expect(node.neighbors).to.eql(props.neighbors);

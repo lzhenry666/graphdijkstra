@@ -5,7 +5,7 @@
 
 var _chai = require('chai');
 
-var _graph = require('./graph.js');
+var _graph = require('./src/graph.js');
 
 var _graph2 = _interopRequireDefault(_graph);
 
@@ -212,19 +212,11 @@ describe('empty graph tests', function () {
 
         var node = graph.deleteNode(1);
         (0, _chai.expect)(graph.nodeCount).to.equal(1);
-
-        (0, _chai.expect)(node.id).to.equal(1);
-        (0, _chai.expect)(node.neighbors).to.eql(props.neighbors);
-        (0, _chai.expect)(node.weight).to.equal(props.weight);
-        (0, _chai.expect)(node.nType).to.equal(props.nType);
+        _nodeHelper(node.id, props, node);
 
         node = graph.deleteNode(2);
         (0, _chai.expect)(graph.nodeCount).to.equal(0);
-
-        (0, _chai.expect)(node.id).to.equal(2);
-        (0, _chai.expect)(node.neighbors).to.eql(props2.neighbors);
-        (0, _chai.expect)(node.weight).to.equal(props2.weight);
-        (0, _chai.expect)(node.nType).to.equal(props2.nType);
+        _nodeHelper(node.id, props2, node);
     });
 
     it('it should handle deletion if node does not exist', function () {
@@ -242,29 +234,23 @@ describe('empty graph tests', function () {
 
     //------------------------------------------
 
-    /** ensure all tests start with an empty graph */
-    // function _testEmptyGraph(graph) {
-    //     expect(graph.nodes).to.empty;
-    //     expect(graph.nodeCount).to.equal(0);
-    //     expect(graph.edgeCount).to.equal(0);
-    // }
-
     function _testNode(id, props, node) {
-        var found = graph.find(id);
-
         (0, _chai.expect)(graph.exists(id)).to.be.true;
 
+        var found = graph.find(id);
         (0, _chai.expect)(found).to.eql(node);
-        (0, _chai.expect)(found).to.eql({
+
+        _nodeHelper(id, props, node);
+        _nodeHelper(id, props, found);
+    }
+
+    function _nodeHelper(id, props, node) {
+        (0, _chai.expect)(node).to.eql({
             _id: id,
             _neighbors: props.neighbors,
             _weight: props.weight,
             _nType: props.nType
         });
-        (0, _chai.expect)(found.id).to.equal(id);
-        (0, _chai.expect)(found.neighbors).to.eql(props.neighbors);
-        (0, _chai.expect)(found.weight).to.equal(props.weight);
-        (0, _chai.expect)(found.nType).to.equal(props.nType);
 
         (0, _chai.expect)(node.id).to.equal(id);
         (0, _chai.expect)(node.neighbors).to.eql(props.neighbors);
