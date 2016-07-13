@@ -49,7 +49,7 @@
                     return e.distance;
                 },
                 function(e) {
-                    return e._id;
+                    return e.id;
                 },
                 'distance'
             );
@@ -63,20 +63,21 @@
 
             // Initialization
             dist[source] = 0; // source is distance 0 from source
-            var keys = Object.keys(graph.nodes);
-            // for (var i in keys) {
-            for (var i = 0; i < keys.length; i++) {
-                // for each node in the graph...
-                var node = graph.nodes[keys[i]];
+            // for each node in the graph...
+            for (var id in graph.nodes) {
+                if (!graph.nodes.hasOwnProperty(id)) {
+                    continue; // ensure we are getting the right property
+                }
+                var node = graph.nodes[id];
 
-                if (node._id !== parseInt(source, 10)) {
-                    prev[node._id] = null; // set previous to undefined
-                    dist[node._id] = Infinity; // set distance to Infinity
+                if (node.id !== parseInt(source, 10)) {
+                    prev[node.id] = null; // set previous to undefined
+                    dist[node.id] = Infinity; // set distance to Infinity
                 }
                 // push node to unvisited with distance Infinity
                 unvisited.push({
-                    _id: node._id,
-                    distance: dist[node._id]
+                    id: node.id,
+                    distance: dist[node.id]
                 });
             }
 
@@ -96,26 +97,26 @@
             function runAlgorithm() {
                 // while there are still unvisited nodes
                 while (unvisited.size() > 0) {
-                    var minNode = unvisited.pop(); // get minimum node dist and ID
+                    var min = unvisited.pop(); // get minimum node dist and ID
+                    var minNode = graph.nodes[min.id]; // get the minimum node
 
                     // for each neighbor of minNode that is in the unvisited queue
-                    for (i = 0; i < graph.nodes[minNode._id]._neighbors.length; i++) {
-                        var n = graph.nodes[graph.nodes[minNode._id]._neighbors[i]];
+                    for (var i = 0; i < minNode.neighbors.length; i++) {
+                        var n = graph.nodes[minNode.neighbors[i]]; // node for the neighbor
 
                         // ensure node is in unvisited and it is a PATH
-                        if (!unvisited.exists(n) || (n._nType !== pathType &&
-                                n._id !== parseInt(target, 10))) {
+                        if (!unvisited.exists(n) || (n.nType !== pathType && n.id !== parseInt(target, 10))) {
                             continue;
                         }
 
                         // calculate alternative distance
-                        var alt = minNode.distance + minNode.weight;
+                        var alt = min.distance + minNode.weight;
 
                         // use this path instead, if alternative distance is shorter
-                        if (alt < dist[n._id]) {
-                            dist[n._id] = alt;
-                            prev[n._id] = minNode._id;
-                            unvisited.decreaseKey(n._id, alt); // update key
+                        if (alt < dist[n.id]) {
+                            dist[n.id] = alt;
+                            prev[n.id] = min.id;
+                            unvisited.decreaseKey(n.id, alt); // update key
                         }
                     }
                 }
@@ -167,6 +168,7 @@
         }
     }
 })();
+
 },{"./min_heap.js":6}],2:[function(require,module,exports){
 // graph-dijkstra.js
 (function() {
@@ -474,7 +476,7 @@
         // for (var i = 0; i < keys.length; i++) {
         for (var id in graph.nodes) {
             if (!graph.nodes.hasOwnProperty(id)) {
-                continue;
+                continue; // ensure we are getting the right property
             }
             var n = graph.nodes[id];
             // should have non-negative weight and type between 1 and 6

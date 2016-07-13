@@ -96,25 +96,25 @@
             function runAlgorithm() {
                 // while there are still unvisited nodes
                 while (unvisited.size() > 0) {
-                    var minNode = unvisited.pop(); // get minimum node dist and ID
+                    var min = unvisited.pop(); // get minimum node dist and ID
+                    var minNode = graph.nodes[min.id]; // get the minimum node
 
                     // for each neighbor of minNode that is in the unvisited queue
-                    for (i = 0; i < graph.nodes[minNode.id].neighbors.length; i++) {
-                        var n = graph.nodes[graph.nodes[minNode.id].neighbors[i]];
+                    for (var i = 0; i < minNode.neighbors.length; i++) {
+                        var n = graph.nodes[minNode.neighbors[i]]; // node for the neighbor
 
                         // ensure node is in unvisited and it is a PATH
-                        if (!unvisited.exists(n) || (n.nType !== pathType &&
-                                n.id !== parseInt(target, 10))) {
+                        if (!unvisited.exists(n) || (n.nType !== pathType && n.id !== parseInt(target, 10))) {
                             continue;
                         }
 
                         // calculate alternative distance
-                        var alt = minNode.distance + minNode.weight;
+                        var alt = min.distance + minNode.weight;
 
                         // use this path instead, if alternative distance is shorter
                         if (alt < dist[n.id]) {
                             dist[n.id] = alt;
-                            prev[n.id] = minNode.id;
+                            prev[n.id] = min.id;
                             unvisited.decreaseKey(n.id, alt); // update key
                         }
                     }
