@@ -178,22 +178,27 @@ describe('empty graph tests', function () {
         (0, _chai.expect)(graph.edgeCount).to.equal(2);
     });
 
-    it.only('it should fix inconsistencies when adding the edge', function () {
-        // graph.addNode(1, props);
-        // graph.addNode(2, props);
+    it('it should fix inconsistencies when adding an edge', function () {
         props.neighbors = [1, 2];
         graph.addNode(3, props);
 
-        console.log(graph.find(1).neighbors);
-
-        (0, _chai.expect)(graph.addEdge(1, 2)).to.be.true;
-        _testEdge(1, 2);
+        graph.find(1).neighbors = []; // create inconsistency (1,3)
+        graph.find(2).neighbors = []; // create inconsistency (2,3)
 
         (0, _chai.expect)(graph.addEdge(2, 3)).to.be.true;
         _testEdge(2, 3);
 
         (0, _chai.expect)(graph.addEdge(3, 1)).to.be.true;
         _testEdge(3, 1);
+
+        (0, _chai.expect)(graph.edgeCount).to.equal(2);
+    });
+
+    it('it should not allow self edges', function () {
+        graph.addNode(1, props);
+
+        (0, _chai.expect)(graph.addEdge(1, 1)).to.be.false;
+        (0, _chai.expect)(graph.edgeCount).to.equal(0);
     });
 
     it('it should delete nodes (without edges)', function () {

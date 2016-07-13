@@ -102,22 +102,24 @@
      */
     Graph.prototype.addNode = function(id, props) {
         _assert(!!id, 'Cannot create a node without an id');
+        props = props || {};
 
         // only add node if it does not already exist
         // do not overwrite existing properties (TODO: might change)
         if (!this.exists(id)) {
             // create & add new node
             var node = new Node(id, props);
+            this.nodes[id] = node;
+
             // ensure consistency of graph by adding necessary edges to specifeid neighbors
             for (var i = 0; i < node.neighbors.length; i++) {
-                var neigh = this.addNode(node.neighbors[i]); // create/find neighbor
-                neigh.neighbors.push(id); // add id to neighbor's neighbors
-                ++this.edgeCount; // one more edge!
+                var neigh = this.addNode(node.neighbors[i]); // create neighbor (if necessary)
 
-                // this.addEdge(id, node.neighbors[i]); // create edge between new node and the neighbor
+                // fix inconsistent edge between new node and its neighbor
+                this.addEdge(id, neigh.id);
+                ++this.edgeCount; // one more edge! (add edge will not account for it)
+                // neigh.neighbors.push(id); // add id to neighbor's neighbors
             }
-
-            this.nodes[id] = node;
             ++this.nodeCount;
         }
         return this.nodes[id];
@@ -156,12 +158,19 @@
     };
 
     /**
-     * Graph.addEdge: connect two nodes (undirected edges) that exist
+     * Graph.addEdge: connect two nodes (undirected edge) that both exist
+     * do not allow self edges (by nature of being a simple graph)
      * @source: ID of one end of the edge
      * @target: ID of the other end of the edge
-     * return true if able to add edge, false otherwise
+     * return true if able to add edge, false otherwise (i.e., self edge or invalid)
      */
     Graph.prototype.addEdge = function(source, target) {
+        // is this a self edge?
+        if (source === target) {
+            // console.log('Cannot add self edge in simple graph');
+            return false;
+        }
+
         // find the source & target nodes
         var s = this.find(source);
         var t = this.find(target);
@@ -179,9 +188,9 @@
             t.neighbors.push(s.id);
             ++this.edgeCount;
         } else if (s.neighbors.indexOf(t.id) < 0) {
-            s.neighbors.push(t.id); // fix consistency in source
+            s.neighbors.push(t.id); // fix inconsistency in source
         } else if (t.neighbors.indexOf(s.id) < 0) {
-            t.neighbors.push(s.id); // fix consistency in target
+            t.neighbors.push(s.id); // fix inconsistency in target
         }
         return true; // return true even if it is redundant
     };

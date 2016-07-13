@@ -171,26 +171,27 @@ describe('empty graph tests', () => {
         expect(graph.edgeCount).to.equal(2);
     });
 
-    it.only('it should fix inconsistencies when adding the edge', () => {
-        // graph.addNode(1, props);
-        // graph.addNode(2, props);
+    it('it should fix inconsistencies when adding an edge', () => {
         props.neighbors = [1, 2];
         graph.addNode(3, props);
 
-        // console.log(graph.find(1).neighbors);
-        _testEdge(1,2);
         graph.find(1).neighbors = []; // create inconsistency (1,3)
         graph.find(2).neighbors = []; // create inconsistency (2,3)
-        _testEdge(1,2);
-
-        expect(graph.addEdge(1, 2)).to.be.true;
-        _testEdge(1, 2);
 
         expect(graph.addEdge(2, 3)).to.be.true;
         _testEdge(2, 3);
 
         expect(graph.addEdge(3, 1)).to.be.true;
         _testEdge(3,1);
+
+        expect(graph.edgeCount).to.equal(2);
+    });
+
+    it('it should not allow self edges', () => {
+        graph.addNode(1, props);
+
+        expect(graph.addEdge(1, 1)).to.be.false;
+        expect(graph.edgeCount).to.equal(0);
     });
 
     it('it should delete nodes (without edges)', () => {
