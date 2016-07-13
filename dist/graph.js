@@ -1,10 +1,12 @@
+'use strict';
+
 /**
  * graph.js
  * 05/31/16
  *
  * a simple undirected graph to represent the office
  /*---------------------------------------------------------------------------*/
-(function() {
+(function () {
     'use strict';
 
     var Node = require('./graph-node.js');
@@ -15,14 +17,13 @@
      *    @debug: only verify if debug is set to true (defaults to false)
      *    @graph: a JSON representation of the graph to initialize
      */
-    var Graph = function(params) {
+    var Graph = function Graph(params) {
         params = params || {};
         var debug = params.debug || false;
         this._nodes = {}; // initialize nodes to empty
         // this._nodeCount = !!params.graph ? params.graph.nodeCount : 0; // number of nodes
         this._nodeCount = 0; // initialize node count to 0
         this._edgeCount = !!params.graph ? params.graph.edgeCount : 0; // number of edges
-
 
         if (!!params.graph) {
             // add each of the nodes in the supplied graph (if there is one)
@@ -46,31 +47,31 @@
     Object.defineProperties(Graph.prototype, {
         // nodeCount
         nodeCount: {
-            get: function() {
+            get: function get() {
                 return this._nodeCount;
             },
-            set: function(value) {
+            set: function set(value) {
                 this._nodeCount = value;
             }
         },
         // edgeCount
         edgeCount: {
-            get: function() {
+            get: function get() {
                 return this._edgeCount;
             },
-            set: function(value) {
+            set: function set(value) {
                 this._edgeCount = value;
             }
         },
         // nodes
         nodes: {
-            get: function() {
+            get: function get() {
                 return this._nodes;
             },
-            set: function(value) {
+            set: function set(value) {
                 this._nodes = value;
             }
-        },
+        }
     });
 
     /**
@@ -78,7 +79,7 @@
      * @id: the ID of the node to find
      * returns the node if found, null otherwise
      */
-    Graph.prototype.find = function(id) {
+    Graph.prototype.find = function (id) {
         return this.nodes[id] || null;
     };
 
@@ -87,7 +88,7 @@
      * @id: the ID of the node to check
      * returns true if it is a node, false otherwise
      */
-    Graph.prototype.exists = function(id) {
+    Graph.prototype.exists = function (id) {
         return this.nodes[id] !== undefined;
     };
 
@@ -100,7 +101,7 @@
      *    @nType: the type of the node to create
      * return the added (or existing) node with @id
      */
-    Graph.prototype.addNode = function(id, props) {
+    Graph.prototype.addNode = function (id, props) {
         _assert(!!id, 'Cannot create a node without an id');
 
         // only add node if it does not already exist (TODO: might change)
@@ -126,8 +127,8 @@
      * @id: the ID of the node to delete (required)
      * return the node that was deleted or null if it does not exist
      */
-    Graph.prototype.deleteNode = function(id) {
-         _assert(!!id, 'Cannot delete a node without an id');
+    Graph.prototype.deleteNode = function (id) {
+        _assert(!!id, 'Cannot delete a node without an id');
 
         // only remove if it exists
         if (this.exists(id)) {
@@ -159,7 +160,7 @@
      * @target: ID of the other end of the edge
      * return true if able to add edge, false otherwise
      */
-    Graph.prototype.addEdge = function(source, target) {
+    Graph.prototype.addEdge = function (source, target) {
         // create (or find) the source & target nodes
         var s = this.addNode(source);
         var t = this.addNode(target);
@@ -189,7 +190,7 @@
      * @source: ID of one end of the edge to delete
      * @target: ID of the other end of the edge to delete
      */
-    Graph.prototype.deleteEdge = function(source, target) {
+    Graph.prototype.deleteEdge = function (source, target) {
         var s = this.nodes[source]; // the node corresponding to source ID
         var t = this.nodes[target]; // the node corresponding to target ID
 
@@ -225,8 +226,7 @@
         console.info('Verifying Graph');
         // the number of nodes should be the same as the nodeCount
         var numNodes = Object.keys(graph.nodes).length;
-        _assert(numNodes === graph.nodeCount, 'Inconsistent nodeCount (' +
-            numNodes + ' != ' + graph.nodeCount + ')');
+        _assert(numNodes === graph.nodeCount, 'Inconsistent nodeCount (' + numNodes + ' != ' + graph.nodeCount + ')');
 
         // verify each node
         var numEdges = 0;
@@ -239,24 +239,20 @@
             var n = graph.nodes[id];
             // should have non-negative weight and type between 1 and 6
             _assert(n.weight >= 0, 'Negative Weight (' + n.weight + ')');
-            _assert(n.nType > 0 && n.nType <= 9, 'Irregular Type (' +
-                n.nType + ')');
+            _assert(n.nType > 0 && n.nType <= 9, 'Irregular Type (' + n.nType + ')');
 
             // should have consistent edges and no self edges
             for (var j = 0; j < n.neighbors.length; j++) {
                 numEdges++; // count number of edges (should be double)
                 var k = graph.nodes[n.neighbors[j]];
 
-                _assert(k.id !== n.id, 'Cannot have self edge (' +
-                    n.id + ')');
+                _assert(k.id !== n.id, 'Cannot have self edge (' + n.id + ')');
 
-                _assert(k._neighbors.includes(n.id), 'Inconsisent Edge (' +
-                    n.id + ',' + k.id + ')');
+                _assert(k._neighbors.includes(n.id), 'Inconsisent Edge (' + n.id + ',' + k.id + ')');
             }
         }
         // number of edges should be same as the edgeCount
-        _assert(numEdges / 2 === graph.edgeCount, 'Inconsistent edgeCount (' +
-            numEdges / 2 + ' != ' + graph.edgeCount + ')');
+        _assert(numEdges / 2 === graph.edgeCount, 'Inconsistent edgeCount (' + numEdges / 2 + ' != ' + graph.edgeCount + ')');
 
         return true;
     }

@@ -1,5 +1,7 @@
+'use strict';
+
 // graph-node.js
-(function() {
+(function () {
     'use strict';
 
     /**
@@ -10,7 +12,8 @@
      *    @neighbors: list of node ids that are the neighbors
      *    @nType:  an integer that represents the type of nodes (e.g., an enumeration)
      */
-    var Node = function(id, props) {
+
+    var Node = function Node(id, props) {
         props = props || {};
         this._id = id;
         this._weight = props.weight || 0;
@@ -24,34 +27,34 @@
     Object.defineProperties(Node.prototype, {
         // id
         id: {
-            get: function() {
+            get: function get() {
                 return this._id;
-            },
+            }
         },
         // neighbors
         neighbors: {
-            get: function() {
+            get: function get() {
                 return this._neighbors;
             },
-            set: function(value) {
+            set: function set(value) {
                 this._neighbors = value.slice();
             }
         },
         // weight
         weight: {
-            get: function() {
+            get: function get() {
                 return this._weight;
             },
-            set: function(value) {
+            set: function set(value) {
                 this._weight = value;
             }
         },
         // nType
         nType: {
-            get: function() {
+            get: function get() {
                 return this._nType;
             },
-            set: function(value) {
+            set: function set(value) {
                 this._nType = value;
             }
         }

@@ -31,7 +31,7 @@ gulp.task('clean', () =>
 
 gulp.task('browserify', ['lint-src'], function() {
   return browserify({
-      entries: './src/stand-alone.js'
+      entries: './src/browserify.js'
     })
     .bundle()
     .on('error', function(err) {
