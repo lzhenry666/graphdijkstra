@@ -9,8 +9,6 @@ import Graph from './src/graph.js';
 // initialize empty graph tests
 describe('graph tests (initialized)', () => {
 
-    let graph;
-    let props;
     const GRAPH = {
         nodes: [
             {id:  1, props: {weight: 1, nType: 4} },
@@ -53,6 +51,11 @@ describe('graph tests (initialized)', () => {
             [9,  10]
         ]
     };
+    const INIT_NODES = 20;
+    const INIT_EDGES = 16;
+
+    let graph;
+    let props;
 
     beforeEach(() => {
         graph = new Graph({graph: GRAPH}); // initialize graph
@@ -66,19 +69,19 @@ describe('graph tests (initialized)', () => {
 
         // initialize empty graph
         expect(graph.nodes).to.not.be.empty;
-        expect(graph.nodeCount).to.equal(20);
-        expect(graph.edgeCount).to.equal(16);
+        expect(graph.nodeCount).to.equal(INIT_NODES);
+        expect(graph.edgeCount).to.equal(INIT_EDGES);
     });
 
     after(() => graph = undefined);
 
-    it('it should initialize with 10 nodes', () => {
+    it('it should initialize with 20 nodes', () => {
         expect(graph.nodes).to.not.be.empty;
-        expect(graph.nodeCount).to.equal(20);
+        expect(graph.nodeCount).to.equal(INIT_NODES);
     });
 
     it('it should initialize with 16 edges', () => {
-        expect(graph.edgeCount).to.equal(16);
+        expect(graph.edgeCount).to.equal(INIT_EDGES);
     });
 
     it('it should initialize with the correct nodes', () => {
@@ -95,60 +98,61 @@ describe('graph tests (initialized)', () => {
         }
     });
 
-    // it('it should add a node (without neighbors)', () => {
-    //     var node = graph.addNode(1, props);
+    it('it should add a node (without neighbors)', () => {
+        var node = graph.addNode(INIT_NODES+1, props);
 
-    //     expect(graph.nodeCount).to.equal(1);
-    //     expect(graph.edgeCount).to.equal(0);
+        expect(graph.nodeCount).to.equal(INIT_NODES+1);
+        expect(graph.edgeCount).to.equal(INIT_EDGES);
 
-    //     _testNode(1, props, node);
-    // });
+        _testNode(INIT_NODES+1, props, node);
+    });
 
-    // it('it should add many nodes', () => {
-    //     for (var i = 1; i <= 10; i++) {
-    //         var node = graph.addNode(i, props);
+    it('it should add many nodes', () => {
+        for (var i = INIT_NODES+1; i <= INIT_NODES+10; i++) {
+            var node = graph.addNode(i, props);
 
-    //         expect(graph.nodeCount).to.equal(i);
-    //         expect(graph.edgeCount).to.equal(0);
+            expect(graph.nodeCount).to.equal(i);
+            expect(graph.edgeCount).to.equal(INIT_EDGES);
 
-    //         _testNode(i, props, node);
-    //     }
+            _testNode(i, props, node);
+        }
 
-    //     expect(graph.nodeCount).to.equal(10);
-    //     expect(graph.edgeCount).to.equal(0);
-    // });
+        expect(graph.nodeCount).to.equal(INIT_NODES+10);
+        expect(graph.edgeCount).to.equal(INIT_EDGES);
+    });
 
-    // it('it should add a node (with neighbors)', () => {
-    //     props.neighbors = [2, 3, 4];
-    //     var propsNeighbor = {
-    //         weight: 0,
-    //         nType: 0,
-    //         neighbors: [1]
-    //     };
-    //     var node = graph.addNode(1, props);
+    it('it should add a node (with neighbors)', () => {
+        props.neighbors = [INIT_NODES+2, INIT_NODES+3, INIT_NODES+4];
+        var propsNeighbor = {
+            weight: 0,
+            nType: 0,
+            neighbors: [INIT_NODES+1]
+        };
+        var node = graph.addNode(INIT_NODES+1, props);
 
-    //     expect(graph.nodeCount).to.equal(4);
-    //     expect(graph.edgeCount).to.equal(3);
+        expect(graph.nodeCount).to.equal(INIT_NODES+4);
+        expect(graph.edgeCount).to.equal(INIT_EDGES+3);
 
-    //     _testNode(1, props, node);
-    //     _testNode(2, propsNeighbor, graph.find(2));
-    //     _testNode(3, propsNeighbor, graph.find(3));
-    //     _testNode(4, propsNeighbor, graph.find(4));
-    // });
+        _testNode(INIT_NODES+1, props, node);
+        _testNode(INIT_NODES+2, propsNeighbor, graph.find(INIT_NODES+2));
+        _testNode(INIT_NODES+3, propsNeighbor, graph.find(INIT_NODES+3));
+        _testNode(INIT_NODES+4, propsNeighbor, graph.find(INIT_NODES+4));
+    });
 
-    // it('it should not duplicate or overwrite nodes', () => {
-    //     var node = graph.addNode(1, props);
-    //     expect(graph.nodeCount).to.equal(1);
-    //     graph.addNode(1, props);
-    //     expect(graph.nodeCount).to.equal(1);
+    it('it should not duplicate or overwrite nodes', () => {
+        var node = graph.addNode(1, props);
+        expect(graph.nodeCount).to.equal(INIT_NODES);
+        graph.addNode(1, props);
+        expect(graph.nodeCount).to.equal(INIT_NODES);
 
-    //     props.weight = 10;
-    //     graph.addNode(1, props);
-    //     expect(graph.nodeCount).to.equal(1);
-
-    //     props.weight = 0;
-    //     _testNode(1, props, node);
-    // });
+        var propsNode = {
+            weight: 1,
+            nType: 4,
+            neighbors: [2, 3, 4]
+        };
+        expect(node).to.eql(graph.find(1));
+        _nodeHelper(1, propsNode, node);
+    });
 
     // it('it should add edges', () => {
     //     for (var i = 1; i <= 10; i++) {
