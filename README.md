@@ -31,30 +31,30 @@ See [wiki pages](#) for more detail
 #### Graphing
 ###### (angular factory)
 * **graph** (*variable*)
-* **createGraph(url, debug)** (*method*):       returns **Graph**
+* **createGraph(url, debug)** - returns **Graph**
 
 ---
 
 #### Dijkstra
 ###### (angular factory)
-* **RUN(graph)** (*method*):                    returns **{ dist, prev }**
+* **RUN(graph)** - returns **{dist, prev}**
 
 ---
 
 #### Graph
 ###### (object)
-* **nodes** (*variable*)
-* **nodeCount** (*variable*)
-* **edgeCount** (*variable*)
 * **Graph(params)** (*constructor*)
-* **find(id)** (*method*):                      returns **Node**
-* **exists(id)** (*method*):                    returns **boolean**
-* **addNode(id, props)** (*method*):            returns **Node**
-* **deleteNode(id)** (*method*):                returns **Node**
-* **addEdge(source, target)** (*method*):       returns **boolean**
-* **deleteEdge(source, target)** (*method*):    returns **boolean**
-* **connected(source, target)** (*method*):     returns **boolean**
-* **update(id, props)** (*method*):             returns **Node**
+* **nodes**
+* **nodeCount**
+* **edgeCount**
+* **find(id)**  -  returns **Node**
+* **exists(id)**  -  returns **boolean**
+* **addNode(id, props)**  -  returns **Node**
+* **deleteNode(id)**  -  returns **Node**
+* **addEdge(source, target)**  -  returns **boolean**
+* **deleteEdge(source, target)**  -  returns **boolean**
+* **connected(source, target)**  -  returns **boolean**
+* **update(id, props)** -             returns **Node**
 
 
 ## Dependencies
