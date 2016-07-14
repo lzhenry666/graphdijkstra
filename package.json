@@ -1,6 +1,6 @@
 {
   "name": "angular-graph-dijkstra",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "LITOSI",
   "main": "dist/graph-dijkstra.js",
   "description": "An angular wrapper for an undirected graph that allows for finding the shortest path via Dijkstra's algorithm",
