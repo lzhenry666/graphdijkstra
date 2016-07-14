@@ -1,32 +1,46 @@
-# babel-npm-module-example [![Build Status](https://travis-ci.org/anvk/babel-npm-module-example.svg?branch=master)](https://travis-ci.org/anvk/babel-npm-module-example)
+# angular-graph-dijkstra
 
-> A boilerplate to start writing your NPM modules in ES6 using Babel.
+An angular wrapper for an undirected graph that allows for finding the shortest
+path via Dijkstra's algorithm.
 
+**Version:** 0.1.0
 
-## Install
+## Installation & Usage
 
-```
-$ npm install babel-npm-module-example --save
-```
+1. Install via npm
+   * `$ npm install --save-dev https://github.com/LincolnTechOpenSource/angular-graph-dijkstra`
+2. Include the JavaScript file
+   * `<link rel="stylesheet" href="node_modules/angular-graph-dijkstra/dist/graph-dijkstra.js">`
+3. Add the dependency module
+   * `var myApp = angular.module('myApp', ['graphDijkstra']);`
 
-## How to use
+## Public API
 
-Open sourcecode, take a look and start coding...
-https://github.com/anvk/babel-npm-module-example
+TODO: Detail API
 
-## How to run locally installed gulp
-
-```
-$ node_modules/gulp/bin/gulp.js
-```
 
 ## Important!
 
-I commented out `dist/` folder in my ignore file on purpose just for this example project.
-For a real project you do not want to push `dist/` folder to your repo.
+This project is tailored for use in the [Lincoln Employee Locator ] and may not yet
+be optimally portable. We encourage and appreciate any contributions that aim to
+enhance the generality/portability of this module.
+
+[Lincoln Employee Locator]: https://github.com/LincolnTechOpenSource/lincoln-gps
+
+
+## How to Contribute
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md)
+
+
+## Credits
+
+**Authors:** Matthew Vasseur and David Tahvildaran
+
+**Adapted Resources:**
+   * [Min Heap with Decrease Key](https://github.com/rombdn/js-binaryheap-decreasekey)
+
 
 ## License
 
-MIT license; see [LICENSE](./LICENSE).
-
-(c) 2016 by Alexey Novak
+See the [LICENSE file](LICENSE) for license rights and limitations (MIT).
