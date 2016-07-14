@@ -7,7 +7,7 @@ import {expect} from 'chai';
 import Graph from './src/graph.js';
 
 // initialize empty graph tests
-describe('graph tests (initialized)', () => {
+describe('graph tests (initialized nodes & edges)', () => {
 
     const GRAPH = {
         nodes: [
@@ -108,13 +108,13 @@ describe('graph tests (initialized)', () => {
     });
 
     it('it should add many nodes', () => {
-        for (var i = INIT_NODES+1; i <= INIT_NODES+10; i++) {
-            var node = graph.addNode(i, props);
+        for (var i = 1; i <= 10; i++) {
+            var node = graph.addNode(INIT_NODES+i, props);
 
-            expect(graph.nodeCount).to.equal(i);
+            expect(graph.nodeCount).to.equal(INIT_NODES+i);
             expect(graph.edgeCount).to.equal(INIT_EDGES);
 
-            _testNode(i, props, node);
+            _testNode(INIT_NODES+i, props, node);
         }
 
         expect(graph.nodeCount).to.equal(INIT_NODES+10);
@@ -155,8 +155,8 @@ describe('graph tests (initialized)', () => {
     });
 
     it('it should add edges', () => {
-        for (var i = INIT_NODES+1; i <= INIT_NODES+10; i++) {
-            graph.addNode(i, props);
+        for (var i = 1; i <= 10; i++) {
+            graph.addNode(INIT_NODES+i, props);
         }
 
         expect(graph.nodeCount).to.equal(INIT_NODES+10);
@@ -202,135 +202,135 @@ describe('graph tests (initialized)', () => {
         _testEdge(INIT_NODES+1, INIT_NODES+6);
     });
 
-    // it('it should handle adding edges if node does not exist', () => {
-    //     for (var i = 1; i <= 10; i++) {
-    //         graph.addNode(i, props);
-    //     }
-    //     graph.addEdge(1, 2);
-    //     graph.addEdge(2, 3);
+    it('it should handle adding edges if node does not exist', () => {
+        for (var i = 1; i <= 10; i++) {
+            graph.addNode(INIT_NODES+i, props);
+        }
+        graph.addEdge(INIT_NODES+1, INIT_NODES+2);
+        graph.addEdge(INIT_NODES+2, INIT_NODES+3);
 
-    //     expect(graph.addEdge(3,11)).to.be.false;
-    //     expect(graph.find(3).neighbors).to.not.include.members([11]);
-    //     expect(graph.addEdge(14,7)).to.be.false;
-    //     expect(graph.find(7).neighbors).to.not.include.members([14]);
-    //     expect(graph.addEdge(14,17)).to.be.false;
+        expect(graph.addEdge(INIT_NODES+3,INIT_NODES+11)).to.be.false;
+        expect(graph.find(INIT_NODES+3).neighbors).to.not.include.members([INIT_NODES+11]);
+        expect(graph.addEdge(INIT_NODES+14,INIT_NODES+7)).to.be.false;
+        expect(graph.find(INIT_NODES+7).neighbors).to.not.include.members([INIT_NODES+14]);
+        expect(graph.addEdge(INIT_NODES+14,INIT_NODES+17)).to.be.false;
 
-    //     expect(graph.edgeCount).to.equal(2);
-    // });
+        expect(graph.edgeCount).to.equal(INIT_EDGES+2);
+    });
 
-    // it('it should not duplicate edges', () => {
-    //     for (var i = 1; i <= 10; i++) {
-    //         graph.addNode(i, props);
-    //     }
-    //     graph.addEdge(1, 2);
-    //     graph.addEdge(2, 3);
+    it('it should not duplicate edges', () => {
+        for (var i = 1; i <= 10; i++) {
+            graph.addNode(INIT_NODES+i, props);
+        }
+        graph.addEdge(INIT_NODES+1, INIT_NODES+2);
+        graph.addEdge(INIT_NODES+2, INIT_NODES+3);
 
-    //     expect(graph.addEdge(2,3)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(2);
+        expect(graph.addEdge(INIT_NODES+2,INIT_NODES+3)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+2);
 
-    //     expect(graph.addEdge(3,2)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(2);
-    // });
+        expect(graph.addEdge(INIT_NODES+3,INIT_NODES+2)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+2);
+    });
 
-    // it('it should fix inconsistencies when adding an edge', () => {
-    //     props.neighbors = [1, 2];
-    //     graph.addNode(3, props);
+    it('it should fix inconsistencies when adding an edge', () => {
+        props.neighbors = [INIT_NODES+1, INIT_NODES+2];
+        graph.addNode(INIT_NODES+3, props);
 
-    //     graph.find(1).neighbors = []; // create inconsistency (1,3)
-    //     graph.find(2).neighbors = []; // create inconsistency (2,3)
+        graph.find(INIT_NODES+1).neighbors = []; // create inconsistency
+        graph.find(INIT_NODES+2).neighbors = []; // create inconsistency
 
-    //     expect(graph.addEdge(2, 3)).to.be.true;
-    //     _testEdge(2, 3);
+        expect(graph.addEdge(INIT_NODES+2, INIT_NODES+3)).to.be.true;
+        _testEdge(INIT_NODES+2, INIT_NODES+3);
 
-    //     expect(graph.addEdge(3, 1)).to.be.true;
-    //     _testEdge(3,1);
+        expect(graph.addEdge(INIT_NODES+3, INIT_NODES+1)).to.be.true;
+        _testEdge(INIT_NODES+3,INIT_NODES+1);
 
-    //     expect(graph.edgeCount).to.equal(2);
-    // });
+        expect(graph.edgeCount).to.equal(INIT_EDGES+2);
+    });
 
-    // it('it should not allow self edges', () => {
-    //     graph.addNode(1, props);
+    it('it should not allow self edges', () => {
+        graph.addNode(INIT_NODES+1, props);
 
-    //     expect(graph.addEdge(1, 1)).to.be.false;
-    //     expect(graph.edgeCount).to.equal(0);
-    // });
+        expect(graph.addEdge(INIT_NODES+1, INIT_NODES+1)).to.be.false;
+        expect(graph.edgeCount).to.equal(INIT_EDGES);
+    });
 
-    // it('it should delete nodes (without edges)', () => {
-    //     graph.addNode(1, props);
-    //     var props2 = {
-    //         weight: 10,
-    //         nType: 7,
-    //         neighbors: []
-    //     };
-    //     graph.addNode(2, props2);
+    it('it should delete nodes (without edges)', () => {
+        graph.addNode(INIT_NODES+1, props);
+        var props2 = {
+            weight: 10,
+            nType: 7,
+            neighbors: []
+        };
+        graph.addNode(INIT_NODES+2, props2);
 
-    //     var node = graph.deleteNode(1);
-    //     expect(node).to.not.be.null;
-    //     expect(graph.nodeCount).to.equal(1);
-    //     _nodeHelper(node.id, props, node);
+        var node = graph.deleteNode(INIT_NODES+1);
+        expect(node).to.not.be.null;
+        expect(graph.nodeCount).to.equal(INIT_NODES+1);
+        _nodeHelper(node.id, props, node);
 
-    //     node = graph.deleteNode(2);
-    //     expect(node).to.not.be.null;
-    //     expect(graph.nodeCount).to.equal(0);
-    //     _nodeHelper(node.id, props2, node);
-    // });
+        node = graph.deleteNode(INIT_NODES+2);
+        expect(node).to.not.be.null;
+        expect(graph.nodeCount).to.equal(INIT_NODES);
+        _nodeHelper(node.id, props2, node);
+    });
 
-    // it('it should handle deletion if node does not exist', () => {
-    //     var node = graph.deleteNode(2);
+    it('it should handle deletion if node does not exist', () => {
+        var node = graph.deleteNode(INIT_NODES+2);
 
-    //     expect(graph.nodeCount).to.equal(0);
-    //     expect(node).to.be.null;
+        expect(graph.nodeCount).to.equal(INIT_NODES);
+        expect(node).to.be.null;
 
-    //     graph.addNode(2, props);
+        graph.addNode(INIT_NODES+2, props);
 
-    //     node = graph.deleteNode(1);
-    //     expect(node).to.be.null;
+        node = graph.deleteNode(INIT_NODES+1);
+        expect(node).to.be.null;
 
-    //     expect(graph.nodeCount).to.equal(1);
-    // });
+        expect(graph.nodeCount).to.equal(INIT_NODES+1);
+    });
 
-    // it('it should delete nodes with edges, maintaining consistency', () => {
-    //     props.neighbors = [2, 3, 4];
-    //     graph.addNode(1, props);
-    //     graph.addEdge(2, 3);
+    it('it should delete nodes with edges, maintaining consistency', () => {
+        props.neighbors = [INIT_NODES+2, INIT_NODES+3, INIT_NODES+4];
+        graph.addNode(INIT_NODES+1, props);
+        graph.addEdge(INIT_NODES+2, INIT_NODES+3);
 
-    //     expect(graph.nodeCount).to.equal(4);
-    //     expect(graph.edgeCount).to.equal(4);
-    //     _testEdge(1, 2);
-    //     _testEdge(1, 3);
-    //     _testEdge(1, 4);
-    //     _testEdge(2, 3);
+        expect(graph.nodeCount).to.equal(INIT_NODES+4);
+        expect(graph.edgeCount).to.equal(INIT_EDGES+4);
+        _testEdge(INIT_NODES+1, INIT_NODES+2);
+        _testEdge(INIT_NODES+1, INIT_NODES+3);
+        _testEdge(INIT_NODES+1, INIT_NODES+4);
+        _testEdge(INIT_NODES+2, INIT_NODES+3);
 
-    //     expect(graph.deleteNode(1)).to.not.be.null;
-    //     expect(graph.nodeCount).to.equal(3);
-    //     expect(graph.edgeCount).to.equal(1);
+        expect(graph.deleteNode(INIT_NODES+1)).to.not.be.null;
+        expect(graph.nodeCount).to.equal(INIT_NODES+3);
+        expect(graph.edgeCount).to.equal(INIT_EDGES+1);
 
-    //     expect(graph.connected(1, 2)).to.be.false;
-    //     expect(graph.connected(1, 3)).to.be.false;
-    //     expect(graph.connected(1, 4)).to.be.false;
-    //     expect(graph.connected(2, 3)).to.be.true;
-    // });
+        expect(graph.connected(INIT_NODES+1, INIT_NODES+2)).to.be.false;
+        expect(graph.connected(INIT_NODES+1, INIT_NODES+3)).to.be.false;
+        expect(graph.connected(INIT_NODES+1, INIT_NODES+4)).to.be.false;
+        expect(graph.connected(INIT_NODES+2, INIT_NODES+3)).to.be.true;
+    });
 
-    // it('it should delete edges', () => {
-    //     props.neighbors = [2, 3, 4];
-    //     graph.addNode(1, props);
+    it('it should delete edges', () => {
+        props.neighbors = [INIT_NODES+2, INIT_NODES+3, INIT_NODES+4];
+        graph.addNode(INIT_NODES+1, props);
 
-    //     expect(graph.deleteEdge(1, 2)).to.be.true;
+        expect(graph.deleteEdge(INIT_NODES+1, INIT_NODES+2)).to.be.true;
 
-    //     expect(graph.edgeCount).to.equal(2);
-    //     expect(graph.connected(1, 2)).to.be.false;
-    // });
+        expect(graph.edgeCount).to.equal(INIT_EDGES+2);
+        expect(graph.connected(INIT_NODES+1, INIT_NODES+2)).to.be.false;
+    });
 
-    // it('it should handle deletion if edge does not exist', () => {
-    //     props.neighbors = [2, 3, 4];
-    //     graph.addNode(1, props);
+    it('it should handle deletion if edge does not exist', () => {
+        props.neighbors = [INIT_NODES+2, INIT_NODES+3, INIT_NODES+4];
+        graph.addNode(INIT_NODES+1, props);
 
-    //     expect(graph.deleteEdge(1, 2)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(2);
+        expect(graph.deleteEdge(INIT_NODES+1, INIT_NODES+2)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+2);
 
-    //     expect(graph.deleteEdge(2, 3)).to.be.false;
-    //     expect(graph.edgeCount).to.equal(2);
-    // });
+        expect(graph.deleteEdge(INIT_NODES+2, INIT_NODES+3)).to.be.false;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+2);
+    });
 
     //------------------------------------------
 
