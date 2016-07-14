@@ -289,13 +289,15 @@ require('./graph-dijkstra.js');
         // this._edgeCount = !!params.graph ? params.graph.edgeCount : 0; // number of edges
 
         // if a graph is supplied, initialize to that
-        if (!!params.graph) {
+        var i = 0;
+        if (!!params.graph && !!params.graph.nodes) {
             // add each of the nodes in the supplied graph
-            for (var i = 0; i < params.graph.nodes.length; i++) {
+            for (i = 0; i < params.graph.nodes.length; i++) {
                 var nodeVals = params.graph.nodes[i];
                 this.addNode(nodeVals.id, nodeVals.props);
             }
-
+        }
+        if (!!params.graph && !!params.graph.nodes) {
             // add each of the edges in the supplied graph
             for (i = 0; i < params.graph.edges.length; i++) {
                 var source = params.graph.edges[i][0];
