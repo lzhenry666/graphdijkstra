@@ -274,28 +274,38 @@ require('./graph-dijkstra.js');
      * @params: (optional) object of parameters for initializing graph, valid keys are:
      *    @debug: only verify if debug is set to true (defaults to false)
      *    @graph: a JSON representation of the graph to initialize
+     *    * the graph should an object with two arrays, nodes and edges.
+     *    * nodes: an array of objects with integer id and object props (keys: weight, nType, and neighbors)
+     *    * edges: an array of length 2 arrays representing the source and target ids for the edge
      */
     var Graph = function(params) {
         params = params || {};
-        var debug = params.debug || false;
+        params.debug = params.debug || false;
         this._nodes = {}; // initialize nodes to empty
-        // this._nodeCount = !!params.graph ? params.graph.nodeCount : 0; // number of nodes
         this._nodeCount = 0; // initialize node count to 0
-        this._edgeCount = !!params.graph ? params.graph.edgeCount : 0; // number of edges
+        this._edgeCount = 0; // initialize edge count to 0
 
+        // this._nodeCount = !!params.graph ? params.graph.nodeCount : 0; // number of nodes
+        // this._edgeCount = !!params.graph ? params.graph.edgeCount : 0; // number of edges
 
+        // if a graph is supplied, initialize to that
         if (!!params.graph) {
-            // add each of the nodes in the supplied graph (if there is one)
-            for (var id in params.graph.nodes) {
-                if (params.graph.nodes.hasOwnProperty(id)) {
-                    var nodeVals = params.graph.nodes[id];
-                    this.addNode(nodeVals.id, nodeVals.props);
-                }
+            // add each of the nodes in the supplied graph
+            for (var i = 0; i < params.graph.nodes.length; i++) {
+                var nodeVals = params.graph.nodes[i];
+                this.addNode(nodeVals.id, nodeVals.props);
+            }
+
+            // add each of the edges in the supplied graph
+            for (i = 0; i < params.graph.edges.length; i++) {
+                var source = params.graph.edges[i][0];
+                var target = params.graph.edges[i][1];
+                this.addEdge(source, target);
             }
         }
 
         // verify the graph if debug is true
-        if (debug && !!params.graph) {
+        if (params.debug && !!params.graph) {
             _verify(this);
         }
     };
@@ -465,8 +475,8 @@ require('./graph-dijkstra.js');
         var s = this.nodes[source]; // the node corresponding to source ID
         var t = this.nodes[target]; // the node corresponding to target ID
 
-        // ensure they exist
-        if (s === undefined || t === undefined) {
+        // ensure the edge exists (i.e., connected)
+        if (!this.connected(source, target)) {
             return false;
         }
 
@@ -484,6 +494,9 @@ require('./graph-dijkstra.js');
      * return true is yes, false if no
      */
     Graph.prototype.connected = function(source, target) {
+        if (!this.exists(source) || !this.exists(target)) {
+            return false; // clearly not connected if does not exist
+        }
         return this.find(source).neighbors.indexOf(target) >= 0 && this.find(target).neighbors.indexOf(source) >= 0;
     };
 
