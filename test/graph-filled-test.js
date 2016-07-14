@@ -154,52 +154,53 @@ describe('graph tests (initialized)', () => {
         _nodeHelper(1, propsNode, node);
     });
 
-    // it('it should add edges', () => {
-    //     for (var i = 1; i <= 10; i++) {
-    //         graph.addNode(i, props);
-    //     }
-    //     expect(graph.nodeCount).to.equal(10);
+    it('it should add edges', () => {
+        for (var i = INIT_NODES+1; i <= INIT_NODES+10; i++) {
+            graph.addNode(i, props);
+        }
 
-    //     expect(graph.addEdge(1, 2)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(1);
-    //     _testEdge(1, 2);
+        expect(graph.nodeCount).to.equal(INIT_NODES+10);
 
-    //     expect(graph.addEdge(2, 3)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(2);
-    //     _testEdge(2, 3);
+        expect(graph.addEdge(INIT_NODES+1, INIT_NODES+2)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+1);
+        _testEdge(INIT_NODES+1, INIT_NODES+2);
 
-    //     expect(graph.addEdge(2, 4)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(3);
-    //     _testEdge(2, 4);
+        expect(graph.addEdge(INIT_NODES+2, INIT_NODES+3)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+2);
+        _testEdge(INIT_NODES+2, INIT_NODES+3);
 
-    //     expect(graph.addEdge(10, 1)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(4);
-    //     _testEdge(10, 1);
+        expect(graph.addEdge(INIT_NODES+2, INIT_NODES+4)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+3);
+        _testEdge(INIT_NODES+2, INIT_NODES+4);
 
-    //     expect(graph.addEdge(9, 3)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(5);
-    //     _testEdge(9, 3);
+        expect(graph.addEdge(INIT_NODES+10, INIT_NODES+1)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+4);
+        _testEdge(INIT_NODES+10, INIT_NODES+1);
 
-    //     expect(graph.addEdge(8, 9)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(6);
-    //     _testEdge(8, 9);
+        expect(graph.addEdge(INIT_NODES+9, INIT_NODES+3)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+5);
+        _testEdge(INIT_NODES+9, INIT_NODES+3);
 
-    //     expect(graph.addEdge(6, 7)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(7);
-    //     _testEdge(6, 7);
+        expect(graph.addEdge(INIT_NODES+8, INIT_NODES+9)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+6);
+        _testEdge(INIT_NODES+8, INIT_NODES+9);
 
-    //     expect(graph.addEdge(5, 7)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(8);
-    //     _testEdge(5, 7);
+        expect(graph.addEdge(INIT_NODES+6, INIT_NODES+7)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+7);
+        _testEdge(INIT_NODES+6, INIT_NODES+7);
 
-    //     expect(graph.addEdge(2, 10)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(9);
-    //     _testEdge(2, 10);
+        expect(graph.addEdge(INIT_NODES+5, INIT_NODES+7)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+8);
+        _testEdge(INIT_NODES+5, INIT_NODES+7);
 
-    //     expect(graph.addEdge(1, 6)).to.be.true;
-    //     expect(graph.edgeCount).to.equal(10);
-    //     _testEdge(1, 6);
-    // });
+        expect(graph.addEdge(INIT_NODES+2, INIT_NODES+10)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+9);
+        _testEdge(INIT_NODES+2, INIT_NODES+10);
+
+        expect(graph.addEdge(INIT_NODES+1, INIT_NODES+6)).to.be.true;
+        expect(graph.edgeCount).to.equal(INIT_EDGES+10);
+        _testEdge(INIT_NODES+1, INIT_NODES+6);
+    });
 
     // it('it should handle adding edges if node does not exist', () => {
     //     for (var i = 1; i <= 10; i++) {
