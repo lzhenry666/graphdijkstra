@@ -23,21 +23,21 @@ See [wiki pages](#) for more detail
 
 #### graphDijkstra
 ###### (angular module)
-* **Graphing** (*factory*)
-* **Dijkstra** (*factory*)
+* **Graphing** (*angular factory*)
+* **Dijkstra** (*angular factory*)
 
 ---
 
 #### Graphing
 ###### (angular factory)
 * **graph** (*variable*)
-* **createGraph(url, debug)** (*method*)    -- returns: **Graph**
+* **createGraph(url, debug)** (*method*):       returns **Graph**
 
 ---
 
 #### Dijkstra
 ###### (angular factory)
-* **RUN(graph)** (*method*)                 -- returns: **{ dist, prev }**
+* **RUN(graph)** (*method*):                    returns **{ dist, prev }**
 
 ---
 
@@ -47,14 +47,14 @@ See [wiki pages](#) for more detail
 * **nodeCount** (*variable*)
 * **edgeCount** (*variable*)
 * **Graph(params)** (*constructor*)
-* **find(id)** (*method*)                   -- returns: **Node**
-* **exists(id)** (*method*)                 -- returns: **boolean**
-* **addNode(id, props)** (*method*)         -- returns: **Node**
-* **deleteNode(id)** (*method*)             -- returns: **Node**
-* **addEdge(source, target)** (*method*)    -- returns: **boolean**
-* **deleteEdge(source, target)** (*method*) -- returns: **boolean**
-* **connected(source, target)** (*method*)  -- returns: **boolean**
-* **update(id, props)** (*method*)          -- returns: **Node**
+* **find(id)** (*method*):                      returns **Node**
+* **exists(id)** (*method*):                    returns **boolean**
+* **addNode(id, props)** (*method*):            returns **Node**
+* **deleteNode(id)** (*method*):                returns **Node**
+* **addEdge(source, target)** (*method*):       returns **boolean**
+* **deleteEdge(source, target)** (*method*):    returns **boolean**
+* **connected(source, target)** (*method*):     returns **boolean**
+* **update(id, props)** (*method*):             returns **Node**
 
 
 ## Dependencies
