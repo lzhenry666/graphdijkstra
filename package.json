@@ -1,13 +1,17 @@
 {
-  "name": "babel-npm-module-example",
-  "version": "0.0.6",
-  "author": "anvk",
-  "main": "dist/developer.js",
-  "description": "A boilerplate to start writing your NPM modules in ES6 using Babel.",
+  "name": "angular-graph-dijkstra",
+  "version": "0.1.4",
+  "author": "LITOSI",
+  "main": "dist/graph-dijkstra.js",
+  "description": "An angular wrapper for an undirected graph that allows for finding the shortest path via Dijkstra's algorithm",
   "contributors": [
     {
-      "name": "Alexey Novak",
-      "email": "alexey.novak.mail@gmail.com"
+      "name": "Matthew Vasseur",
+      "email": "mvasseur.lincolninvestment@gmail.com"
+    },
+    {
+      "name": "David Tahvildaran",
+      "email": "dtahvildaran.lincolninvestment@gmail.com"
     }
   ],
   "scripts": {
@@ -15,32 +19,39 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:anvk/babel-npm-module-example.git"
+    "url": "git@github.com:LincolnTechOpenSource/angular-graph-dijkstra.git"
   },
   "keywords": [
-    "module",
-    "es6",
-    "es5",
-    "babel"
+    "graph",
+    "shortest",
+    "path",
+    "dijkstra",
+    "undirected",
+    "nodes"
   ],
   "devDependencies": {
     "babel": "^6.3.26",
     "babel-core": "^6.4.0",
-    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-es2015": "^6.9.0",
+    "browserify": "^13.0.1",
     "chai": "^3.4.1",
     "del": "^2.2.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
     "gulp-jshint": "^2.0.0",
     "gulp-mocha": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.4",
     "jshint": "^2.9.1",
+    "jshint-stylish": "^2.2.0",
     "mocha": "^2.3.4",
-    "run-sequence": "^1.1.5"
+    "run-sequence": "^1.1.5",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   },
-  "engine": "node >= 0.10.x",
-  "homepage": "https://github.com/anvk/babel-npm-module-example",
+  "engine": "node >= 4.4.x",
   "bugs": {
-    "url": "https://github.com/anvk/babel-npm-module-example/issues"
+    "url": "https://github.com/LincolnTechOpenSource/graph-dijkstra-lib/issues"
   },
   "private": false,
   "license": "MIT"
