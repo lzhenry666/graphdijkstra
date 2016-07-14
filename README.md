@@ -3,7 +3,7 @@
 An angular wrapper for an undirected graph that allows for finding the shortest
 path via Dijkstra's algorithm.
 
-**Version:** 0.1.2
+**Version:** 0.1.3
 
 ## Installation & Usage
 
