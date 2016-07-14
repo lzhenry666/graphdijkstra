@@ -18,6 +18,9 @@ path via Dijkstra's algorithm.
 
 TODO: Detail API
 
+## Dependencies
+
+   * [Lodash v4.3.1](https://lodash.com/)
 
 ## Important!
 

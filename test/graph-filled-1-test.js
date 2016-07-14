@@ -34,7 +34,7 @@ describe('graph tests (initialized nodes)', () => {
         ]
     };
     const INIT_NODES = 20;
-    const INIT_EDGES = 10;
+    const INIT_EDGES = 14;
 
     let graph;
     let props;
@@ -50,6 +50,7 @@ describe('graph tests (initialized nodes)', () => {
         };
 
         // check initialized graph
+        // console.log(graph.nodes);
         expect(graph.nodes).to.not.be.empty;
         expect(graph.nodeCount).to.equal(INIT_NODES);
         expect(graph.edgeCount).to.equal(INIT_EDGES);
@@ -57,7 +58,7 @@ describe('graph tests (initialized nodes)', () => {
 
     after(() => graph = undefined);
 
-    it('it should initialize with ' + INIT_NODES + ' nodes', () => {
+    it.only('it should initialize with ' + INIT_NODES + ' nodes', () => {
         expect(graph.nodes).to.not.be.empty;
         expect(graph.nodeCount).to.equal(INIT_NODES);
     });
@@ -66,7 +67,7 @@ describe('graph tests (initialized nodes)', () => {
         expect(graph.edgeCount).to.equal(INIT_EDGES);
     });
 
-    it.only('it should initialize with the correct nodes', () => {
+    it('it should initialize with the correct nodes', () => {
         for (var i = 0; i < GRAPH.nodes.length; i++) {
             var node = graph.find(GRAPH.nodes[i].id);
             GRAPH.nodes[i].props.neighbors = node.neighbors;

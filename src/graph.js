@@ -48,9 +48,12 @@
         for (i = 0; i < params.graph.nodes.length; i++) {
             var nodeVals = params.graph.nodes[i];
             if (graph.exists(nodeVals.id)) {
-                // update (was created earlier by a neighbor specification)
-                nodeVals.props.neighbors = graph.find(nodeVals.id).neighbors.concat(nodeVals.props.neighbors || []);
+                // update node (was created earlier by a neighbor specification)
+                var node = graph.find(nodeVals.id);
+                nodeVals.props.neighbors = node.neighbors.concat(nodeVals.props.neighbors || []);
                 graph.update(nodeVals.id, nodeVals.props);
+                console.log(node.neighbors);
+                fixConsistency(graph, node);
             }
             else {
                 // create new
@@ -68,10 +71,10 @@
         }
         else {
             console.warn('Deprecation Warning: ');
-            console.warn(' Initializing graph object by only specifying nodes is ' +
-                'deprecated and will be removed in v1.0.0');
-            console.warn('  * To solve this please supply both nodes and edges in the graph object');
-            console.warn('  * To remove this message: add \"edges: []\" to your supplied graph object');
+            // console.warn(' Initializing graph object by only specifying nodes is ' +
+            //     'deprecated and will be removed in v1.0.0');
+            // console.warn('  * To solve this please supply both nodes and edges in the graph object');
+            // console.warn('  * To remove this message: add \"edges: []\" to your supplied graph object');
         }
 
         // verify the graph if debug is true
@@ -153,19 +156,25 @@
             var node = new Node(id, props);
             this.nodes[id] = node;
 
-            // ensure consistency of graph by adding necessary edges to specified neighbors
-            for (var i = 0; i < node.neighbors.length; i++) {
-                var neigh = this.addNode(node.neighbors[i]); // create neighbor (if necessary)
-
-                // fix inconsistent edge between new node and its neighbor
-                this.addEdge(id, neigh.id);
-                ++this.edgeCount; // one more edge! (add edge will not account for it)
-                // neigh.neighbors.push(id); // add id to neighbor's neighbors
-            }
             ++this.nodeCount;
+            fixConsistency(this, node); // fix possible inconsistencies
         }
         return this.nodes[id];
     };
+
+    /** fixConsistency: fixes the inconsistencies in the neighbors of @node
+     * by adding the necessary edges
+     */
+    function fixConsistency(graph, node) {
+        // ensure consistency of graph by adding necessary edges to specified neighbors
+        for (var i = 0; i < node.neighbors.length; i++) {
+            var neigh = graph.addNode(node.neighbors[i]); // create neighbor (if necessary)
+
+            // fix inconsistent edge between new node and its neighbor
+            graph.addEdge(node.id, neigh.id);
+            ++graph.edgeCount; // one more edge! (add edge will not account for it)
+        }
+    }
 
     /**
      * Graph.deleteNode: delete a node from the graph. true if successful
