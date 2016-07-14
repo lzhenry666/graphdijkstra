@@ -17,6 +17,7 @@
      *    * the graph should an object with two arrays, nodes and edges.
      *    * nodes: an array of objects with integer id and object props (keys: weight, nType, and neighbors)
      *    * edges: an array of length 2 arrays representing the source and target ids for the edge
+     * return true if successfully constructed
      */
     var Graph = function(params) {
         params = params || {};
@@ -25,32 +26,61 @@
         this._nodeCount = 0; // initialize node count to 0
         this._edgeCount = 0; // initialize edge count to 0
 
-        // this._nodeCount = !!params.graph ? params.graph.nodeCount : 0; // number of nodes
-        // this._edgeCount = !!params.graph ? params.graph.edgeCount : 0; // number of edges
+        // no graph supplied, skip
+        if (!params.graph) {
+            return true;
+        }
 
-        // if a graph is supplied, initialize to that
+        // handle invalid graph parameter format
+        if (!('nodes' in params.graph)) {
+            _assert(true, 'Invalid graph format: must specify array \'nodes\' with keys' +
+            'id\' and \'props\'\n *\'props\' has keys \'weight\', \'nType\', \'neighbors\'');
+        }
+
+        // graph is supplied, initialize to that
+        return initializeGraph(this, params);
+    };
+
+    function initializeGraph(graph, params) {
         var i = 0;
-        if (!!params.graph && !!params.graph.nodes) {
-            // add each of the nodes in the supplied graph
-            for (i = 0; i < params.graph.nodes.length; i++) {
-                var nodeVals = params.graph.nodes[i];
-                this.addNode(nodeVals.id, nodeVals.props);
+
+        // add each of the nodes in the supplied graph
+        for (i = 0; i < params.graph.nodes.length; i++) {
+            var nodeVals = params.graph.nodes[i];
+            if (graph.exists(nodeVals.id)) {
+                // update (was created earlier by a neighbor specification)
+                nodeVals.props.neighbors = graph.find(nodeVals.id).neighbors.concat(nodeVals.props.neighbors || []);
+                graph.update(nodeVals.id, nodeVals.props);
+            }
+            else {
+                // create new
+                graph.addNode(nodeVals.id, nodeVals.props);
             }
         }
-        if (!!params.graph && !!params.graph.edges) {
+
+        if ('edges' in params.graph) {
             // add each of the edges in the supplied graph
             for (i = 0; i < params.graph.edges.length; i++) {
                 var source = params.graph.edges[i][0];
                 var target = params.graph.edges[i][1];
-                this.addEdge(source, target);
+                graph.addEdge(source, target);
             }
+        }
+        else {
+            console.warn('Deprecation Warning: ');
+            console.warn(' Initializing graph object by only specifying nodes is ' +
+                'deprecated and will be removed in v1.0.0');
+            console.warn('  * To solve this please supply both nodes and edges in the graph object');
+            console.warn('  * To remove this message: add \"edges: []\" to your supplied graph object');
         }
 
         // verify the graph if debug is true
         if (params.debug && !!params.graph) {
-            _verify(this);
+            _verify(graph);
         }
-    };
+
+        return true;
+    }
 
     /**
      * Graph define properties
@@ -100,7 +130,7 @@
      * returns true if it is a node, false otherwise
      */
     Graph.prototype.exists = function(id) {
-        return this.nodes[id] !== undefined;
+        return id in this.nodes;
     };
 
     /**
