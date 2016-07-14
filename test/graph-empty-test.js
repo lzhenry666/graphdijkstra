@@ -7,7 +7,7 @@ import {expect} from 'chai';
 import Graph from './src/graph.js';
 
 // initialize empty graph tests
-describe('graph tests (initially empty)', () => {
+describe('graph tests (empty)', () => {
 
     const INIT_NODES = 0;
     const INIT_EDGES = 0;
@@ -25,7 +25,7 @@ describe('graph tests (initially empty)', () => {
             nType: 1
         };
 
-        // initialize empty graph
+        // check empty graph
         expect(graph.nodes).to.be.empty;
         expect(graph.nodeCount).to.equal(0);
         expect(graph.edgeCount).to.equal(0);
@@ -33,12 +33,12 @@ describe('graph tests (initially empty)', () => {
 
     after(() => graph = undefined);
 
-    it('it should initialize with 0 nodes', () => {
+    it('it should initialize with ' + INIT_NODES + ' nodes', () => {
         expect(graph.nodes).to.be.empty;
         expect(graph.nodeCount).to.equal(INIT_NODES);
     });
 
-    it('it should initialize with 0 edges', () => {
+    it('it should initialize with ' + INIT_EDGES + ' edges', () => {
         expect(graph.edgeCount).to.equal(INIT_EDGES);
     });
 

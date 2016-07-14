@@ -67,7 +67,7 @@ describe('graph tests (initialized)', () => {
             nType: 1
         };
 
-        // initialize empty graph
+        // check initialized graph
         expect(graph.nodes).to.not.be.empty;
         expect(graph.nodeCount).to.equal(INIT_NODES);
         expect(graph.edgeCount).to.equal(INIT_EDGES);
@@ -75,12 +75,12 @@ describe('graph tests (initialized)', () => {
 
     after(() => graph = undefined);
 
-    it('it should initialize with 20 nodes', () => {
+    it('it should initialize with ' + INIT_NODES + ' nodes', () => {
         expect(graph.nodes).to.not.be.empty;
         expect(graph.nodeCount).to.equal(INIT_NODES);
     });
 
-    it('it should initialize with 16 edges', () => {
+    it('it should initialize with ' + INIT_EDGES + ' edges', () => {
         expect(graph.edgeCount).to.equal(INIT_EDGES);
     });
 
