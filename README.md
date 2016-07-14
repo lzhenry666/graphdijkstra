@@ -20,7 +20,7 @@ TODO: Detail API
 
 ## Dependencies
 
-   * [Lodash v4.3.1](https://lodash.com/)
+   * [Lodash v4.3.1](https://www.npmjs.com/package/lodash)
 
 ## Important!
 

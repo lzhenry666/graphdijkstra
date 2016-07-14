@@ -50,15 +50,14 @@ describe('graph tests (initialized nodes)', () => {
         };
 
         // check initialized graph
-        // console.log(graph.nodes);
         expect(graph.nodes).to.not.be.empty;
-        expect(graph.nodeCount).to.equal(INIT_NODES);
         expect(graph.edgeCount).to.equal(INIT_EDGES);
+        expect(graph.nodeCount).to.equal(INIT_NODES);
     });
 
     after(() => graph = undefined);
 
-    it.only('it should initialize with ' + INIT_NODES + ' nodes', () => {
+    it('it should initialize with ' + INIT_NODES + ' nodes', () => {
         expect(graph.nodes).to.not.be.empty;
         expect(graph.nodeCount).to.equal(INIT_NODES);
     });
@@ -218,13 +217,13 @@ describe('graph tests (initialized nodes)', () => {
         for (var i = 1; i <= 10; i++) {
             graph.addNode(INIT_NODES+i, props);
         }
-        graph.addEdge(INIT_NODES+1, INIT_NODES+2);
-        graph.addEdge(INIT_NODES+2, INIT_NODES+3);
+        expect(graph.addEdge(INIT_NODES+1, INIT_NODES+2)).to.be.true;
+        expect(graph.addEdge(INIT_NODES+2, INIT_NODES+3)).to.be.true;
 
-        expect(graph.addEdge(INIT_NODES+2,INIT_NODES+3)).to.be.true;
+        expect(graph.addEdge(INIT_NODES+2,INIT_NODES+3)).to.be.false;
         expect(graph.edgeCount).to.equal(INIT_EDGES+2);
 
-        expect(graph.addEdge(INIT_NODES+3,INIT_NODES+2)).to.be.true;
+        expect(graph.addEdge(INIT_NODES+3,INIT_NODES+2)).to.be.false;
         expect(graph.edgeCount).to.equal(INIT_EDGES+2);
     });
 

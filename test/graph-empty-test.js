@@ -161,13 +161,13 @@ describe('graph tests (empty)', () => {
         for (var i = 1; i <= 10; i++) {
             graph.addNode(i, props);
         }
-        graph.addEdge(1, 2);
-        graph.addEdge(2, 3);
+        expect(graph.addEdge(1, 2)).to.be.true;
+        expect(graph.addEdge(2, 3)).to.be.true;
 
-        expect(graph.addEdge(2,3)).to.be.true;
+        expect(graph.addEdge(2,3)).to.be.false;
         expect(graph.edgeCount).to.equal(2);
 
-        expect(graph.addEdge(3,2)).to.be.true;
+        expect(graph.addEdge(3,2)).to.be.false;
         expect(graph.edgeCount).to.equal(2);
     });
 

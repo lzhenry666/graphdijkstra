@@ -8,6 +8,7 @@
     'use strict';
 
     var Node = require('./graph-node.js');
+    var _ = require('lodash');
 
     /**
      * Graph
@@ -38,7 +39,8 @@
         }
 
         // graph is supplied, initialize to that
-        return initializeGraph(this, params);
+        initializeGraph(this, params);
+        // console.log(_.mapValues(this.nodes, 'neighbors'));
     };
 
     function initializeGraph(graph, params) {
@@ -50,9 +52,8 @@
             if (graph.exists(nodeVals.id)) {
                 // update node (was created earlier by a neighbor specification)
                 var node = graph.find(nodeVals.id);
-                nodeVals.props.neighbors = node.neighbors.concat(nodeVals.props.neighbors || []);
+                nodeVals.props.neighbors = _.union(node.neighbors, (nodeVals.props.neighbors || []));
                 graph.update(nodeVals.id, nodeVals.props);
-                console.log(node.neighbors);
                 fixConsistency(graph, node);
             }
             else {
@@ -69,13 +70,13 @@
                 graph.addEdge(source, target);
             }
         }
-        else {
-            console.warn('Deprecation Warning: ');
-            // console.warn(' Initializing graph object by only specifying nodes is ' +
-            //     'deprecated and will be removed in v1.0.0');
-            // console.warn('  * To solve this please supply both nodes and edges in the graph object');
-            // console.warn('  * To remove this message: add \"edges: []\" to your supplied graph object');
-        }
+        // else {
+        //     console.warn('Deprecation Warning: ');
+        //     console.warn(' Initializing graph object by only specifying nodes is ' +
+        //         'deprecated and will be removed in v1.0.0');
+        //     console.warn('  * To solve this please supply both nodes and edges in the graph object');
+        //     console.warn('  * To remove this message: add \"edges: []\" to your supplied graph object');
+        // }
 
         // verify the graph if debug is true
         if (params.debug && !!params.graph) {
@@ -171,8 +172,9 @@
             var neigh = graph.addNode(node.neighbors[i]); // create neighbor (if necessary)
 
             // fix inconsistent edge between new node and its neighbor
-            graph.addEdge(node.id, neigh.id);
-            ++graph.edgeCount; // one more edge! (add edge will not account for it)
+            if (graph.addEdge(node.id, neigh.id)) {
+                ++graph.edgeCount; // one more edge! (add edge will not account for it)
+            }
         }
     }
 
@@ -213,7 +215,7 @@
      * do not allow self edges (by nature of being a simple graph)
      * @source: ID of one end of the edge
      * @target: ID of the other end of the edge
-     * return true if able to add edge, false otherwise (i.e., self edge or invalid)
+     * return true if able to add edge, false otherwise (i.e., self edge, invalid, or redundant)
      */
     Graph.prototype.addEdge = function(source, target) {
         // is this a self edge?
@@ -242,8 +244,10 @@
             s.neighbors.push(t.id); // fix inconsistency in source
         } else if (t.neighbors.indexOf(s.id) < 0) {
             t.neighbors.push(s.id); // fix inconsistency in target
+        } else {
+            return false; // return false for redundant edges
         }
-        return true; // return true even if it is redundant
+        return true; // return true
     };
 
     /**

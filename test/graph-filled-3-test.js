@@ -222,13 +222,13 @@ describe('graph tests (initialized nodes & edges)', () => {
         for (var i = 1; i <= 10; i++) {
             graph.addNode(INIT_NODES+i, props);
         }
-        graph.addEdge(INIT_NODES+1, INIT_NODES+2);
-        graph.addEdge(INIT_NODES+2, INIT_NODES+3);
+        expect(graph.addEdge(INIT_NODES+1, INIT_NODES+2)).to.be.true;
+        expect(graph.addEdge(INIT_NODES+2, INIT_NODES+3)).to.be.true;
 
-        expect(graph.addEdge(INIT_NODES+2,INIT_NODES+3)).to.be.true;
+        expect(graph.addEdge(INIT_NODES+2,INIT_NODES+3)).to.be.false;
         expect(graph.edgeCount).to.equal(INIT_EDGES+2);
 
-        expect(graph.addEdge(INIT_NODES+3,INIT_NODES+2)).to.be.true;
+        expect(graph.addEdge(INIT_NODES+3,INIT_NODES+2)).to.be.false;
         expect(graph.edgeCount).to.equal(INIT_EDGES+2);
     });
 
