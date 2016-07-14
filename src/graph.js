@@ -31,16 +31,20 @@
         // if a graph is supplied, initialize to that
         if (!!params.graph) {
             // add each of the nodes in the supplied graph
-            for (var i = 0; i < params.graph.nodes.length; i++) {
-                var nodeVals = params.graph.nodes[i];
-                this.addNode(nodeVals.id, nodeVals.props);
+            if (!!params.graph.nodes) {
+                for (var i = 0; i < params.graph.nodes.length; i++) {
+                    var nodeVals = params.graph.nodes[i];
+                    this.addNode(nodeVals.id, nodeVals.props);
+                }
             }
 
             // add each of the edges in the supplied graph
-            for (i = 0; i < params.graph.edges.length; i++) {
-                var source = params.graph.edges[i][0];
-                var target = params.graph.edges[i][1];
-                this.addEdge(source, target);
+            if (!!params.graph.edges) {
+                for (i = 0; i < params.graph.edges.length; i++) {
+                    var source = params.graph.edges[i][0];
+                    var target = params.graph.edges[i][1];
+                    this.addEdge(source, target);
+                }
             }
         }
 
