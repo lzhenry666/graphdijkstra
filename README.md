@@ -13,6 +13,8 @@ path via Dijkstra's algorithm.
    * `<link rel="stylesheet" href="node_modules/angular-graph-dijkstra/dist/graph-dijkstra.js">`
 3. Add the dependency module
    * `var myApp = angular.module('myApp', ['graphDijkstra']);`
+4. Use the available directives
+   * `function myController(Graphing, Dijkstra) { ... }`
 
 ## Public API
 
