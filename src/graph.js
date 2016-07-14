@@ -37,7 +37,7 @@
                 this.addNode(nodeVals.id, nodeVals.props);
             }
         }
-        if (!!params.graph && !!params.graph.nodes) {
+        if (!!params.graph && !!params.graph.edges) {
             // add each of the edges in the supplied graph
             for (i = 0; i < params.graph.edges.length; i++) {
                 var source = params.graph.edges[i][0];
