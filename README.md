@@ -3,7 +3,7 @@
 An angular wrapper for an undirected graph that allows for finding the shortest
 path via Dijkstra's algorithm.
 
-**Version:** 0.1.4
+**Version:** 0.2.0
 
 ## Installation & Usage
 
@@ -11,8 +11,11 @@ path via Dijkstra's algorithm.
    * `$ npm install --save-dev https://github.com/LincolnTechOpenSource/angular-graph-dijkstra`
 2. Include the JavaScript file
    * `<link rel="stylesheet" href="node_modules/angular-graph-dijkstra/dist/graph-dijkstra.js">`
+   * or `<link rel="stylesheet" href="node_modules/angular-graph-dijkstra/dist/graph-dijkstra.min.js">`
 3. Add the dependency module
    * `var myApp = angular.module('myApp', ['graphDijkstra']);`
+4. Use the available directives
+   * `angular.controller('myCtrl', function(Graphing, Dijkstra) { ... });`
 
 ## Public API
 

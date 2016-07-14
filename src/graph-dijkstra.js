@@ -6,7 +6,7 @@
   var Dijkstra = require('./dijkstra.js');
 
   /* global angular */
-  angular.module('graphDijkstra.lib', [])
+  angular.module('graphDijkstra', [])
     .factory('Graphing', Graphing)
     .factory('Dijkstra', Dijkstra);
 
