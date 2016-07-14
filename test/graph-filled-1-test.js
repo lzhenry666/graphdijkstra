@@ -7,7 +7,7 @@ import {expect} from 'chai';
 import Graph from './src/graph.js';
 
 // initialize empty graph tests
-describe('graph tests (initialized nodes & edges)', () => {
+describe('graph tests (initialized nodes)', () => {
 
     const GRAPH = {
         nodes: [
@@ -31,28 +31,10 @@ describe('graph tests (initialized nodes & edges)', () => {
             {id: 18, props: {weight: 9, nType: 6} },
             {id: 19, props: {weight: 1, nType: 1} },
             {id: 20, props: {weight: 5, nType: 2} }
-        ],
-        edges: [
-            [1,  2],
-            [1,  3],
-            [1,  4],
-            [2,  3],
-            [2,  6],
-            [2,  7],
-            [3,  8],
-            [3,  9],
-            [3,  10],
-            [5,  9],
-            [5,  10],
-            [6,  7],
-            [7,  10],
-            [8,  9],
-            [8,  10],
-            [9,  10]
         ]
     };
     const INIT_NODES = 20;
-    const INIT_EDGES = 16;
+    const INIT_EDGES = 0;
 
     let graph;
     let props;
@@ -92,9 +74,9 @@ describe('graph tests (initialized nodes & edges)', () => {
         }
     });
 
-    it('it should initialize with the correct edges', () => {
-        for (var i = 0; i < GRAPH.edges.length; i++) {
-            _testEdge(GRAPH.edges[i][0], GRAPH.edges[i][1]);
+    it('it should initialize with the no edges', () => {
+        for (var i = 1; i <= GRAPH.nodes.length; i++) {
+            expect(graph.find(i).neighbors).to.be.empty;
         }
     });
 
@@ -148,7 +130,7 @@ describe('graph tests (initialized nodes & edges)', () => {
         var propsNode = {
             weight: 1,
             nType: 4,
-            neighbors: [2, 3, 4]
+            neighbors: []
         };
         expect(node).to.eql(graph.find(1));
         _nodeHelper(1, propsNode, node);

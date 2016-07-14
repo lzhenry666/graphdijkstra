@@ -37,7 +37,7 @@ gulp.task('clean', () =>
     del(config.paths.test.dist)
 );
 
-gulp.task('build', ['lint-src'], function() {
+gulp.task('dist', ['lint-src'], function() {
     del(config.paths.build.dist); // clean build path
 
     // browserify source
@@ -96,7 +96,12 @@ gulp.task('test', ['babel'], () =>
         .on('error', err => console.log(err.stack))
 );
 
+// Build Task
+gulp.task('build', () =>
+    runSequence('clean', ['test'], 'dist')
+);
+
 // Default Task
 gulp.task('default', () =>
-    runSequence('clean', ['test'], 'build')
+    runSequence('clean', ['test'], 'watch')
 );
