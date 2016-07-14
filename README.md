@@ -11,6 +11,7 @@ path via Dijkstra's algorithm.
    * `$ npm install --save-dev https://github.com/LincolnTechOpenSource/angular-graph-dijkstra`
 2. Include the JavaScript file
    * `<link rel="stylesheet" href="node_modules/angular-graph-dijkstra/dist/graph-dijkstra.js">`
+   * or `<link rel="stylesheet" href="node_modules/angular-graph-dijkstra/dist/graph-dijkstra.min.js">`
 3. Add the dependency module
    * `var myApp = angular.module('myApp', ['graphDijkstra']);`
 4. Use the available directives
