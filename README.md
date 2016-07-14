@@ -14,7 +14,7 @@ path via Dijkstra's algorithm.
 3. Add the dependency module
    * `var myApp = angular.module('myApp', ['graphDijkstra']);`
 4. Use the available directives
-   * `function myController(Graphing, Dijkstra) { ... }`
+   * `angular.controller('myCtrl', function(Graphing, Dijkstra) { ... });`
 
 ## Public API
 
