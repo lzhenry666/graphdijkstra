@@ -123,7 +123,7 @@
             var node = new Node(id, props);
             this.nodes[id] = node;
 
-            // ensure consistency of graph by adding necessary edges to specifeid neighbors
+            // ensure consistency of graph by adding necessary edges to specified neighbors
             for (var i = 0; i < node.neighbors.length; i++) {
                 var neigh = this.addNode(node.neighbors[i]); // create neighbor (if necessary)
 
@@ -250,6 +250,28 @@
     // Graph.prototype.weight = function(source) {
     //     return this.nodes[source].weight;
     // };
+
+    /**
+     * Graph.update: set the properties of the node specified by @id
+     * @id: id of the node to update
+     * @props: object of properties for the node, valid keys are:
+     *    @neighbors: the neighbors of the node to add (create node if it does not exist)
+     *    @weight: the weight of the node to create
+     *    @nType: the type of the node to create
+     * return the updated node on success, or null if unable to update/find
+     */
+    Graph.prototype.update = function(id, props) {
+        if (!this.exists(id)) {
+            return null;
+        }
+        var node = this.find(id);
+
+        node.weight = props.weight || node.weight;
+        node.nType = props.nType || node.nType;
+        node.neighbors = props.neighbors || node.neighbors;
+
+        return node;
+    };
 
     module.exports = Graph;
 
