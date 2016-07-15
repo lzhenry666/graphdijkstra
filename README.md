@@ -27,7 +27,7 @@ finding and acting on the shortest path.
 For an example of this module at work in a larger project, see our
 [Lincoln Employee Locator](lincoln-gps) application. In this project **Graphing**
 serves as the underlying graph of location objects (nodes) on which we use **Dijkstra** to
-find the paths bewteen them.
+find the paths between them.
 
 
 
