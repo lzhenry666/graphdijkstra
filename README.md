@@ -17,19 +17,23 @@ path via Dijkstra's algorithm.
 4. Use the available directives
    * `angular.controller('myCtrl', function(Graphing, Dijkstra) { ... });`
 
-## Demo
+## Demos
 
-See module in action with our simple [demo](demo/index.html).
+* See the module in action with our simple [demo](demo/index.html).
 
-Here we use a basic 36 node graph to serve as a grid and demonstrate how to go about
+   Here we use a basic 36 node graph to serve as a grid and demonstrate how to go about
 finding and acting on the shortest path.
 
-For an example of this module at work in a larger project, see our
-[Lincoln Employee Locator](lincoln-gps) application. In this project **Graphing**
-serves as the underlying graph of location objects (nodes) on which we use **Dijkstra** to
-find the paths between them.
+* For an example of this module at work in a larger project, see our
+[Lincoln Employee Locator](lincoln-gps) application.
 
+   In this project **Graphing**
+serves as the underlying graph of location objects (nodes) on which we run **Dijkstra** to
+find the shortest paths between them.
 
+## Dependencies
+
+This library assumes that `angular` is available globally and it relies angular's `$http` service.
 
 ## Public API
 
@@ -70,11 +74,6 @@ See [wiki pages]() for more detail
 * **connected(source, target)**  -  returns **boolean**
 * **update(id, props)** -             returns **Node**
 
-
-## Dependencies
-
-   * [Lodash v4.3.1](https://www.npmjs.com/package/lodash)
-
 ## Important!
 
 This project is tailored for use in the [Lincoln Employee Locator](lincoln-gps) and may not yet
@@ -96,6 +95,8 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md)
 **Adapted Resources:**
    * [Min Heap with Decrease Key](https://github.com/rombdn/js-binaryheap-decreasekey)
 
+**Library Resources:**
+   * [Lodash v4.3.1](https://www.npmjs.com/package/lodash)
 
 ## License
 
