@@ -17,6 +17,20 @@ path via Dijkstra's algorithm.
 4. Use the available directives
    * `angular.controller('myCtrl', function(Graphing, Dijkstra) { ... });`
 
+## Demo
+
+See module in action with our simple [demo](demo/index.html).
+
+Here we use a basic 36 node graph to serve as a grid and demonstrate how to go about
+finding and acting on the shortest path.
+
+For an example of this module at work in a larger project, see our
+[Lincoln Employee Locator](lincoln-gps) application. In this project **Graphing**
+serves as the underlying graph of location objects (nodes) on which we use **Dijkstra** to
+find the paths bewteen them.
+
+
+
 ## Public API
 
 See [wiki pages]() for more detail
@@ -63,11 +77,11 @@ See [wiki pages]() for more detail
 
 ## Important!
 
-This project is tailored for use in the [Lincoln Employee Locator ] and may not yet
+This project is tailored for use in the [Lincoln Employee Locator](lincoln-gps) and may not yet
 be optimally portable. We encourage and appreciate any contributions that aim to
 enhance the generality/portability of this module.
 
-[Lincoln Employee Locator ]: https://github.com/LincolnTechOpenSource/lincoln-gps
+[lincoln-gps]: https://github.com/LincolnTechOpenSource/lincoln-gps
 
 
 ## How to Contribute
