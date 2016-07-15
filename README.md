@@ -23,8 +23,8 @@ See [wiki pages](#) for more detail
 
 #### graphDijkstra
 ###### (angular module)
-* **Graphing** (*angular factory*)
-* **Dijkstra** (*angular factory*)
+* **Graphing** (*angular service*)
+* **Dijkstra** (*angular service*)
 
 ---
 

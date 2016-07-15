@@ -5,19 +5,19 @@
 (function() {
     'use strict';
 
-    // var Graphing = require('./graphing.js');
+    var Graphing = require('./graphing.js');
     // var Graph = require('./graph.js');
-    // var Dijkstra = require('./dijkstra.js');
+    var Dijkstra = require('./dijkstra.js');
 
-    module.exports = {
-        Graph: require('./graph.js'),
-        Dijkstra: require('./dijkstra.js')
-    };
+    // module.exports = {
+    //     Graph: require('./graph.js'),
+    //     Dijkstra: require('./dijkstra.js')
+    // };
 
-    // /* global angular */
-    // angular.module('graphDijkstra', [])
-    //     .factory('Graphing', Graphing)
-    //     .factory('Dijkstra', Dijkstra);
+    /* global angular */
+    angular.module('graphDijkstra', [])
+        .factory('Graphing', Graphing)
+        .factory('Dijkstra', Dijkstra);
 
     // Graphing.$inject = ['$http'];
     // function Graphing($http) {
