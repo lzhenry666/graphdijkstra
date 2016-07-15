@@ -30,7 +30,7 @@ See [wiki pages](#) for more detail
 
 #### Graphing
 ###### (angular factory)
-* **graph** (*variable*)
+* **graph** - variable **Graph**
 * **createGraph(url, debug)** - returns **Graph**
 
 ---
@@ -44,9 +44,9 @@ See [wiki pages](#) for more detail
 #### Graph
 ###### (object)
 * **Graph(params)** (*constructor*)
-* **nodes**
-* **nodeCount**
-* **edgeCount**
+* **nodes** - variable **{Node}**
+* **nodeCount** - variable **integer**
+* **edgeCount** - variable **integer**
 * **find(id)**  -  returns **Node**
 * **exists(id)**  -  returns **boolean**
 * **addNode(id, props)**  -  returns **Node**
