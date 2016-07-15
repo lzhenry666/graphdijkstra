@@ -17,9 +17,9 @@
             body {
                 background-color: #DDD;
             }
-            .col {
+            .graph .col {
                 padding: 0;
-                height: 160px;
+                height: 145px;
             }
             .node-rect {
                 x: 5%;
@@ -49,104 +49,40 @@
     <body ng-controller="myCtrl">
         <div class="container">
             <div class="row">
-                <div class="col col-xs-2" ng-repeat="i in _.values(graph.nodes).slice(0,6)" ng-click="path(i.id)">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                         <rect id="{{i.id}}" class="node-rect" />
-                         <text class="node-text" x="50%" y="50%" text-anchor="middle" font-size="24" font-weight="600">
-                             {{ i.id }}
-                         </text>
-                         <!-- right connecting lines -->
-                         <line class="node-line" x1="95%" y1="50%" x2="100%" y2="50%" ng-if="($index+1) % 6 !== 0 && graph.connected(i.id, _.values(graph.nodes)[$index+1+0].id)" />
-                         <!-- left connecting lines -->
-                         <line class="node-line" x1="5%" y1="50%" x2="0%" y2="50%" ng-if="($index+1) % 6 !== 1 && graph.connected(i.id, _.values(graph.nodes)[$index-1+0].id)" />
-                         <!-- down connecting lines -->
-                         <line class="node-line" x1="50%" y1="95%" x2="50%" y2="100%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index+6].id)" />
-                     </svg>
+                <div class="col col-xs-5">
+                    <button class="btn btn-primary" ng-click="select(true)">Source: {{ graph.find(source) || 'N/A'}}</button>
+                </div>
+                <div class="col col-xs-2">
+                    <button class="btn btn-warning" ng-click="clear()">Reset</button>
+                </div>
+                <div class="col col-xs-5">
+                    <button class="btn btn-success" ng-click="select(false)">Target: {{ graph.find(target) || 'N/A'}}</button>
                 </div>
             </div>
-
-            <div class="row">
-                <div id="{{i.id}}" class="col col-xs-2" ng-repeat="i in _.values(graph.nodes).slice(6,12)" ng-click="path(i.id)">
+        </div>
+        <div class="container">
+            <div class="graph row" ng-repeat="j in [0, 1, 2, 3, 4, 5]">
+                <div class="col col-xs-2" ng-repeat="i in _.values(graph.nodes).slice(j*6,(j+1)*6)" ng-click="path(i.id)">
                     <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <rect id="{{i.id}}" class="node-rect" />
-                        <text class="node-text" x="50%" y="50%" text-anchor="middle" font-size="24" font-weight="600">
-                            {{ i.id }}
-                        </text>
-                        <!-- right connecting lines -->
-                        <line class="node-line" x1="95%" y1="50%" x2="100%" y2="50%" ng-if="($index+1) % 6 !== 0 && graph.connected(i.id, _.values(graph.nodes)[$index+7].id)" />
-                        <!-- left connecting lines -->
-                        <line class="node-line" x1="5%" y1="50%" x2="0%" y2="50%" ng-if="($index+1) % 6 !== 1 && graph.connected(i.id, _.values(graph.nodes)[$index+5].id)" />
-                        <!-- down connecting lines -->
-                        <line class="node-line" x1="50%" y1="95%" x2="50%" y2="100%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index+12].id)" />
-                        <!-- up connecting lines-->
-                        <line class="node-line" x1="50%" y1="5%" x2="50%" y2="0%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index].id)"/>
-                    </svg>
-                </div>
-            </div>
-            <div class="row">
-                <div id="{{i.id}}" class="col col-xs-3" ng-repeat="i in _.values(graph.nodes).slice(12,18)" ng-click="path(i.id)">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <rect id="{{i.id}}" class="node-rect" />
-                        <text class="node-text" x="50%" y="50%" text-anchor="middle" font-size="24" font-weight="600">
-                            {{ i.id }}
-                        </text>
-                        <!-- right connecting lines -->
-                        <line class="node-line" x1="95%" y1="50%" x2="100%" y2="50%" ng-if="($index+1) % 4 !== 0 && graph.connected(i.id, _.values(graph.nodes)[$index+9].id)" />
-                        <!-- left connecting lines -->
-                        <line class="node-line" x1="5%" y1="50%" x2="0%" y2="50%" ng-if="($index+1) % 4 !== 1 && graph.connected(i.id, _.values(graph.nodes)[$index+7].id)" />
-                        <!-- down connecting lines -->
-                        <line class="node-line" x1="50%" y1="95%" x2="50%" y2="100%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index+12].id)" />
-                        <!-- up connecting lines-->
-                        <line class="node-line" x1="50%" y1="5%" x2="50%" y2="0%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index+4].id)"/>
-                    </svg>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col col-xs-3" ng-repeat="i in _.values(graph.nodes).slice(12,16)" ng-click="path(i.id)">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <rect id="{{i.id}}" class="node-rect" />
-                        <text class="node-text" x="50%" y="50%" text-anchor="middle" font-size="24" font-weight="600">
-                            {{ i.id }}
-                        </text>
-                        <!-- right connecting lines -->
-                        <line class="node-line" x1="95%" y1="50%" x2="100%" y2="50%" ng-if="($index+1) % 4 !== 0 && graph.connected(i.id, _.values(graph.nodes)[$index+13].id)" />
-                        <!-- left connecting lines -->
-                        <line class="node-line" x1="5%" y1="50%" x2="0%" y2="50%" ng-if="($index+1) % 4 !== 1 && graph.connected(i.id, _.values(graph.nodes)[$index+11].id)" />
-                        <!-- up connecting lines-->
-                        <line class="node-line" x1="50%" y1="5%" x2="50%" y2="0%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index+8].id)"/>
-                    </svg>
-                </div>
+                    <rect id="{{i.id}}" class="node-rect" />
+                    <text class="node-text" x="50%" y="50%" text-anchor="middle" font-size="24" font-weight="600">
+                        {{ i.id }}
+                    </text>
+                    <!-- right connecting lines -->
+                    <line class="node-line" x1="95%" y1="50%" x2="100%" y2="50%" ng-if="($index+1) % 6 !== 0 && graph.connected(i.id, _.values(graph.nodes)[$index+1+j*6].id)" />
+                    <!-- left connecting lines -->
+                    <line class="node-line" x1="5%" y1="50%" x2="0%" y2="50%" ng-if="($index+1) % 6 !== 1 && graph.connected(i.id, _.values(graph.nodes)[$index-1+j*6].id)" />
+                    <!-- down connecting lines -->
+                    <line class="node-line" x1="50%" y1="95%" x2="50%" y2="100%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index+(j+1)*6].id)" />
+                    <!-- up connecting lines-->
+                    <line class="node-line" x1="50%" y1="5%" x2="50%" y2="0%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index+(j-1)*6].id)"/>
+                </svg>
             </div>
         </div>
     </body>
 
     <script src="../dist/graph-dijkstra.js"></script>
     <script>
-        var f = function(num) {
-            for (var i = 0; i < num; i++) {
-                console.log(' ');
-                console.log('<div class="row">');
-                console.log('<div class="col col-xs-2" ng-repeat="i in _.values(graph.nodes).slice('+i*num+','+(i+1)*num+')" ng-click="path(i.id)">');
-                console.log('<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">');
-                console.log('<rect id="{{i.id}}" class="node-rect" />');
-                console.log('<text class="node-text" x="50%" y="50%" text-anchor="middle" font-size="24" font-weight="600">');
-                console.log('{{ i.id }}');
-                console.log('</text>');
-                console.log('<!-- right connecting lines -->');
-                console.log('<line class="node-line" x1="95%" y1="50%" x2="100%" y2="50%" ng-if="($index+1) % 6 !== 0 && graph.connected(i.id, _.values(graph.nodes)[$index+1+'+i*num+'].id)" />');
-                console.log('<!-- left connecting lines -->');
-                console.log('<line class="node-line" x1="5%" y1="50%" x2="0%" y2="50%" ng-if="($index+1) % 6 !== 1 && graph.connected(i.id, _.values(graph.nodes)[$index-1+'+i*num+'].id)" />');
-                console.log('<!-- down connecting lines -->');
-                console.log('<line class="node-line" x1="50%" y1="95%" x2="50%" y2="100%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index+'+(i+1)*num+'].id)" />');
-                console.log('<!-- up connecting lines-->');
-                console.log('<line class="node-line" x1="50%" y1="5%" x2="50%" y2="0%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index+'+(i-1)*num+'].id)"/>');
-                console.log('</svg>');
-                console.log('</div>');
-                console.log('</div>');
-                console.log(' ');
-            }
-        };
-
         angular.module('myApp', [])
             .controller('myCtrl', myCtrl)
             .factory('Graphing', Graphing)
@@ -162,22 +98,28 @@
 
                 // calculate shortest path
                 var isSource = true;
-                var source = null;
-                var target = null;
+                $scope.source = null;
+                $scope.target = null;
 
+                $scope.select = function(s) {
+                    isSource = s;
+                };
+                $scope.clear = function() {
+                    $scope.source = null;
+                    $scope.target = null;
+                    $('.node-rect').removeClass('path');
+                };
                 $scope.path = function(id) {
-                    isSource ? source = id : target = id;
+                    isSource ? $scope.source = id : $scope.target = id;
 
-                    if (!!source && !!target) {
-                        var dijResults  = Dijkstra.run(source, target, $scope.graph, 1);
-                        var shortestPath = Dijkstra.getPath(dijResults.prev, target);
+                    if (!!$scope.source && !!$scope.target) {
+                        var dijResults  = Dijkstra.run($scope.source, $scope.target, $scope.graph, 1);
+                        var shortestPath = Dijkstra.getPath(dijResults.prev, $scope.target);
                         $('.node-rect').removeClass('path');
                         $scope._.forEach(shortestPath, function(id) {
                             $('#' + id + '.node-rect').addClass('path');
                         });
                     }
-
-                    isSource = !isSource;
                 };
             }
 
