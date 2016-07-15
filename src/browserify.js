@@ -1,6 +1,6 @@
 // browserify.js
-// needed for browserify to inject required resources
-// var graphDijkstra = require('./graph-dijkstra.js');
+// inject required resources via browserify
+
 var Graph = require('./graph.js');
 var Dijkstra = require('./dijkstra.js');
 

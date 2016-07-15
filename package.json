@@ -1,5 +1,5 @@
 {
-  "name": "angular-graph-dijkstra",
+  "name": "graph-dijkstra",
   "version": "0.3.0",
   "author": "LITOSI",
   "main": "dist/graph-dijkstra.js",
