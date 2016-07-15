@@ -44,6 +44,7 @@
     "gulp-uglify": "^1.5.4",
     "jshint": "^2.9.1",
     "jshint-stylish": "^2.2.0",
+    "lodash": "^4.13.1",
     "mocha": "^2.3.4",
     "run-sequence": "^1.1.5",
     "vinyl-buffer": "^1.0.0",
@@ -56,6 +57,5 @@
   "private": false,
   "license": "MIT",
   "dependencies": {
-    "lodash": "^4.13.1"
   }
 }

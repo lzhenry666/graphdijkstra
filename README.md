@@ -29,14 +29,14 @@ See [wiki pages](#) for more detail
 ---
 
 #### Graphing
-###### (angular factory)
+###### (angular service)
 * **graph** - variable **Graph**
 * **createGraph(url, debug)** - returns **Graph**
 
 ---
 
 #### Dijkstra
-###### (angular factory)
+###### (angular service)
 * **RUN(graph)** - returns **{dist, prev}**
 
 ---
