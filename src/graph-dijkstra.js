@@ -6,40 +6,45 @@
     'use strict';
 
     // var Graphing = require('./graphing.js');
-    var Graph = require('./graph.js');
-    var Dijkstra = require('./dijkstra.js');
+    // var Graph = require('./graph.js');
+    // var Dijkstra = require('./dijkstra.js');
 
-    /* global angular */
-    angular.module('graphDijkstra', [])
-        .factory('Graphing', Graphing)
-        .factory('Dijkstra', Dijkstra);
+    module.exports = {
+        Graph: require('./graph.js'),
+        Dijkstra: require('./dijkstra.js')
+    };
 
-    Graphing.$inject = ['$http'];
-    function Graphing($http) {
-        var service = {
-            graph: null,
+    // /* global angular */
+    // angular.module('graphDijkstra', [])
+    //     .factory('Graphing', Graphing)
+    //     .factory('Dijkstra', Dijkstra);
 
-            createGraph: createGraph
-        };
+    // Graphing.$inject = ['$http'];
+    // function Graphing($http) {
+    //     var service = {
+    //         graph: null,
 
-        return service;
+    //         createGraph: createGraph
+    //     };
 
-        //------------------------------------------------//
+    //     return service;
 
-        function createGraph(url, debug) {
-            $http.get(url)
-                .success(function(data) {
-                    service.graph = new Graph({
-                        graph: data,
-                        debug: debug || false // default to false
-                    });
+    //     //------------------------------------------------//
 
-                    return service.graph;
-                })
-                .error(function(error) {
-                    console.error(error || 'Request failed');
-                });
-        }
-    }
+    //     function createGraph(url, debug) {
+    //         $http.get(url)
+    //             .success(function(data) {
+    //                 service.graph = new Graph({
+    //                     graph: data,
+    //                     debug: debug || false // default to false
+    //                 });
+
+    //                 return service.graph;
+    //             })
+    //             .error(function(error) {
+    //                 console.error(error || 'Request failed');
+    //             });
+    //     }
+    // }
 
 })();
