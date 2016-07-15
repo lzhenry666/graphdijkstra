@@ -3,7 +3,7 @@
 An angular wrapper for an undirected graph that allows for finding the shortest
 path via Dijkstra's algorithm.
 
-**Version:** 0.2.1
+**Version:** 0.3.0
 
 ## Installation & Usage
 
@@ -19,7 +19,7 @@ path via Dijkstra's algorithm.
 
 ## Public API
 
-See [wiki pages](#) for more detail
+See [wiki pages]() for more detail
 
 #### graphDijkstra
 ###### (angular module)
@@ -67,7 +67,7 @@ This project is tailored for use in the [Lincoln Employee Locator ] and may not 
 be optimally portable. We encourage and appreciate any contributions that aim to
 enhance the generality/portability of this module.
 
-[Lincoln Employee Locator]: https://github.com/LincolnTechOpenSource/lincoln-gps
+[Lincoln Employee Locator ]: https://github.com/LincolnTechOpenSource/lincoln-gps
 
 
 ## How to Contribute
