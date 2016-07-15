@@ -19,7 +19,7 @@
             }
             .graph .col {
                 padding: 0;
-                height: 145px;
+                height: 140px;
             }
             .node-rect {
                 x: 5%;
@@ -52,14 +52,18 @@
                 <div class="col col-xs-5">
                     <button class="btn btn-primary" ng-click="select(true)">Source: {{ graph.find(source) || 'N/A'}}</button>
                 </div>
-                <div class="col col-xs-2">
-                    <button class="btn btn-warning" ng-click="clear()">Reset</button>
+                <div class="col col-xs-1">
+                    <button class="btn btn-warning" ng-click="clear()">Clear Path</button>
                 </div>
                 <div class="col col-xs-5">
                     <button class="btn btn-success" ng-click="select(false)">Target: {{ graph.find(target) || 'N/A'}}</button>
                 </div>
+                <div class="col col-xs-1">
+                    <button class="btn">Distance {{ dist || 0 }}</button>
+                </div>
             </div>
         </div>
+        <!-- display all of the nodes in graph.json as rectangles and edges in the grid -->
         <div class="container">
             <div class="graph row" ng-repeat="j in [0, 1, 2, 3, 4, 5]">
                 <div class="col col-xs-2" ng-repeat="i in _.values(graph.nodes).slice(j*6,(j+1)*6)" ng-click="path(i.id)">
@@ -89,73 +93,95 @@
             .factory('Dijkstra', Dijkstra);
 
 
-            function myCtrl($scope, Graphing, Dijkstra) {
-                $scope._ = window._; // load lodash
-                // create and store graph
-                Graphing.createGraph('./graph.json', true).then(function() {
-                    $scope.graph = Graphing.graph;
-                });
+        function myCtrl($scope, Graphing, Dijkstra) {
+            $scope._ = window._; // load lodash
+            // create and store graph using graph.json
+            Graphing.createGraph('./graph.json', true).then(function() {
+                $scope.graph = Graphing.graph;
+            });
 
-                // calculate shortest path
-                var isSource = true;
+            var isSource = true;  // click should set source or target ?
+            $scope.source = null; // path source
+            $scope.target = null; // path target
+            $scope.dist = 0;      // distance of path
+
+            // use button to determine which to select (source vs. target)
+            $scope.select = function(s) {
+                isSource = s;
+            };
+
+            // clear the path & source/target
+            $scope.clear = function() {
                 $scope.source = null;
                 $scope.target = null;
+                $scope.dist = 0;
+                $('.node-rect').removeClass('path');
+            };
 
-                $scope.select = function(s) {
-                    isSource = s;
-                };
-                $scope.clear = function() {
-                    $scope.source = null;
-                    $scope.target = null;
-                    $('.node-rect').removeClass('path');
-                };
-                $scope.path = function(id) {
-                    isSource ? $scope.source = id : $scope.target = id;
+            // calculate shortest path
+            // upon clicking a node, highlight the node
+            // if both source and target are selected, run Dijkstra's algorithm to
+            // calculate the distances and previous for the path
+            // then highlight along the path (by adding class 'path')
+            $scope.path = function(id) {
+                isSource ? $scope.source = id : $scope.target = id; // set appropriately
 
-                    if (!!$scope.source && !!$scope.target) {
-                        var dijResults  = Dijkstra.run($scope.source, $scope.target, $scope.graph, 1);
-                        var shortestPath = Dijkstra.getPath(dijResults.prev, $scope.target);
-                        $('.node-rect').removeClass('path');
-                        $scope._.forEach(shortestPath, function(id) {
-                            $('#' + id + '.node-rect').addClass('path');
-                        });
-                    }
-                };
-            }
+                // reset highlighting and highlight the source & target
+                $('.node-rect').removeClass('path');
+                $('#' + $scope.source + '.node-rect').addClass('path');
+                $('#' + $scope.target + '.node-rect').addClass('path');
 
-            /**
-             * Graphing: example angular service using Graph
-             * @graph stores a created graph (enables use between controllers)
-             * @createGraph(url, debug) creates a new graph given the url to a json
-             * graph (in this case ./graph.json) and debug allows the enable or disable
-             * verification during graph construction
-             */
-            function Graphing($http) {
-                var service = {
-                    graph: null,
+                // if both are set, calculate the shortest path
+                if (!!$scope.source && !!$scope.target) {
+                    // run Dijkstra's algorithm, calculating distance and previous
+                    var dijResults = Dijkstra.run($scope.source, $scope.target, $scope.graph, 1);
+                    // set distance
+                    $scope.dist = dijResults.dist[$scope.target];
+                    // find the shortest path (an array of ids)
+                    var shortestPath = Dijkstra.getPath(dijResults.prev, $scope.target);
 
-                    createGraph: createGraph
-                };
-
-                return service;
-
-                //------------------------------------------------//
-
-                function createGraph(url, debug) {
-                    return $http.get(url)
-                        .success(function(data) {
-                            service.graph = new Graph({
-                                graph: data,
-                                debug: debug || false // default to false
-                            });
-
-                            return service.graph;
-                        })
-                        .error(function(error) {
-                            console.error(error || 'Request failed');
-                        });
+                    // highlight (via class path) the shortest path on the grid
+                    $scope._.forEach(shortestPath, function(id) {
+                        $('#' + id + '.node-rect').addClass('path');
+                    });
                 }
-            }
-    </script>
+            };
+        }
 
+        /**
+         * Graphing: example angular service using Graph
+         * @graph stores a created graph (enables use between controllers)
+         * @createGraph(url, debug) creates a new graph given the url to a json
+         * graph (in this case ./graph.json) and debug allows the enable or disable
+         * verification during graph construction
+         */
+        function Graphing($http) {
+            var service = {
+                graph: null,
+
+                createGraph: createGraph
+            };
+
+            return service;
+
+            //------------------------------------------------//
+
+            function createGraph(url, debug) {
+                // use http to get the graph json
+                return $http.get(url)
+                    .success(function(data) {
+                        // create the new graph
+                        service.graph = new Graph({
+                            graph: data,
+                            debug: debug || false // default to false
+                        });
+
+                        return service.graph;
+                    })
+                    .error(function(error) {
+                        console.error(error || 'Request failed');
+                    });
+            }
+        }
+    </script>
 </html>
