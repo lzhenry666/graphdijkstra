@@ -1,7 +1,11 @@
-# angular-graph-dijkstra
+# graph-dijkstra
 
-An angular wrapper for an undirected graph that allows for finding the shortest
-path via Dijkstra's algorithm.
+A simple undirected graph that allows for finding the shortest path between nodes
+via [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#Using_a_priority_queue).
+This portable package can easily be wrapper into an angular service (as seen in our [demo](demo)).
+
+Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
+
 
 **Version:** 0.3.0
 
@@ -12,24 +16,41 @@ path via Dijkstra's algorithm.
 2. Include the JavaScript file
    * `<link rel="stylesheet" href="node_modules/angular-graph-dijkstra/dist/graph-dijkstra.js">`
    * or `<link rel="stylesheet" href="node_modules/angular-graph-dijkstra/dist/graph-dijkstra.min.js">`
-3. Add the dependency module
-   * `var myApp = angular.module('myApp', ['graphDijkstra']);`
-4. Use the available directives
-   * `angular.controller('myCtrl', function(Graphing, Dijkstra) { ... });`
+3. Use the available API - for example:
+   ```javascript
+   var graph = new Graph();
+   graph.addNode(1, {weight: 1, nType: 1});
+   graph.addNode(2, {weight: 1, nType: 1});
+   graph.addNode(3, {weight: 4, nType: 1});
+
+   graph.addEdge(1, 2);
+   graph.addEdge(2, 3);
+   graph.addEdge(1, 3);
+
+   var results = Dijkstra.run(graph, 1, 3);
+   var path = Dijkstra.getPath(results.prev, 3);
+
+   console.log(results); // logs: #####
+   console.log(path);    // logs: #####
+   console.log('node 1 is ' + results.dist[3] + ' units from node 3'); // logs: ####
+   ```
 
 ## Demos
 
-* See the module in action with our simple [demo](demo/index.html).
+* See the package in an angular application with our simple [demo](demo).
 
-   Here we use a basic 36 node graph to serve as a grid and demonstrate how to go about
-finding and acting on the shortest path.
+[demo]: demo/index.html
 
-* For an example of this module at work in a larger project, see our
+   Here we create a simple service to wrap the **Graph**. Using this service we make a
+   36 node graph to serve as a grid and demonstrate how to go about finding and
+   acting on the shortest path.
+
+* For an example of this package at work in a larger project, see our
 [Lincoln Employee Locator](lincoln-gps) application.
 
-   In this project **Graphing**
-serves as the underlying graph of location objects (nodes) on which we run **Dijkstra** to
-find the shortest paths between them.
+   In this project we again create a service to wrap **Graph**, which serves as
+   the underlying graph of location objects (nodes) on which we run **Dijkstra**
+   to find the shortest paths between them and generate directions.
 
 ## Dependencies
 
