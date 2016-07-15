@@ -1778,32 +1778,35 @@ module.exports = union;
 },{"./_baseFlatten":12,"./_baseUniq":16,"./isArrayLikeObject":55,"./rest":62}],67:[function(require,module,exports){
 // browserify.js
 // needed for browserify to inject required resources
-var graphDijkstra = require('./graph-dijkstra.js');
-// var Dijkstra = require('./graph-dijkstra.js').Dijkstra;
+require('./graph-dijkstra.js');
 
-// UMD module definition
-(function(window, document){
-  // AMD
-  if (typeof define === 'function' && define.amd) {
-    define('graph', function () {
-      return graphDijkstra.Graph;
-    });
-    define('dijkstra', function () {
-      return graphDijkstra.Dijkstra;
-    });
-  // CMD
-  } else if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        Graph: graphDijkstra.Graph,
-        Dijkstra: graphDijkstra.Dijkstra
-    };
 
-    // Browser
-    // Keep exporting globally as module.exports is available because of browserify
-    window.Graph = graphDijkstra.Graph;
-    window.Dijkstra = graphDijkstra.Dijkstra;
-  }
-})(window, document);
+// var graphDijkstra = require('./graph-dijkstra.js');
+// // var Dijkstra = require('./graph-dijkstra.js').Dijkstra;
+
+// // UMD module definition
+// (function(window, document){
+//   // AMD
+//   if (typeof define === 'function' && define.amd) {
+//     define('graph', function () {
+//       return graphDijkstra.Graph;
+//     });
+//     define('dijkstra', function () {
+//       return graphDijkstra.Dijkstra;
+//     });
+//   // CMD
+//   } else if (typeof module !== 'undefined' && module.exports) {
+//     module.exports = {
+//         Graph: graphDijkstra.Graph,
+//         Dijkstra: graphDijkstra.Dijkstra
+//     };
+
+//     // Browser
+//     // Keep exporting globally as module.exports is available because of browserify
+//     window.Graph = graphDijkstra.Graph;
+//     window.Dijkstra = graphDijkstra.Dijkstra;
+//   }
+// })(window, document);
 },{"./graph-dijkstra.js":69}],68:[function(require,module,exports){
 /**
  * dijkstra.js
@@ -2167,13 +2170,13 @@ var graphDijkstra = require('./graph-dijkstra.js');
                 graph.addEdge(source, target);
             }
         }
-        // else {
-        //     console.warn('Deprecation Warning: ');
-        //     console.warn(' Initializing graph object by only specifying nodes is ' +
-        //         'deprecated and will be removed in v1.0.0');
-        //     console.warn('  * To solve this please supply both nodes and edges in the graph object');
-        //     console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
-        // }
+        else {
+            console.warn('Deprecation Warning: ');
+            console.warn(' Initializing graph object by only specifying nodes is ' +
+                'deprecated and will be removed in v1.0.0');
+            console.warn('  * To solve this please supply both nodes and edges in the graph object');
+            console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
+        }
 
         // verify the graph if debug is true
         if (params.debug && !!params.graph) {
@@ -2382,15 +2385,6 @@ var graphDijkstra = require('./graph-dijkstra.js');
         return this.find(source).neighbors.indexOf(target) >= 0 && this.find(target).neighbors.indexOf(source) >= 0;
     };
 
-    // /**
-    //  * Graph.weight: return the weight of the specified edge/node
-    //  * the weight of an edge is defined as the weight of the source node
-    //  * @source: ID of the node to check
-    //  */
-    // Graph.prototype.weight = function(source) {
-    //     return this.nodes[source].weight;
-    // };
-
     /**
      * Graph.update: set the properties of the node specified by @id
      * @id: id of the node to update
@@ -2499,7 +2493,7 @@ var graphDijkstra = require('./graph-dijkstra.js');
         //------------------------------------------------//
 
         function createGraph(url, debug) {
-            $http.get(url)
+            return $http.get(url)
                 .success(function(data) {
                     service.graph = new Graph({
                         graph: data,

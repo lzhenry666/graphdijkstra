@@ -69,13 +69,13 @@
                 graph.addEdge(source, target);
             }
         }
-        // else {
-        //     console.warn('Deprecation Warning: ');
-        //     console.warn(' Initializing graph object by only specifying nodes is ' +
-        //         'deprecated and will be removed in v1.0.0');
-        //     console.warn('  * To solve this please supply both nodes and edges in the graph object');
-        //     console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
-        // }
+        else {
+            console.warn('Deprecation Warning: ');
+            console.warn(' Initializing graph object by only specifying nodes is ' +
+                'deprecated and will be removed in v1.0.0');
+            console.warn('  * To solve this please supply both nodes and edges in the graph object');
+            console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
+        }
 
         // verify the graph if debug is true
         if (params.debug && !!params.graph) {
@@ -283,15 +283,6 @@
         }
         return this.find(source).neighbors.indexOf(target) >= 0 && this.find(target).neighbors.indexOf(source) >= 0;
     };
-
-    // /**
-    //  * Graph.weight: return the weight of the specified edge/node
-    //  * the weight of an edge is defined as the weight of the source node
-    //  * @source: ID of the node to check
-    //  */
-    // Graph.prototype.weight = function(source) {
-    //     return this.nodes[source].weight;
-    // };
 
     /**
      * Graph.update: set the properties of the node specified by @id

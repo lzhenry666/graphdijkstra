@@ -3,9 +3,9 @@
 An angular wrapper for an undirected graph that allows for finding the shortest
 path via Dijkstra's algorithm.
 
-**Version:** 0.2.1
+**Version:** 0.3.0
 
-## Installation & Usage
+## Installation & Typical Usage
 
 1. Install via npm
    * `$ npm install --save-dev https://github.com/LincolnTechOpenSource/angular-graph-dijkstra`
@@ -17,9 +17,27 @@ path via Dijkstra's algorithm.
 4. Use the available directives
    * `angular.controller('myCtrl', function(Graphing, Dijkstra) { ... });`
 
+## Demos
+
+* See the module in action with our simple [demo](demo/index.html).
+
+   Here we use a basic 36 node graph to serve as a grid and demonstrate how to go about
+finding and acting on the shortest path.
+
+* For an example of this module at work in a larger project, see our
+[Lincoln Employee Locator](lincoln-gps) application.
+
+   In this project **Graphing**
+serves as the underlying graph of location objects (nodes) on which we run **Dijkstra** to
+find the shortest paths between them.
+
+## Dependencies
+
+This library assumes that `angular` is available globally and it relies angular's `$http` service.
+
 ## Public API
 
-See [wiki pages](#) for more detail
+See [wiki pages]() for more detail
 
 #### graphDijkstra
 ###### (angular module)
@@ -56,18 +74,13 @@ See [wiki pages](#) for more detail
 * **connected(source, target)**  -  returns **boolean**
 * **update(id, props)** -             returns **Node**
 
-
-## Dependencies
-
-   * [Lodash v4.3.1](https://www.npmjs.com/package/lodash)
-
 ## Important!
 
-This project is tailored for use in the [Lincoln Employee Locator ] and may not yet
+This project is tailored for use in the [Lincoln Employee Locator](lincoln-gps) and may not yet
 be optimally portable. We encourage and appreciate any contributions that aim to
 enhance the generality/portability of this module.
 
-[Lincoln Employee Locator]: https://github.com/LincolnTechOpenSource/lincoln-gps
+[lincoln-gps]: https://github.com/LincolnTechOpenSource/lincoln-gps
 
 
 ## How to Contribute
@@ -82,6 +95,8 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md)
 **Adapted Resources:**
    * [Min Heap with Decrease Key](https://github.com/rombdn/js-binaryheap-decreasekey)
 
+**Library Resources:**
+   * [Lodash v4.3.1](https://www.npmjs.com/package/lodash)
 
 ## License
 
