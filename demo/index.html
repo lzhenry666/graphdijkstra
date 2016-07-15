@@ -1,0 +1,151 @@
+<!--index.html-->
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+        <title>Graph Dijkstra Example</title>
+
+        <!-- using lodash and bootstrap in the example -->
+        <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+        <style>
+            body {
+                background-color: #DDD;
+            }
+            .graph .col {
+                padding: 0;
+                height: 140px;
+            }
+            .node-rect {
+                x: 5%;
+                y: 5%;
+                width: 90%;
+                height: 90%;
+                stroke: black;
+                stroke-width: 2px;
+                fill: #33F;
+            }
+            .node-rect.path {
+                fill: #0FF;
+            }
+            .node-text {
+                fill: #D00;
+            }
+            .node-line {
+                stroke: black;
+                stroke-width: 10px;
+            }
+            .node-rect.path ~ .node-line {
+                /*stroke: #fff;*/
+            }
+        </style>
+    </head>
+
+    <body ng-controller="myCtrl">
+        <div class="container">
+            <div class="row">
+                <div class="col col-xs-5">
+                    <button class="btn btn-primary" ng-click="select(true)">Source: {{ graph.find(source) || 'N/A'}}</button>
+                </div>
+                <div class="col col-xs-1">
+                    <button class="btn btn-warning" ng-click="clear()">Clear Path</button>
+                </div>
+                <div class="col col-xs-5">
+                    <button class="btn btn-success" ng-click="select(false)">Target: {{ graph.find(target) || 'N/A'}}</button>
+                </div>
+                <div class="col col-xs-1">
+                    <button class="btn">Distance {{ dist || 0 }}</button>
+                </div>
+            </div>
+        </div>
+        <!-- display all of the nodes in graph.json as rectangles and edges in the grid -->
+        <div class="container">
+            <div class="graph row" ng-repeat="j in [0, 1, 2, 3, 4, 5]">
+                <div class="col col-xs-2" ng-repeat="i in _.values(graph.nodes).slice(j*6,(j+1)*6)" ng-click="path(i.id)">
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <rect id="{{i.id}}" class="node-rect" />
+                    <text class="node-text" x="50%" y="50%" text-anchor="middle" font-size="24" font-weight="600">
+                        {{ i.id }}
+                    </text>
+                    <!-- right connecting lines -->
+                    <line class="node-line" x1="95%" y1="50%" x2="100%" y2="50%" ng-if="($index+1) % 6 !== 0 && graph.connected(i.id, _.values(graph.nodes)[$index+1+j*6].id)" />
+                    <!-- left connecting lines -->
+                    <line class="node-line" x1="5%" y1="50%" x2="0%" y2="50%" ng-if="($index+1) % 6 !== 1 && graph.connected(i.id, _.values(graph.nodes)[$index-1+j*6].id)" />
+                    <!-- down connecting lines -->
+                    <line class="node-line" x1="50%" y1="95%" x2="50%" y2="100%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index+(j+1)*6].id)" />
+                    <!-- up connecting lines-->
+                    <line class="node-line" x1="50%" y1="5%" x2="50%" y2="0%" ng-if="graph.connected(i.id, _.values(graph.nodes)[$index+(j-1)*6].id)"/>
+                </svg>
+            </div>
+        </div>
+    </body>
+
+    <script src="../dist/graph-dijkstra.js"></script>
+    <script>
+        angular.module('myApp', ['graphDijkstra'])
+            .controller('myCtrl', myCtrl);
+
+
+        function myCtrl($scope, Graphing, Dijkstra) {
+            $scope._ = window._; // load lodash
+            // create and store graph using graph.json
+            Graphing.createGraph('./graph.json', true).then(function() {
+                $scope.graph = Graphing.graph;
+            });
+
+            var isSource = true;  // click should set source or target ?
+            $scope.source = null; // path source
+            $scope.target = null; // path target
+            $scope.dist = 0;      // distance of path
+
+            // use button to determine which to select (source vs. target)
+            $scope.select = function(s) {
+                isSource = s;
+            };
+
+            // clear the path & source/target
+            $scope.clear = function() {
+                $scope.source = null;
+                $scope.target = null;
+                $scope.dist = 0;
+                $('.node-rect').removeClass('path');
+            };
+
+            // calculate shortest path
+            // upon clicking a node, highlight the node
+            // if both source and target are selected, run Dijkstra's algorithm to
+            // calculate the distances and previous for the path
+            // then highlight along the path (by adding class 'path')
+            $scope.path = function(id) {
+                isSource ? $scope.source = id : $scope.target = id; // set appropriately
+
+                // reset highlighting and highlight the source & target
+                $('.node-rect').removeClass('path');
+                $('#' + $scope.source + '.node-rect').addClass('path');
+                $('#' + $scope.target + '.node-rect').addClass('path');
+
+                // if both are set, calculate the shortest path
+                if (!!$scope.source && !!$scope.target) {
+                    // run Dijkstra's algorithm, calculating distance and previous
+                    var dijResults = Dijkstra.run($scope.source, $scope.target, $scope.graph, 1);
+                    // set distance
+                    $scope.dist = dijResults.dist[$scope.target];
+                    // find the shortest path (an array of ids)
+                    var shortestPath = Dijkstra.getPath(dijResults.prev, $scope.target);
+
+                    // highlight (via class path) the shortest path on the grid
+                    $scope._.forEach(shortestPath, function(id) {
+                        $('#' + id + '.node-rect').addClass('path');
+                    });
+                }
+            };
+        }
+
+
+    </script>
+</html>

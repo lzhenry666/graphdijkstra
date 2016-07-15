@@ -39,10 +39,11 @@
         }
 
         // graph is supplied, initialize to that
-        return initializeGraph(this, params);
+        return _initializeGraph(this, params);
     };
 
-    function initializeGraph(graph, params) {
+    /** initializeGraph: helper function for Graph constructor to handle supplied @params */
+    function _initializeGraph(graph, params) {
         var i = 0;
 
         // add each of the nodes in the supplied graph
@@ -53,7 +54,7 @@
                 var node = graph.find(nodeVals.id);
                 nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
                 graph.update(nodeVals.id, nodeVals.props);
-                fixConsistency(graph, node);
+                _fixConsistency(graph, node);
             }
             else {
                 graph.addNode(nodeVals.id, nodeVals.props); // create new
@@ -68,13 +69,13 @@
                 graph.addEdge(source, target);
             }
         }
-        // else {
-        //     console.warn('Deprecation Warning: ');
-        //     console.warn(' Initializing graph object by only specifying nodes is ' +
-        //         'deprecated and will be removed in v1.0.0');
-        //     console.warn('  * To solve this please supply both nodes and edges in the graph object');
-        //     console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
-        // }
+        else {
+            console.warn('Deprecation Warning: ');
+            console.warn(' Initializing graph object by only specifying nodes is ' +
+                'deprecated and will be removed in v1.0.0');
+            console.warn('  * To solve this please supply both nodes and edges in the graph object');
+            console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
+        }
 
         // verify the graph if debug is true
         if (params.debug && !!params.graph) {
@@ -156,15 +157,15 @@
             this.nodes[id] = node;
 
             ++this.nodeCount;
-            fixConsistency(this, node); // fix possible inconsistencies
+            _fixConsistency(this, node); // fix possible inconsistencies
         }
         return this.nodes[id];
     };
 
-    /** fixConsistency: fixes the inconsistencies in @graph caused by the neighbors
+    /** _fixConsistency: fixes the inconsistencies in @graph caused by the neighbors
      * of @node by adding the necessary edges
      */
-    function fixConsistency(graph, node) {
+    function _fixConsistency(graph, node) {
         // ensure consistency of graph by adding necessary edges to specified neighbors
         for (var i = 0; i < node.neighbors.length; i++) {
             var neigh = graph.addNode(node.neighbors[i]); // create neighbor (if necessary)
@@ -282,15 +283,6 @@
         }
         return this.find(source).neighbors.indexOf(target) >= 0 && this.find(target).neighbors.indexOf(source) >= 0;
     };
-
-    // /**
-    //  * Graph.weight: return the weight of the specified edge/node
-    //  * the weight of an edge is defined as the weight of the source node
-    //  * @source: ID of the node to check
-    //  */
-    // Graph.prototype.weight = function(source) {
-    //     return this.nodes[source].weight;
-    // };
 
     /**
      * Graph.update: set the properties of the node specified by @id

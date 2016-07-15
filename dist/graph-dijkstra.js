@@ -1780,6 +1780,33 @@ module.exports = union;
 // needed for browserify to inject required resources
 require('./graph-dijkstra.js');
 
+
+// var graphDijkstra = require('./graph-dijkstra.js');
+// // var Dijkstra = require('./graph-dijkstra.js').Dijkstra;
+
+// // UMD module definition
+// (function(window, document){
+//   // AMD
+//   if (typeof define === 'function' && define.amd) {
+//     define('graph', function () {
+//       return graphDijkstra.Graph;
+//     });
+//     define('dijkstra', function () {
+//       return graphDijkstra.Dijkstra;
+//     });
+//   // CMD
+//   } else if (typeof module !== 'undefined' && module.exports) {
+//     module.exports = {
+//         Graph: graphDijkstra.Graph,
+//         Dijkstra: graphDijkstra.Dijkstra
+//     };
+
+//     // Browser
+//     // Keep exporting globally as module.exports is available because of browserify
+//     window.Graph = graphDijkstra.Graph;
+//     window.Dijkstra = graphDijkstra.Dijkstra;
+//   }
+// })(window, document);
 },{"./graph-dijkstra.js":69}],68:[function(require,module,exports){
 /**
  * dijkstra.js
@@ -1952,17 +1979,54 @@ require('./graph-dijkstra.js');
 })();
 
 },{"./min_heap.js":73}],69:[function(require,module,exports){
-// graph-dijkstra.js
+/**
+ * graph-dijkstra.js
+ * example angular implementation of the services
+ */
 (function() {
-  'use strict';
+    'use strict';
 
-  var Graphing = require('./graphing.js');
-  var Dijkstra = require('./dijkstra.js');
+    var Graphing = require('./graphing.js');
+    // var Graph = require('./graph.js');
+    var Dijkstra = require('./dijkstra.js');
 
-  /* global angular */
-  angular.module('graphDijkstra', [])
-    .factory('Graphing', Graphing)
-    .factory('Dijkstra', Dijkstra);
+    // module.exports = {
+    //     Graph: require('./graph.js'),
+    //     Dijkstra: require('./dijkstra.js')
+    // };
+
+    /* global angular */
+    angular.module('graphDijkstra', [])
+        .factory('Graphing', Graphing)
+        .factory('Dijkstra', Dijkstra);
+
+    // Graphing.$inject = ['$http'];
+    // function Graphing($http) {
+    //     var service = {
+    //         graph: null,
+
+    //         createGraph: createGraph
+    //     };
+
+    //     return service;
+
+    //     //------------------------------------------------//
+
+    //     function createGraph(url, debug) {
+    //         $http.get(url)
+    //             .success(function(data) {
+    //                 service.graph = new Graph({
+    //                     graph: data,
+    //                     debug: debug || false // default to false
+    //                 });
+
+    //                 return service.graph;
+    //             })
+    //             .error(function(error) {
+    //                 console.error(error || 'Request failed');
+    //             });
+    //     }
+    // }
 
 })();
 },{"./dijkstra.js":68,"./graphing.js":72}],70:[function(require,module,exports){
@@ -2076,10 +2140,11 @@ require('./graph-dijkstra.js');
         }
 
         // graph is supplied, initialize to that
-        return initializeGraph(this, params);
+        return _initializeGraph(this, params);
     };
 
-    function initializeGraph(graph, params) {
+    /** initializeGraph: helper function for Graph constructor to handle supplied @params */
+    function _initializeGraph(graph, params) {
         var i = 0;
 
         // add each of the nodes in the supplied graph
@@ -2090,7 +2155,7 @@ require('./graph-dijkstra.js');
                 var node = graph.find(nodeVals.id);
                 nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
                 graph.update(nodeVals.id, nodeVals.props);
-                fixConsistency(graph, node);
+                _fixConsistency(graph, node);
             }
             else {
                 graph.addNode(nodeVals.id, nodeVals.props); // create new
@@ -2193,15 +2258,15 @@ require('./graph-dijkstra.js');
             this.nodes[id] = node;
 
             ++this.nodeCount;
-            fixConsistency(this, node); // fix possible inconsistencies
+            _fixConsistency(this, node); // fix possible inconsistencies
         }
         return this.nodes[id];
     };
 
-    /** fixConsistency: fixes the inconsistencies in @graph caused by the neighbors
+    /** _fixConsistency: fixes the inconsistencies in @graph caused by the neighbors
      * of @node by adding the necessary edges
      */
-    function fixConsistency(graph, node) {
+    function _fixConsistency(graph, node) {
         // ensure consistency of graph by adding necessary edges to specified neighbors
         for (var i = 0; i < node.neighbors.length; i++) {
             var neigh = graph.addNode(node.neighbors[i]); // create neighbor (if necessary)
@@ -2437,7 +2502,7 @@ require('./graph-dijkstra.js');
         //------------------------------------------------//
 
         function createGraph(url, debug) {
-            $http.get(url)
+            return $http.get(url)
                 .success(function(data) {
                     service.graph = new Graph({
                         graph: data,

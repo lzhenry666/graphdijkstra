@@ -20,7 +20,7 @@
         //------------------------------------------------//
 
         function createGraph(url, debug) {
-            $http.get(url)
+            return $http.get(url)
                 .success(function(data) {
                     service.graph = new Graph({
                         graph: data,
