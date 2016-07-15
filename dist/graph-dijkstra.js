@@ -1778,36 +1778,34 @@ module.exports = union;
 },{"./_baseFlatten":12,"./_baseUniq":16,"./isArrayLikeObject":55,"./rest":62}],67:[function(require,module,exports){
 // browserify.js
 // needed for browserify to inject required resources
-require('./graph-dijkstra.js');
-
-
 // var graphDijkstra = require('./graph-dijkstra.js');
-// // var Dijkstra = require('./graph-dijkstra.js').Dijkstra;
+var Graph = require('./graph.js');
+var Dijkstra = require('./dijkstra.js');
 
-// // UMD module definition
-// (function(window, document){
-//   // AMD
-//   if (typeof define === 'function' && define.amd) {
-//     define('graph', function () {
-//       return graphDijkstra.Graph;
-//     });
-//     define('dijkstra', function () {
-//       return graphDijkstra.Dijkstra;
-//     });
-//   // CMD
-//   } else if (typeof module !== 'undefined' && module.exports) {
-//     module.exports = {
-//         Graph: graphDijkstra.Graph,
-//         Dijkstra: graphDijkstra.Dijkstra
-//     };
+// UMD module definition
+(function(window, document){
+  // AMD
+  if (typeof define === 'function' && define.amd) {
+    define('graph', function () {
+      return Graph;
+    });
+    define('dijkstra', function () {
+      return Dijkstra;
+    });
+  // CMD
+  } else if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        Graph: Graph,
+        Dijkstra: Dijkstra
+    };
 
-//     // Browser
-//     // Keep exporting globally as module.exports is available because of browserify
-//     window.Graph = graphDijkstra.Graph;
-//     window.Dijkstra = graphDijkstra.Dijkstra;
-//   }
-// })(window, document);
-},{"./graph-dijkstra.js":69}],68:[function(require,module,exports){
+    // Browser
+    // Keep exporting globally as module.exports is available because of browserify
+    window.Graph = Graph;
+    window.Dijkstra = Dijkstra;
+  }
+})(window, document);
+},{"./dijkstra.js":68,"./graph.js":70}],68:[function(require,module,exports){
 /**
  * dijkstra.js
  * 06/01/16
@@ -1978,58 +1976,7 @@ require('./graph-dijkstra.js');
     }
 })();
 
-},{"./min_heap.js":73}],69:[function(require,module,exports){
-/**
- * graph-dijkstra.js
- * example angular implementation of the services
- */
-(function() {
-    'use strict';
-
-    var Graphing = require('./graphing.js');
-    // var Graph = require('./graph.js');
-    var Dijkstra = require('./dijkstra.js');
-
-    // module.exports = {
-    //     Graph: require('./graph.js'),
-    //     Dijkstra: require('./dijkstra.js')
-    // };
-
-    /* global angular */
-    angular.module('graphDijkstra', [])
-        .factory('Graphing', Graphing)
-        .factory('Dijkstra', Dijkstra);
-
-    // Graphing.$inject = ['$http'];
-    // function Graphing($http) {
-    //     var service = {
-    //         graph: null,
-
-    //         createGraph: createGraph
-    //     };
-
-    //     return service;
-
-    //     //------------------------------------------------//
-
-    //     function createGraph(url, debug) {
-    //         $http.get(url)
-    //             .success(function(data) {
-    //                 service.graph = new Graph({
-    //                     graph: data,
-    //                     debug: debug || false // default to false
-    //                 });
-
-    //                 return service.graph;
-    //             })
-    //             .error(function(error) {
-    //                 console.error(error || 'Request failed');
-    //             });
-    //     }
-    // }
-
-})();
-},{"./dijkstra.js":68,"./graphing.js":72}],70:[function(require,module,exports){
+},{"./min_heap.js":71}],69:[function(require,module,exports){
 // graph-node.js
 (function() {
     'use strict';
@@ -2098,7 +2045,7 @@ require('./graph-dijkstra.js');
     module.exports = Node;
 })();
 
-},{}],71:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 /**
  * graph.js
  * 05/31/16
@@ -2470,49 +2417,7 @@ require('./graph-dijkstra.js');
 })();
 /*----------------------------------------------------------------------------*/
 
-},{"./graph-node.js":70,"lodash/union":66}],72:[function(require,module,exports){
-/**
- * graphing.js
- * 05/31/16
- *
- * an angular wrapper for the graph
- /*---------------------------------------------------------------------------*/
-(function() {
-    'use strict';
-
-    var Graph = require('./graph.js');
-    var Graphing = function($http) {
-        var service = {
-            graph: null,
-
-            createGraph: createGraph
-        };
-
-        return service;
-
-        //------------------------------------------------//
-
-        function createGraph(url, debug) {
-            return $http.get(url)
-                .success(function(data) {
-                    service.graph = new Graph({
-                        graph: data,
-                        debug: debug || false // default to false
-                    });
-
-                    return service.graph;
-                })
-                .error(function(error) {
-                    console.error(error || 'Request failed');
-                });
-        }
-    };
-
-    Graphing.$inject = ['$http'];
-    module.exports = Graphing;
-})();
-/*----------------------------------------------------------------------------*/
-},{"./graph.js":71}],73:[function(require,module,exports){
+},{"./graph-node.js":69,"lodash/union":66}],71:[function(require,module,exports){
 /*
  * min_heap.js
  * adapted from https://github.com/rombdn/js-binaryheap-decreasekey
