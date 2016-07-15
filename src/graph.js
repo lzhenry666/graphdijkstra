@@ -69,13 +69,13 @@
                 graph.addEdge(source, target);
             }
         }
-        // else {
-        //     console.warn('Deprecation Warning: ');
-        //     console.warn(' Initializing graph object by only specifying nodes is ' +
-        //         'deprecated and will be removed in v1.0.0');
-        //     console.warn('  * To solve this please supply both nodes and edges in the graph object');
-        //     console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
-        // }
+        else {
+            console.warn('Deprecation Warning: ');
+            console.warn(' Initializing graph object by only specifying nodes is ' +
+                'deprecated and will be removed in v1.0.0');
+            console.warn('  * To solve this please supply both nodes and edges in the graph object');
+            console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
+        }
 
         // verify the graph if debug is true
         if (params.debug && !!params.graph) {
