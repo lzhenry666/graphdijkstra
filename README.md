@@ -5,7 +5,7 @@ path via Dijkstra's algorithm.
 
 **Version:** 0.3.0
 
-## Installation & Usage
+## Installation & Typical Usage
 
 1. Install via npm
    * `$ npm install --save-dev https://github.com/LincolnTechOpenSource/angular-graph-dijkstra`
