@@ -87,10 +87,8 @@
 
     <script src="../dist/graph-dijkstra.js"></script>
     <script>
-        angular.module('myApp', [])
-            .controller('myCtrl', myCtrl)
-            .factory('Graphing', Graphing)
-            .factory('Dijkstra', Dijkstra);
+        angular.module('myApp', ['graphDijkstra'])
+            .controller('myCtrl', myCtrl);
 
 
         function myCtrl($scope, Graphing, Dijkstra) {
@@ -148,40 +146,6 @@
             };
         }
 
-        /**
-         * Graphing: example angular service using Graph
-         * @graph stores a created graph (enables use between controllers)
-         * @createGraph(url, debug) creates a new graph given the url to a json
-         * graph (in this case ./graph.json) and debug allows the enable or disable
-         * verification during graph construction
-         */
-        function Graphing($http) {
-            var service = {
-                graph: null,
 
-                createGraph: createGraph
-            };
-
-            return service;
-
-            //------------------------------------------------//
-
-            function createGraph(url, debug) {
-                // use http to get the graph json
-                return $http.get(url)
-                    .success(function(data) {
-                        // create the new graph
-                        service.graph = new Graph({
-                            graph: data,
-                            debug: debug || false // default to false
-                        });
-
-                        return service.graph;
-                    })
-                    .error(function(error) {
-                        console.error(error || 'Request failed');
-                    });
-            }
-        }
     </script>
 </html>
