@@ -284,15 +284,6 @@
         return this.find(source).neighbors.indexOf(target) >= 0 && this.find(target).neighbors.indexOf(source) >= 0;
     };
 
-    // /**
-    //  * Graph.weight: return the weight of the specified edge/node
-    //  * the weight of an edge is defined as the weight of the source node
-    //  * @source: ID of the node to check
-    //  */
-    // Graph.prototype.weight = function(source) {
-    //     return this.nodes[source].weight;
-    // };
-
     /**
      * Graph.update: set the properties of the node specified by @id
      * @id: id of the node to update
