@@ -89,17 +89,17 @@
     <script>
         angular.module('myApp', [])
             .controller('myCtrl', myCtrl)
-            .factory('Graphing', Graphing)
-            .factory('Dijkstra', Dijkstra);
+            .factory('Graphing', Graphing);
 
 
-        function myCtrl($scope, Graphing, Dijkstra) {
+        function myCtrl($scope, Graphing) {
             $scope._ = window._; // load lodash
             // create and store graph using graph.json
             Graphing.createGraph('./graph.json', true).then(function() {
                 $scope.graph = Graphing.graph;
             });
 
+            var PATH_TYPE = 1; // node nType that represents a valid path
             var isSource = true;  // click should set source or target ?
             $scope.source = null; // path source
             $scope.target = null; // path target
@@ -116,6 +116,7 @@
                 $scope.target = null;
                 $scope.dist = 0;
                 $('.node-rect').removeClass('path');
+                Graphing.clearCache();
             };
 
             // calculate shortest path
@@ -124,26 +125,42 @@
             // calculate the distances and previous for the path
             // then highlight along the path (by adding class 'path')
             $scope.path = function(id) {
-                isSource ? $scope.source = id : $scope.target = id; // set appropriately
-
-                // reset highlighting and highlight the source & target
-                $('.node-rect').removeClass('path');
-                $('#' + $scope.source + '.node-rect').addClass('path');
-                $('#' + $scope.target + '.node-rect').addClass('path');
+                // set and highlight new source or target (depending on which was selected)
+                if (isSource) {
+                    $('#' + $scope.source + '.node-rect').removeClass('path');
+                    $scope.source = id;
+                    $('#' + $scope.source + '.node-rect').addClass('path');
+                } else {
+                    $('#' + $scope.target + '.node-rect').removeClass('path');
+                    $scope.target = id;
+                    $('#' + $scope.target + '.node-rect').addClass('path');
+                }
 
                 // if both are set, calculate the shortest path
                 if (!!$scope.source && !!$scope.target) {
                     // run Dijkstra's algorithm, calculating distance and previous
-                    var dijResults = Dijkstra.run($scope.source, $scope.target, $scope.graph, 1);
-                    // set distance
-                    $scope.dist = dijResults.dist[$scope.target];
-                    // find the shortest path (an array of ids)
-                    var shortestPath = Dijkstra.getPath(dijResults.prev, $scope.target);
+                    var dijResults = Graphing.runDijkstra($scope.source, $scope.target, PATH_TYPE);
 
-                    // highlight (via class path) the shortest path on the grid
-                    $scope._.forEach(shortestPath, function(id) {
-                        $('#' + id + '.node-rect').addClass('path');
-                    });
+                    // only get path and rehighlight if it is not cached
+                    if (!dijResults.cached) {
+                        // reset highlighting and highlight the source & target
+                        $('.node-rect').removeClass('path');
+                        $('#' + $scope.source + '.node-rect').addClass('path');
+                        $('#' + $scope.target + '.node-rect').addClass('path');
+
+
+                        // set distance
+                        $scope.dist = dijResults.dist[$scope.target];
+                        // find the shortest path (an array of ids)
+                        var shortestPath = Graphing.getShortestPath();
+
+                        // highlight (via class path) the shortest path on the grid
+                        $scope._.forEach(shortestPath, function(id) {
+                            $('#' + id + '.node-rect').addClass('path');
+                        });
+                    } else {
+                        console.info('Cached!');
+                    }
                 }
             };
         }
@@ -151,15 +168,26 @@
         /**
          * Graphing: example angular service using Graph
          * @graph stores a created graph (enables use between controllers)
-         * @createGraph(url, debug) creates a new graph given the url to a json
+         * @cache stores the results of the previous call to runDijkstra
+         * @createGraph creates a new graph given the url to a json
+         * @runDijkstra runs dijkstra's algorithm
+         * @getShortestPath finds the shortest path from the previous run of dijkstra's
+         * @clearCache clears the cache
          * graph (in this case ./graph.json) and debug allows the enable or disable
          * verification during graph construction
          */
         function Graphing($http) {
             var service = {
                 graph: null,
+                // the previously run search (for caching)
+                cache: {
+                    cached: false
+                },
 
-                createGraph: createGraph
+                createGraph: createGraph,
+                runDijkstra: runDijkstra,
+                getShortestPath: getShortestPath,
+                clearCache: clearCache,
             };
 
             return service;
@@ -181,6 +209,33 @@
                     .error(function(error) {
                         console.error(error || 'Request failed');
                     });
+            }
+
+            function runDijkstra(source, target, pathType) {
+                // caching should be done by the wrapper
+                if (source === service.cache.source && target === service.cache.target) {
+                    service.cache.cached = true;
+                    return service.cache;
+                } else {
+                    service.cache.source = source;
+                    service.cache.target = target;
+                }
+
+                var results = Dijkstra.run(service.graph, source, target, pathType);
+
+                // cache results
+                service.cache = results;
+                return results;
+            }
+
+            function getShortestPath() {
+                return Dijkstra.getPath(service.cache.prev, service.cache.target);
+            }
+
+            function clearCache() {
+                service.cache = {
+                    cached: false
+                };
             }
         }
     </script>

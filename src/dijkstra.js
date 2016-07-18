@@ -11,13 +11,6 @@
     var MinHeap = require('./min_heap.js');
 
     var Dijkstra = {
-        // // the previously run search (caching)
-        // prev: {
-        //     s: null, // previous source
-        //     t: null, // previous target
-        //     r: {} // previous results
-        // },
-
         run: run,
         getPath: getPath
     };
@@ -37,16 +30,6 @@
      * @pathType: which values of node type (nType) are valid paths for the algorithm
      */
     function run(graph, source, target, pathType) {
-
-        // // caching should be done by the wrapper
-        // if (source === service.prev.s && target === service.prev.t) {
-        //     service.prev.r.cached = true;
-        //     return service.prev.r;
-        // } else {
-        //     service.prev.r.cached = false;
-        //     service.prev.s = source;
-        //     service.prev.t = target;
-        // }
 
         // binary min heap of the unvisited nodes (on distance)
         var unvisited = new MinHeap(
@@ -88,31 +71,9 @@
             });
         });
 
-        // for (var id in graph.nodes) {
-        //     if (!graph.exists(id)) {
-        //         continue; // ensure we are getting the right property
-        //     }
-        //     var node = graph.nodes[id];
-
-        //     if (node.id !== parseInt(source, 10)) {
-        //         prev[node.id] = null; // set previous to undefined
-        //         dist[node.id] = Infinity; // set distance to Infinity
-        //     }
-        //     // push node to unvisited with distance Infinity
-        //     unvisited.push({
-        //         id: node.id,
-        //         distance: dist[node.id]
-        //     });
-        // }
-
         // return if source is the same as target (i.e., already there)
         if (source === target) {
-            console.info('Same source and target');
-            // service.prev.r = {
-            //     dist: dist,
-            //     prev: prev
-            // };
-            // return service.prev.r;
+            // console.info('Same source and target');
             ret.dist = dist;
             ret.prev = prev;
             return ret;
@@ -145,12 +106,6 @@
             }
         }
 
-        // return distances and previous (and cache)
-        // service.prev.r = {
-        //     dist: dist,
-        //     prev: prev
-        // };
-        // return service.prev.r;
         ret.dist = dist;
         ret.prev = prev;
         return ret;
