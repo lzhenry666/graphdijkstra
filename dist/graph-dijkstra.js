@@ -1881,12 +1881,7 @@ var Dijkstra = require('./dijkstra.js');
 
         // return if source is the same as target (i.e., already there)
         if (source === target) {
-            console.info('Same source and target');
-            // service.prev.r = {
-            //     dist: dist,
-            //     prev: prev
-            // };
-            // return service.prev.r;
+            // console.info('Same source and target');
             ret.dist = dist;
             ret.prev = prev;
             return ret;
@@ -1919,12 +1914,6 @@ var Dijkstra = require('./dijkstra.js');
             }
         }
 
-        // return distances and previous (and cache)
-        // service.prev.r = {
-        //     dist: dist,
-        //     prev: prev
-        // };
-        // return service.prev.r;
         ret.dist = dist;
         ret.prev = prev;
         return ret;
