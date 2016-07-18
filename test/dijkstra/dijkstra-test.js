@@ -9,7 +9,7 @@ import Graph from '../src/graph.js';
 import Dijkstra from '../src/dijkstra.js';
 
 // initialize empty graph tests
-describe('dijkstra tests', () => {
+describe.only('dijkstra tests', () => {
 
     const GRAPH = {
         nodes: [
