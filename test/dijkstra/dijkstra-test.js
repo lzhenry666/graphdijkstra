@@ -9,7 +9,7 @@ import Graph from '../src/graph.js';
 import Dijkstra from '../src/dijkstra.js';
 
 // initialize empty graph tests
-describe.only('dijkstra tests', () => {
+describe('dijkstra tests', () => {
 
     const GRAPH = {
         nodes: [
@@ -120,7 +120,7 @@ describe.only('dijkstra tests', () => {
 
     after(() => graph = undefined);
 
-    it.only('it should find the shortest path (1)', () => {
+    it('it should find the shortest path (1)', () => {
         var results = Dijkstra.run(graph, 1, 6, 1);
 
         _testResults(results, 1, 6, [1, 2, 3, 4, 5, 6], [1, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5]);
