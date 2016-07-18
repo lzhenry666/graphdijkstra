@@ -1811,158 +1811,155 @@ var Dijkstra = require('./dijkstra.js');
  * 06/01/16
  *
  * runs Dijkstra's shortest path algorithm on a graph
+ * relies on the graph defined in graph.js
  /*---------------------------------------------------------------------------*/
 (function() {
     'use strict';
 
     var MinHeap = require('./min_heap.js');
-    var Dijkstra = function() {
-        var service = {
-            // the previously run search (caching)
-            prev: {
-                s: null, // previous source
-                t: null, // previous target
-                r: {} // previous results
-            },
 
-            run: run,
-            getPath: getPath
-        };
-
-        return service;
-
-        //------------------------------------------------//
-
-        /**
-         * run: run Dijkstra's shortest path algorithm
-         * returns an array of the shortest path from source to target, [] if one DNE
-         * @source: the starting point for the path (a node ID)
-         * @target: the ending point for the path (a node ID)
-         * @graph: the graph on which to run algorithm`
-         */
-        function run(source, target, graph, pathType) {
-            if (source === service.prev.s && target === service.prev.t) {
-                service.prev.r.cached = true;
-                return service.prev.r;
-            } else {
-                service.prev.r.cached = false;
-                service.prev.s = source;
-                service.prev.t = target;
-            }
-
-            // binary min heap of the unvisited nodes (on distance)
-            var unvisited = new MinHeap(
-                function(e) {
-                    return e.distance;
-                },
-                function(e) {
-                    return e.id;
-                },
-                'distance'
-            );
-            var dist = {}; // distance of the node from source
-            var prev = {}; // previous node of the form 'node_id': 'prev_node_id'
-
-            _assert(graph.nodes[source] !== undefined, 'Source does not exist (' +
-                source + ')');
-            _assert(graph.nodes[target] !== undefined, 'Target does not exist (' +
-                target + ')');
-
-            // Initialization
-            dist[source] = 0; // source is distance 0 from source
-            // for each node in the graph...
-            for (var id in graph.nodes) {
-                if (!graph.nodes.hasOwnProperty(id)) {
-                    continue; // ensure we are getting the right property
-                }
-                var node = graph.nodes[id];
-
-                if (node.id !== parseInt(source, 10)) {
-                    prev[node.id] = null; // set previous to undefined
-                    dist[node.id] = Infinity; // set distance to Infinity
-                }
-                // push node to unvisited with distance Infinity
-                unvisited.push({
-                    id: node.id,
-                    distance: dist[node.id]
-                });
-            }
-
-            // return if source is the same as target (i.e., already there)
-            if (source === target) {
-                console.log('Same Spot');
-                service.prev.r = {
-                    dist: dist,
-                    prev: prev
-                };
-                return service.prev.r;
-            }
-
-            return runAlgorithm();
-
-            // Run the loop of the algorithm
-            function runAlgorithm() {
-                // while there are still unvisited nodes
-                while (unvisited.size() > 0) {
-                    var min = unvisited.pop(); // get minimum node dist and ID
-                    var minNode = graph.nodes[min.id]; // get the minimum node
-
-                    // for each neighbor of minNode that is in the unvisited queue
-                    for (var i = 0; i < minNode.neighbors.length; i++) {
-                        var n = graph.nodes[minNode.neighbors[i]]; // node for the neighbor
-
-                        // ensure node is in unvisited and it is a PATH
-                        if (!unvisited.exists(n) || (n.nType !== pathType && n.id !== parseInt(target, 10))) {
-                            continue;
-                        }
-
-                        // calculate alternative distance
-                        var alt = min.distance + minNode.weight;
-
-                        // use this path instead, if alternative distance is shorter
-                        if (alt < dist[n.id]) {
-                            dist[n.id] = alt;
-                            prev[n.id] = min.id;
-                            unvisited.decreaseKey(n.id, alt); // update key
-                        }
-                    }
-                }
-
-                // return distances and previous (and cache)
-                service.prev.r = {
-                    dist: dist,
-                    prev: prev
-                };
-                return service.prev.r;
-            }
-        }
-
-        /**
-         * getPath: gets the path given the previous array from Dijkstra's algorithm
-         * @prev: the previous array generated by a run of Dijkstra's
-         * @target: the end of the path
-         */
-        function getPath(prev, target) {
-            var path = []; // the path to return
-            var t = target;
-
-            // add a block to path
-            while (prev[t] !== undefined && prev[t] !== null) {
-                path.unshift(t);
-                t = prev[t];
-            }
-            // TODO: this is not how you do this
-            path.unshift(t); // add the source to path
-
-            return path;
-        }
+    var Dijkstra = {
+        run: run,
+        getPath: getPath
     };
 
     module.exports = Dijkstra;
 
-    /*
-     * assert: debugging function that throws an error if condition is true
-     * @condition: condition to test for truth
+    //------------------------------------------------//
+
+    /**
+     * run: run Dijkstra's shortest path algorithm
+     * @return an object with the source (source), target (target), distance (dist)
+     * and previous (prev) for the nodes as calculated
+     * @graph: the graph on which to run algorithm
+     * by Dijkstra's algorithm from source to target
+     * @source: the starting point for the path (a node ID)
+     * @target: the ending point for the path (a node ID)
+     * @pathType: which values of node type (nType) are valid paths for the algorithm
+     */
+    function run(graph, source, target, pathType) {
+
+        // binary min heap of the unvisited nodes (on distance)
+        var unvisited = new MinHeap(
+            function(e) {
+                return e.distance;
+            },
+            function(e) {
+                return e.id;
+            },
+            'distance'
+        );
+        var dist = {}; // distance of the node from source
+        var prev = {}; // previous node of the form 'node_id': 'prev_node_id'
+        var ret = {
+            source: source,
+            target: target
+        };
+
+        // throw error if source or target is undefined
+        _assert(graph.exists(source), 'Source does not exist (' +
+            source + ')');
+        _assert(graph.exists(target), 'Target does not exist (' +
+            target + ')');
+
+        // Initialization
+        dist[source] = 0; // source is distance 0 from source
+        prev[source] = source; // the previous of the source is itself (only prev of source can be itself)
+
+        // for each node in the graph... initialize
+        graph.eachNode(function(node) {
+            if (node.id !== parseInt(source, 10)) {
+                prev[node.id] = null; // set previous to null
+                dist[node.id] = Infinity; // set distance to Infinity
+            }
+            // push node to unvisited with distance Infinity
+            unvisited.push({
+                id: node.id,
+                distance: dist[node.id]
+            });
+        });
+
+        // return if source is the same as target (i.e., already there)
+        if (source === target) {
+            console.info('Same source and target');
+            // service.prev.r = {
+            //     dist: dist,
+            //     prev: prev
+            // };
+            // return service.prev.r;
+            ret.dist = dist;
+            ret.prev = prev;
+            return ret;
+        }
+
+        // Run the loop of the algorithm
+        // while there are still unvisited nodes
+        while (unvisited.size() > 0) {
+            var min = unvisited.pop(); // get minimum node dist and ID
+            var minNode = graph.find(min.id); // get the minimum node
+
+            // for each neighbor of minNode that is in the unvisited queue
+            for (var i = 0; i < minNode.neighbors.length; i++) {
+                var n = graph.find(minNode.neighbors[i]); // node for the neighbor
+
+                // ensure node exists, is in unvisited, and it is a valid path (unless it is the target)
+                if (!n || !unvisited.exists(n) || (n.nType !== pathType && n.id !== parseInt(target, 10))) {
+                    continue;
+                }
+
+                // calculate alternative distance
+                var alt = min.distance + minNode.weight;
+
+                // use this path instead, if alternative distance is shorter
+                if (alt < dist[n.id]) {
+                    dist[n.id] = alt;
+                    prev[n.id] = min.id;
+                    unvisited.decreaseKey(n.id, alt); // update key
+                }
+            }
+        }
+
+        // return distances and previous (and cache)
+        // service.prev.r = {
+        //     dist: dist,
+        //     prev: prev
+        // };
+        // return service.prev.r;
+        ret.dist = dist;
+        ret.prev = prev;
+        return ret;
+    }
+
+    /**
+     * getPath: gets the path given the previous array from Dijkstra's algorithm
+     * @prev: the previous array generated by a run of Dijkstra's
+     * @target: the end of the path
+     * @return an array of the path from source to target or [] if there is not one
+     */
+    function getPath(prev, target) {
+        var path = []; // the path to return
+        var t = target;
+
+        // return [] if there was no path
+        if (prev[target] === null) {
+            return [];
+        }
+        // while the previous is not itself (signaling reached the source)
+        while (prev[t] !== t) {
+            path.unshift(t);
+            t = prev[t];
+        }
+
+        path.unshift(t); // add the source to the path
+
+        return path;
+    }
+
+    module.exports = Dijkstra;
+
+    /**
+     * assert: debugging function that throws an error if condition is false
+     * @condition: condition to test truth value
      * @message: error message to display in failure
      */
     function _assert(condition, message) {
@@ -1977,7 +1974,10 @@ var Dijkstra = require('./dijkstra.js');
 })();
 
 },{"./min_heap.js":71}],69:[function(require,module,exports){
-// graph-node.js
+/**
+ * graph-node.js
+ * 07/08/16
+ */
 (function() {
     'use strict';
 
@@ -2090,49 +2090,6 @@ var Dijkstra = require('./dijkstra.js');
         return _initializeGraph(this, params);
     };
 
-    /** initializeGraph: helper function for Graph constructor to handle supplied @params */
-    function _initializeGraph(graph, params) {
-        var i = 0;
-
-        // add each of the nodes in the supplied graph
-        for (i = 0; i < params.graph.nodes.length; i++) {
-            var nodeVals = params.graph.nodes[i];
-            if (graph.exists(nodeVals.id)) {
-                // update node (was created earlier by a neighbor specification)
-                var node = graph.find(nodeVals.id);
-                nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
-                graph.update(nodeVals.id, nodeVals.props);
-                _fixConsistency(graph, node);
-            }
-            else {
-                graph.addNode(nodeVals.id, nodeVals.props); // create new
-            }
-        }
-
-        if ('edges' in params.graph) {
-            // add each of the edges in the supplied graph
-            for (i = 0; i < params.graph.edges.length; i++) {
-                var source = params.graph.edges[i][0];
-                var target = params.graph.edges[i][1];
-                graph.addEdge(source, target);
-            }
-        }
-        else {
-            console.warn('Deprecation Warning: ');
-            console.warn(' Initializing graph object by only specifying nodes is ' +
-                'deprecated and will be removed in v1.0.0');
-            console.warn('  * To solve this please supply both nodes and edges in the graph object');
-            console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
-        }
-
-        // verify the graph if debug is true
-        if (params.debug && !!params.graph) {
-            _verify(graph);
-        }
-
-        return true;
-    }
-
     /**
      * Graph define properties
      */
@@ -2167,12 +2124,12 @@ var Dijkstra = require('./dijkstra.js');
     });
 
     /**
-     * Graph.find: returns the node specified by ID (or undefined)
+     * Graph.find: finds the node specified by id. ID should exist (and not be an invalid property)
      * @id: the ID of the node to find
-     * returns the node if found, null otherwise
+     * @return the node if found, null otherwise
      */
     Graph.prototype.find = function(id) {
-        return this.nodes[id] || null;
+        return this.exists(id) ? this.nodes[id] : null;
     };
 
     /**
@@ -2181,7 +2138,7 @@ var Dijkstra = require('./dijkstra.js');
      * returns true if it is a node, false otherwise
      */
     Graph.prototype.exists = function(id) {
-        return id in this.nodes;
+        return (id in this.nodes) && (this.nodes[id] instanceof Node);
     };
 
     /**
@@ -2209,21 +2166,6 @@ var Dijkstra = require('./dijkstra.js');
         }
         return this.nodes[id];
     };
-
-    /** _fixConsistency: fixes the inconsistencies in @graph caused by the neighbors
-     * of @node by adding the necessary edges
-     */
-    function _fixConsistency(graph, node) {
-        // ensure consistency of graph by adding necessary edges to specified neighbors
-        for (var i = 0; i < node.neighbors.length; i++) {
-            var neigh = graph.addNode(node.neighbors[i]); // create neighbor (if necessary)
-
-            // fix inconsistent edge between new node and its neighbor
-            if (graph.addEdge(node.id, neigh.id)) {
-                ++graph.edgeCount; // one more edge! (add edge will not account for it)
-            }
-        }
-    }
 
     /**
      * Graph.deleteNode: delete a node from the graph. true if successful
@@ -2258,6 +2200,44 @@ var Dijkstra = require('./dijkstra.js');
     };
 
     /**
+     * Graph.eachNode: perform a function on each node in the graph
+     * @fn: the function to perform on each node in the graph
+     */
+    Graph.prototype.eachNode = function(fn) {
+        // jshint forin: false
+        for (var id in this.nodes) {
+            var node = this.find(id);
+            if (!!node) {
+                fn(node);
+            } else {
+                continue;
+            }
+        }
+    };
+
+    /**
+     * Graph.eachNeighbor: perform a function on each neighbor of the node
+     * @id: the id of the node whose neighbors will be acted on
+     * @fn: the function to perform on each neighbor of the node
+     */
+    Graph.prototype.eachNeighbor = function(id, fn) {
+        if (!this.exists(id)) {
+            return; // return if node does not exist
+        }
+
+        var node = this.find(id);
+        // jshint forin: false
+        for (var nID in node.neighbors) {
+            var neigh = this.find(nID);
+            if (!!neigh) {
+                fn(neigh);
+            } else {
+                continue;
+            }
+        }
+    };
+
+    /**
      * Graph.addEdge: connect two nodes (undirected edge) that both exist
      * do not allow self edges (by nature of being a simple graph)
      * @source: ID of one end of the edge
@@ -2267,7 +2247,7 @@ var Dijkstra = require('./dijkstra.js');
     Graph.prototype.addEdge = function(source, target) {
         // is this a self edge?
         if (source === target) {
-            // console.log('Cannot add self edge in simple graph');
+            // console.warn('Cannot add self edge in simple graph');
             return false;
         }
 
@@ -2275,9 +2255,9 @@ var Dijkstra = require('./dijkstra.js');
         var s = this.find(source);
         var t = this.find(target);
 
-        // continue if invalid edge (i.e., either source or target does not exist)
+        // return if invalid edge (i.e., either source or target does not exist)
         if (!s || !t) {
-            // console.log('Unable to add edge (' + source + ',' + target + '): node does not exist');
+            // console.warn('Unable to add edge (' + source + ',' + target + '): node DNE');
             return false;
         }
 
@@ -2298,14 +2278,34 @@ var Dijkstra = require('./dijkstra.js');
     };
 
     /**
+     * Graph.addOrCreateEdge: the same as addEdge(), but will create nodes that do not exist
+     * do not allow self edges (by nature of being a simple graph)
+     * @source: ID of one end of the edge
+     * @target: ID of the other end of the edge
+     * return true if able to add or create the edge, false otherwise (i.e., self edge, invalid, or redundant)
+     */
+    Graph.prototype.addOrCreateEdge = function(source, target) {
+        // create nodes if necessary
+        if (!this.exists(source)) {
+            this.addNode(source);
+        }
+        if (!this.exists(target)) {
+            this.addNode(target);
+        }
+
+        // add the edge
+        return this.addEdge(source, target);
+    };
+
+    /**
      * Graph.deleteEdge: delete an edge from the graph
      * @source: ID of one end of the edge to delete
      * @target: ID of the other end of the edge to delete
      * return true if successful, false otherwise
      */
     Graph.prototype.deleteEdge = function(source, target) {
-        var s = this.nodes[source]; // the node corresponding to source ID
-        var t = this.nodes[target]; // the node corresponding to target ID
+        var s = this.find(source); // the node corresponding to source ID
+        var t = this.find(target); // the node corresponding to target ID
 
         // ensure the edge exists (i.e., connected)
         if (!this.connected(source, target)) {
@@ -2326,10 +2326,12 @@ var Dijkstra = require('./dijkstra.js');
      * return true is yes, false if no
      */
     Graph.prototype.connected = function(source, target) {
-        if (!this.exists(source) || !this.exists(target)) {
+        var s = this.find(source); // get source node
+        var t = this.find(target); // get target node
+        if (!s || !t) {
             return false; // clearly not connected if does not exist
         }
-        return this.find(source).neighbors.indexOf(target) >= 0 && this.find(target).neighbors.indexOf(source) >= 0;
+        return s.neighbors.indexOf(target) >= 0 && t.neighbors.indexOf(source) >= 0;
     };
 
     /**
@@ -2342,10 +2344,11 @@ var Dijkstra = require('./dijkstra.js');
      * return the updated node on success, or null if unable to update/find
      */
     Graph.prototype.update = function(id, props) {
-        if (!this.exists(id)) {
+        var node = this.find(id);
+
+        if (!node) {
             return null;
         }
-        var node = this.find(id);
 
         node.weight = props.weight || node.weight;
         node.nType = props.nType || node.nType;
@@ -2355,6 +2358,66 @@ var Dijkstra = require('./dijkstra.js');
     };
 
     module.exports = Graph;
+
+    //------------------------------------------------//
+
+    /** initializeGraph: helper function for Graph constructor to handle supplied @params */
+    function _initializeGraph(graph, params) {
+        var i = 0;
+
+        // add each of the nodes in the supplied graph
+        for (i = 0; i < params.graph.nodes.length; i++) {
+            var nodeVals = params.graph.nodes[i];
+            if (graph.exists(nodeVals.id)) {
+                // update node (was created earlier by a neighbor specification)
+                var node = graph.find(nodeVals.id);
+                nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
+                graph.update(nodeVals.id, nodeVals.props);
+                _fixConsistency(graph, node);
+            }
+            else {
+                graph.addNode(nodeVals.id, nodeVals.props); // create new
+            }
+        }
+
+        if ('edges' in params.graph) {
+            // add each of the edges in the supplied graph
+            for (i = 0; i < params.graph.edges.length; i++) {
+                var source = params.graph.edges[i][0];
+                var target = params.graph.edges[i][1];
+                graph.addOrCreateEdge(source, target);
+            }
+        }
+        else {
+            console.warn('Deprecation Warning: ');
+            console.warn(' Initializing graph object by only specifying nodes is ' +
+                'deprecated and will be removed in v1.0.0');
+            console.warn('  * To solve this please supply both nodes and edges in the graph object');
+            console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
+        }
+
+        // verify the graph if debug is true
+        if (params.debug && !!params.graph) {
+            _verify(graph);
+        }
+
+        return true;
+    }
+
+    /** _fixConsistency: fixes the inconsistencies in @graph caused by the neighbors
+     * of @node by adding the necessary edges
+     */
+    function _fixConsistency(graph, node) {
+        // ensure consistency of graph by adding necessary edges to specified neighbors
+        for (var i = 0; i < node.neighbors.length; i++) {
+            var neigh = graph.addNode(node.neighbors[i]); // create neighbor (if necessary)
+
+            // fix inconsistent edge between new node and its neighbor
+            if (graph.addEdge(node.id, neigh.id)) {
+                ++graph.edgeCount; // one more edge! (add edge will not account for it)
+            }
+        }
+    }
 
     /**
      * _verify: ensure that the graph is consistent (debugging)
@@ -2418,7 +2481,7 @@ var Dijkstra = require('./dijkstra.js');
 /*----------------------------------------------------------------------------*/
 
 },{"./graph-node.js":69,"lodash/union":66}],71:[function(require,module,exports){
-/*
+/**
  * min_heap.js
  * adapted from https://github.com/rombdn/js-binaryheap-decreasekey
  * 06/01/16
