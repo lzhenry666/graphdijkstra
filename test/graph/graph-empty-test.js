@@ -1,10 +1,11 @@
+// graph-empty-test.js
 'use strict';
 
 /* global it, describe, beforeEach, after */
 /* jshint expr: true */
 
 import {expect} from 'chai';
-import Graph from './src/graph.js';
+import Graph from '../src/graph.js';
 
 // initialize empty graph tests
 describe('graph tests (empty)', () => {

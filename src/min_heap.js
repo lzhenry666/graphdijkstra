@@ -1,4 +1,4 @@
-/*
+/**
  * min_heap.js
  * adapted from https://github.com/rombdn/js-binaryheap-decreasekey
  * 06/01/16
