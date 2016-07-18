@@ -143,6 +143,13 @@ describe('graph tests (initialized nodes with neighbors)', () => {
         _nodeHelper(1, propsNode, node);
     });
 
+    it('it should iterate through all nodes', () => {
+        graph.eachNode((node) => {
+            expect(graph.find(node.id)).to.not.be.null;
+            expect(node.id).to.not.be.null;
+        });
+    });
+
     it('it should add edges', () => {
         for (var i = 1; i <= 10; i++) {
             graph.addNode(INIT_NODES+i, props);

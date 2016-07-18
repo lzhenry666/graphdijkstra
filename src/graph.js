@@ -312,7 +312,7 @@
             for (i = 0; i < params.graph.edges.length; i++) {
                 var source = params.graph.edges[i][0];
                 var target = params.graph.edges[i][1];
-                graph.addEdge(source, target);
+                graph.addOrCreateEdge(source, target);
             }
         }
         else {
