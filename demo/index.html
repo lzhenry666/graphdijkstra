@@ -116,6 +116,7 @@
                 $scope.target = null;
                 $scope.dist = 0;
                 $('.node-rect').removeClass('path');
+                Graphing.clearCache();
             };
 
             // calculate shortest path
@@ -151,12 +152,14 @@
                         // set distance
                         $scope.dist = dijResults.dist[$scope.target];
                         // find the shortest path (an array of ids)
-                        var shortestPath = Graphing.getShortestPath(dijResults.prev, $scope.target);
+                        var shortestPath = Graphing.getShortestPath();
 
                         // highlight (via class path) the shortest path on the grid
                         $scope._.forEach(shortestPath, function(id) {
                             $('#' + id + '.node-rect').addClass('path');
                         });
+                    } else {
+                        console.info('Cached!');
                     }
                 }
             };
@@ -165,7 +168,11 @@
         /**
          * Graphing: example angular service using Graph
          * @graph stores a created graph (enables use between controllers)
-         * @createGraph(url, debug) creates a new graph given the url to a json
+         * @cache stores the results of the previous call to runDijkstra
+         * @createGraph creates a new graph given the url to a json
+         * @runDijkstra runs dijkstra's algorithm
+         * @getShortestPath finds the shortest path from the previous run of dijkstra's
+         * @clearCache clears the cache
          * graph (in this case ./graph.json) and debug allows the enable or disable
          * verification during graph construction
          */
@@ -173,15 +180,14 @@
             var service = {
                 graph: null,
                 // the previously run search (for caching)
-                prev: {
-                    s: null, // previous source
-                    t: null, // previous target
-                    r: {} // previous results
+                cache: {
+                    cached: false
                 },
 
                 createGraph: createGraph,
                 runDijkstra: runDijkstra,
-                getShortestPath: getShortestPath
+                getShortestPath: getShortestPath,
+                clearCache: clearCache,
             };
 
             return service;
@@ -207,26 +213,29 @@
 
             function runDijkstra(source, target, pathType) {
                 // caching should be done by the wrapper
-                if (source === service.prev.s && target === service.prev.t) {
-                    service.prev.r.cached = true;
-                    return service.prev.r;
+                if (source === service.cache.source && target === service.cache.target) {
+                    service.cache.cached = true;
+                    return service.cache;
                 } else {
-                    service.prev.s = source;
-                    service.prev.t = target;
+                    service.cache.source = source;
+                    service.cache.target = target;
                 }
 
                 var results = Dijkstra.run(service.graph, source, target, pathType);
 
                 // cache results
-                service.prev.r = {
-                    dist: results.dist,
-                    prev: results.prev
-                };
+                service.cache = results;
                 return results;
             }
 
-            function getShortestPath(prev, target) {
-                return Dijkstra.getPath(prev, target);
+            function getShortestPath() {
+                return Dijkstra.getPath(service.cache.prev, service.cache.target);
+            }
+
+            function clearCache() {
+                service.cache = {
+                    cached: false
+                };
             }
         }
     </script>
