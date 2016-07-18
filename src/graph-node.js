@@ -1,4 +1,7 @@
-// graph-node.js
+/**
+ * graph-node.js
+ * 07/08/16
+ */
 (function() {
     'use strict';
 

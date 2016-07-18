@@ -1777,8 +1777,8 @@ module.exports = union;
 
 },{"./_baseFlatten":12,"./_baseUniq":16,"./isArrayLikeObject":55,"./rest":62}],67:[function(require,module,exports){
 // browserify.js
-// needed for browserify to inject required resources
-// var graphDijkstra = require('./graph-dijkstra.js');
+// inject required resources via browserify
+
 var Graph = require('./graph.js');
 var Dijkstra = require('./dijkstra.js');
 
@@ -2019,7 +2019,7 @@ var Dijkstra = require('./dijkstra.js');
                 return this._neighbors;
             },
             set: function(value) {
-                this._neighbors = value.slice();
+                this._neighbors = value.slice(); // use slice to create new reference
             }
         },
         // weight
