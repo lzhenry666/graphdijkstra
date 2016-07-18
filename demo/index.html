@@ -124,27 +124,40 @@
             // calculate the distances and previous for the path
             // then highlight along the path (by adding class 'path')
             $scope.path = function(id) {
-                isSource ? $scope.source = id : $scope.target = id; // set appropriately
-
-                // reset highlighting and highlight the source & target
-                $('.node-rect').removeClass('path');
-                $('#' + $scope.source + '.node-rect').addClass('path');
-                $('#' + $scope.target + '.node-rect').addClass('path');
+                // set and highlight new source or target (depending on which was selected)
+                if (isSource) {
+                    $('#' + $scope.source + '.node-rect').removeClass('path');
+                    $scope.source = id;
+                    $('#' + $scope.source + '.node-rect').addClass('path');
+                } else {
+                    $('#' + $scope.target + '.node-rect').removeClass('path');
+                    $scope.target = id;
+                    $('#' + $scope.target + '.node-rect').addClass('path');
+                }
 
                 // if both are set, calculate the shortest path
                 if (!!$scope.source && !!$scope.target) {
                     // run Dijkstra's algorithm, calculating distance and previous
                     var dijResults = Graphing.runDijkstra($scope.source, $scope.target, PATH_TYPE);
 
-                    // set distance
-                    $scope.dist = dijResults.dist[$scope.target];
-                    // find the shortest path (an array of ids)
-                    var shortestPath = Graphing.getShortestPath(dijResults.prev, $scope.target);
+                    // only get path and rehighlight if it is not cached
+                    if (!dijResults.cached) {
+                        // reset highlighting and highlight the source & target
+                        $('.node-rect').removeClass('path');
+                        $('#' + $scope.source + '.node-rect').addClass('path');
+                        $('#' + $scope.target + '.node-rect').addClass('path');
 
-                    // highlight (via class path) the shortest path on the grid
-                    $scope._.forEach(shortestPath, function(id) {
-                        $('#' + id + '.node-rect').addClass('path');
-                    });
+
+                        // set distance
+                        $scope.dist = dijResults.dist[$scope.target];
+                        // find the shortest path (an array of ids)
+                        var shortestPath = Graphing.getShortestPath(dijResults.prev, $scope.target);
+
+                        // highlight (via class path) the shortest path on the grid
+                        $scope._.forEach(shortestPath, function(id) {
+                            $('#' + id + '.node-rect').addClass('path');
+                        });
+                    }
                 }
             };
         }
