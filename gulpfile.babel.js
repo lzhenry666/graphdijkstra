@@ -27,7 +27,7 @@ var config = {
             dist: 'test-dist/src/'
         },
         test: {
-            src: 'test/**/*.js',
+            src: 'test/dijkstra/*.js',
             graph: 'test-dist/graph/**/*.js',
             dijkstra: 'test-dist/dijkstra/**/*.js',
             dist: 'test-dist/',
