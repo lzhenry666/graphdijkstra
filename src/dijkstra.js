@@ -67,10 +67,8 @@
 
         // Initialization
         dist[source] = 0; // source is distance 0 from source
-        // for each node in the graph...
+        // for each node in the graph... initialize
         graph.eachNode(function(node) {
-            // var node = graph.nodes[id];
-
             if (node.id !== parseInt(source, 10)) {
                 prev[node.id] = null; // set previous to undefined
                 dist[node.id] = Infinity; // set distance to Infinity
@@ -81,6 +79,7 @@
                 distance: dist[node.id]
             });
         });
+
         // for (var id in graph.nodes) {
         //     if (!graph.exists(id)) {
         //         continue; // ensure we are getting the right property
@@ -143,11 +142,15 @@
             }
 
             // return distances and previous (and cache)
-            service.prev.r = {
+            // service.prev.r = {
+            //     dist: dist,
+            //     prev: prev
+            // };
+            // return service.prev.r;
+            return {
                 dist: dist,
                 prev: prev
             };
-            return service.prev.r;
         }
     }
 
