@@ -61,9 +61,9 @@
         var prev = {}; // previous node of the form 'node_id': 'prev_node_id'
 
         // throw error if source or target is undefined
-        _assert(!graph.exists(source), 'Source does not exist (' +
+        _assert(graph.exists(source), 'Source does not exist (' +
             source + ')');
-        _assert(!graph.exists(target) !== undefined, 'Target does not exist (' +
+        _assert(graph.exists(target), 'Target does not exist (' +
             target + ')');
 
         // Initialization
