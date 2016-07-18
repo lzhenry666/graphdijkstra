@@ -91,6 +91,7 @@ See [wiki pages]() for more detail
 * **addNode(id, props)**  -  returns **Node**
 * **deleteNode(id)**  -  returns **Node**
 * **addEdge(source, target)**  -  returns **boolean**
+* **addOrCreateEdge(source, target)**  -  returns **boolean**
 * **deleteEdge(source, target)**  -  returns **boolean**
 * **connected(source, target)**  -  returns **boolean**
 * **update(id, props)** -             returns **Node**
