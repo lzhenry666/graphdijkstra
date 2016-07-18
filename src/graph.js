@@ -199,7 +199,7 @@
     Graph.prototype.addEdge = function(source, target) {
         // is this a self edge?
         if (source === target) {
-            console.warn('Cannot add self edge in simple graph');
+            // console.warn('Cannot add self edge in simple graph');
             return false;
         }
 
@@ -209,7 +209,7 @@
 
         // return if invalid edge (i.e., either source or target does not exist)
         if (!s || !t) {
-            console.warn('Unable to add edge (' + source + ',' + target + '): node DNE');
+            // console.warn('Unable to add edge (' + source + ',' + target + '): node DNE');
             return false;
         }
 
