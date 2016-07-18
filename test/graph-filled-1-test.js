@@ -1,3 +1,4 @@
+// graph-filled-1-test.js
 'use strict';
 
 /* global it, describe, beforeEach, after */
@@ -7,7 +8,7 @@ import {expect} from 'chai';
 import Graph from './src/graph.js';
 
 // initialize empty graph tests
-describe('graph tests (initialized nodes)', () => {
+describe('graph tests (initialized nodes with neighbors)', () => {
 
     const GRAPH = {
         nodes: [

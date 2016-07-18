@@ -66,7 +66,7 @@
             for (i = 0; i < params.graph.edges.length; i++) {
                 var source = params.graph.edges[i][0];
                 var target = params.graph.edges[i][1];
-                graph.addEdge(source, target);
+                graph.addOrCreateEdge(source, target);
             }
         }
         else {
@@ -219,7 +219,7 @@
     Graph.prototype.addEdge = function(source, target) {
         // is this a self edge?
         if (source === target) {
-            // console.log('Cannot add self edge in simple graph');
+            console.warn('Cannot add self edge in simple graph');
             return false;
         }
 
@@ -227,9 +227,9 @@
         var s = this.find(source);
         var t = this.find(target);
 
-        // continue if invalid edge (i.e., either source or target does not exist)
+        // return if invalid edge (i.e., either source or target does not exist)
         if (!s || !t) {
-            // console.log('Unable to add edge (' + source + ',' + target + '): node does not exist');
+            console.warn('Unable to add edge (' + source + ',' + target + '): node DNE');
             return false;
         }
 
@@ -247,6 +247,26 @@
             return false; // return false for redundant edges
         }
         return true; // return true
+    };
+
+    /**
+     * Graph.addOrCreateEdge: the same as addEdge(), but will create nodes that do not exist
+     * do not allow self edges (by nature of being a simple graph)
+     * @source: ID of one end of the edge
+     * @target: ID of the other end of the edge
+     * return true if able to add or create the edge, false otherwise (i.e., self edge, invalid, or redundant)
+     */
+    Graph.prototype.addOrCreateEdge = function(source, target) {
+        // create nodes if necessary
+        if (!this.exists(source)) {
+            this.addNode(source);
+        }
+        if (!this.exists(target)) {
+            this.addNode(target);
+        }
+
+        // add the edge
+        return this.addEdge(source, target);
     };
 
     /**
