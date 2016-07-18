@@ -161,9 +161,9 @@
      */
     Graph.prototype.eachNode = function(fn) {
         for (var id in this.nodes) {
-            // if (this.exists(id)) {
-            fn(this.find(id));
-            // }
+            if (this.exists(id)) {
+                fn(this.find(id));
+            }
         }
     };
 
