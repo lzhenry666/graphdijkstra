@@ -74,6 +74,7 @@
         // Initialization
         dist[source] = 0; // source is distance 0 from source
         prev[source] = source; // the previous of the source is itself (only prev of source can be itself)
+
         // for each node in the graph... initialize
         graph.eachNode(function(node) {
             if (node.id !== parseInt(source, 10)) {
@@ -117,11 +118,7 @@
             return ret;
         }
 
-        // return runAlgorithm();
-
         // Run the loop of the algorithm
-        // function runAlgorithm() {
-
         // while there are still unvisited nodes
         while (unvisited.size() > 0) {
             var min = unvisited.pop(); // get minimum node dist and ID
