@@ -131,8 +131,8 @@
             for (var i = 0; i < minNode.neighbors.length; i++) {
                 var n = graph.find(minNode.neighbors[i]); // node for the neighbor
 
-                // ensure node is in unvisited and it is a valid path (unless it is the target)
-                if (!unvisited.exists(n) || (n.nType !== pathType && n.id !== parseInt(target, 10))) {
+                // ensure node exists, is in unvisited, and it is a valid path (unless it is the target)
+                if (!n || !unvisited.exists(n) || (n.nType !== pathType && n.id !== parseInt(target, 10))) {
                     continue;
                 }
 
@@ -186,9 +186,9 @@
 
     module.exports = Dijkstra;
 
-    /*
-     * assert: debugging function that throws an error if condition is true
-     * @condition: condition to test for truth
+    /**
+     * assert: debugging function that throws an error if condition is false
+     * @condition: condition to test truth value
      * @message: error message to display in failure
      */
     function _assert(condition, message) {
