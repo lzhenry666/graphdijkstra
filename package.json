@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "author": "LITOSI",
   "main": "dist/graph-dijkstra.js",
-  "description": "An angular wrapper for an undirected graph that allows for finding the shortest path via Dijkstra's algorithm",
+  "description": "A simple undirected graph that allows for finding the shortest path between nodes via Dijkstra's algorithm",
   "contributors": [
     {
       "name": "Matthew Vasseur",
