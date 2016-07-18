@@ -31,7 +31,8 @@ describe('graph tests (initialized nodes)', () => {
             {id: 18, props: {weight: 9, neighbors: [], nType: 6} },
             {id: 19, props: {weight: 1, neighbors: [], nType: 1} },
             {id: 20, props: {weight: 5, neighbors: [], nType: 2} }
-        ]
+        ],
+        edges: []
     };
     const INIT_NODES = 20;
     const INIT_EDGES = 14;

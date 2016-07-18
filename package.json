@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:LincolnTechOpenSource/angular-graph-dijkstra.git"
+    "url": "git@github.com:LincolnTechOpenSource/graph-dijkstra.git"
   },
   "keywords": [
     "graph",

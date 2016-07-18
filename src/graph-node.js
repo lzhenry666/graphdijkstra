@@ -40,7 +40,7 @@
                 return this._neighbors;
             },
             set: function(value) {
-                this._neighbors = value.slice();
+                this._neighbors = value.slice(); // use slice to create new reference
             }
         },
         // weight
