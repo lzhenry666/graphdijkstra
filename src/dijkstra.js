@@ -129,7 +129,6 @@
 
             // for each neighbor of minNode that is in the unvisited queue
             for (var i = 0; i < minNode.neighbors.length; i++) {
-                //graph.nodes[minNode.neighbors[i]]; // node for the neighbor
                 var n = graph.find(minNode.neighbors[i]); // node for the neighbor
 
                 // ensure node is in unvisited and it is a valid path (unless it is the target)

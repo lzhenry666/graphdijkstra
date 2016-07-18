@@ -81,11 +81,7 @@
      * @return the node if found, null otherwise
      */
     Graph.prototype.find = function(id) {
-        // if (this.exists(id)) {
-            return this.nodes[id] || null;
-        // } else {
-            // return null;
-        // }
+        return this.exists(id) ? this.nodes[id] : null;
     };
 
     /**
@@ -160,9 +156,35 @@
      * @fn: the function to perform on each node in the graph
      */
     Graph.prototype.eachNode = function(fn) {
+        // jshint forin: false
         for (var id in this.nodes) {
-            if (this.exists(id)) {
-                fn(this.find(id));
+            var node = this.find(id);
+            if (!!node) {
+                fn(node);
+            } else {
+                continue;
+            }
+        }
+    };
+
+    /**
+     * Graph.eachNeighbor: perform a function on each neighbor of the node
+     * @id: the id of the node whose neighbors will be acted on
+     * @fn: the function to perform on each neighbor of the node
+     */
+    Graph.prototype.eachNeighbor = function(id, fn) {
+        if (!this.exists(id)) {
+            return; // return if node does not exist
+        }
+
+        var node = this.find(id);
+        // jshint forin: false
+        for (var nID in node.neighbors) {
+            var neigh = this.find(nID);
+            if (!!neigh) {
+                fn(neigh);
+            } else {
+                continue;
             }
         }
     };
@@ -234,8 +256,8 @@
      * return true if successful, false otherwise
      */
     Graph.prototype.deleteEdge = function(source, target) {
-        var s = this.nodes[source]; // the node corresponding to source ID
-        var t = this.nodes[target]; // the node corresponding to target ID
+        var s = this.find(source); // the node corresponding to source ID
+        var t = this.find(target); // the node corresponding to target ID
 
         // ensure the edge exists (i.e., connected)
         if (!this.connected(source, target)) {
@@ -256,10 +278,12 @@
      * return true is yes, false if no
      */
     Graph.prototype.connected = function(source, target) {
-        if (!this.exists(source) || !this.exists(target)) {
+        var s = this.find(source); // get source node
+        var t = this.find(target); // get target node
+        if (!s || !t) {
             return false; // clearly not connected if does not exist
         }
-        return this.find(source).neighbors.indexOf(target) >= 0 && this.find(target).neighbors.indexOf(source) >= 0;
+        return s.neighbors.indexOf(target) >= 0 && t.neighbors.indexOf(source) >= 0;
     };
 
     /**
@@ -272,10 +296,11 @@
      * return the updated node on success, or null if unable to update/find
      */
     Graph.prototype.update = function(id, props) {
-        if (!this.exists(id)) {
+        var node = this.find(id);
+
+        if (!node) {
             return null;
         }
-        var node = this.find(id);
 
         node.weight = props.weight || node.weight;
         node.nType = props.nType || node.nType;

@@ -90,6 +90,8 @@ See [wiki pages]() for more detail
 * **exists(id)**  -  returns **boolean**
 * **addNode(id, props)**  -  returns **Node**
 * **deleteNode(id)**  -  returns **Node**
+* **eachNode(fn)**
+* **eachNeighbor(id, fn)**
 * **addEdge(source, target)**  -  returns **boolean**
 * **addOrCreateEdge(source, target)**  -  returns **boolean**
 * **deleteEdge(source, target)**  -  returns **boolean**
