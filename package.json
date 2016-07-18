@@ -1,9 +1,9 @@
 {
-  "name": "angular-graph-dijkstra",
+  "name": "graph-dijkstra",
   "version": "0.3.0",
   "author": "LITOSI",
   "main": "dist/graph-dijkstra.js",
-  "description": "An angular wrapper for an undirected graph that allows for finding the shortest path via Dijkstra's algorithm",
+  "description": "A simple undirected graph that allows for finding the shortest path between nodes via Dijkstra's algorithm",
   "contributors": [
     {
       "name": "Matthew Vasseur",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:LincolnTechOpenSource/angular-graph-dijkstra.git"
+    "url": "git@github.com:LincolnTechOpenSource/graph-dijkstra.git"
   },
   "keywords": [
     "graph",
@@ -41,6 +41,7 @@
     "gulp-jshint": "^2.0.0",
     "gulp-mocha": "^2.2.0",
     "gulp-rename": "^1.2.2",
+    "gulp-task-listing": "^1.0.1",
     "gulp-uglify": "^1.5.4",
     "jshint": "^2.9.1",
     "jshint-stylish": "^2.2.0",
@@ -56,6 +57,5 @@
   },
   "private": false,
   "license": "MIT",
-  "dependencies": {
-  }
+  "dependencies": {}
 }

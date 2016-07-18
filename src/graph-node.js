@@ -1,4 +1,7 @@
-// graph-node.js
+/**
+ * graph-node.js
+ * 07/08/16
+ */
 (function() {
     'use strict';
 
@@ -40,7 +43,7 @@
                 return this._neighbors;
             },
             set: function(value) {
-                this._neighbors = value.slice();
+                this._neighbors = value.slice(); // use slice to create new reference
             }
         },
         // weight

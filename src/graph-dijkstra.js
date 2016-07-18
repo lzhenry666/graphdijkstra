@@ -7,7 +7,7 @@
 
     var Graphing = require('./graphing.js');
     // var Graph = require('./graph.js');
-    var Dijkstra = require('./dijkstra.js');
+    var Dijkstra = require('./dijkstra-wrapper.js');
 
     // module.exports = {
     //     Graph: require('./graph.js'),

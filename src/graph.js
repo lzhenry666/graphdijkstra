@@ -42,49 +42,6 @@
         return _initializeGraph(this, params);
     };
 
-    /** initializeGraph: helper function for Graph constructor to handle supplied @params */
-    function _initializeGraph(graph, params) {
-        var i = 0;
-
-        // add each of the nodes in the supplied graph
-        for (i = 0; i < params.graph.nodes.length; i++) {
-            var nodeVals = params.graph.nodes[i];
-            if (graph.exists(nodeVals.id)) {
-                // update node (was created earlier by a neighbor specification)
-                var node = graph.find(nodeVals.id);
-                nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
-                graph.update(nodeVals.id, nodeVals.props);
-                _fixConsistency(graph, node);
-            }
-            else {
-                graph.addNode(nodeVals.id, nodeVals.props); // create new
-            }
-        }
-
-        if ('edges' in params.graph) {
-            // add each of the edges in the supplied graph
-            for (i = 0; i < params.graph.edges.length; i++) {
-                var source = params.graph.edges[i][0];
-                var target = params.graph.edges[i][1];
-                graph.addEdge(source, target);
-            }
-        }
-        else {
-            console.warn('Deprecation Warning: ');
-            console.warn(' Initializing graph object by only specifying nodes is ' +
-                'deprecated and will be removed in v1.0.0');
-            console.warn('  * To solve this please supply both nodes and edges in the graph object');
-            console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
-        }
-
-        // verify the graph if debug is true
-        if (params.debug && !!params.graph) {
-            _verify(graph);
-        }
-
-        return true;
-    }
-
     /**
      * Graph define properties
      */
@@ -119,12 +76,12 @@
     });
 
     /**
-     * Graph.find: returns the node specified by ID (or undefined)
+     * Graph.find: finds the node specified by id. ID should exist (and not be an invalid property)
      * @id: the ID of the node to find
-     * returns the node if found, null otherwise
+     * @return the node if found, null otherwise
      */
     Graph.prototype.find = function(id) {
-        return this.nodes[id] || null;
+        return this.exists(id) ? this.nodes[id] : null;
     };
 
     /**
@@ -133,7 +90,7 @@
      * returns true if it is a node, false otherwise
      */
     Graph.prototype.exists = function(id) {
-        return id in this.nodes;
+        return (id in this.nodes) && (this.nodes[id] instanceof Node);
     };
 
     /**
@@ -161,21 +118,6 @@
         }
         return this.nodes[id];
     };
-
-    /** _fixConsistency: fixes the inconsistencies in @graph caused by the neighbors
-     * of @node by adding the necessary edges
-     */
-    function _fixConsistency(graph, node) {
-        // ensure consistency of graph by adding necessary edges to specified neighbors
-        for (var i = 0; i < node.neighbors.length; i++) {
-            var neigh = graph.addNode(node.neighbors[i]); // create neighbor (if necessary)
-
-            // fix inconsistent edge between new node and its neighbor
-            if (graph.addEdge(node.id, neigh.id)) {
-                ++graph.edgeCount; // one more edge! (add edge will not account for it)
-            }
-        }
-    }
 
     /**
      * Graph.deleteNode: delete a node from the graph. true if successful
@@ -210,6 +152,44 @@
     };
 
     /**
+     * Graph.eachNode: perform a function on each node in the graph
+     * @fn: the function to perform on each node in the graph
+     */
+    Graph.prototype.eachNode = function(fn) {
+        // jshint forin: false
+        for (var id in this.nodes) {
+            var node = this.find(id);
+            if (!!node) {
+                fn(node);
+            } else {
+                continue;
+            }
+        }
+    };
+
+    /**
+     * Graph.eachNeighbor: perform a function on each neighbor of the node
+     * @id: the id of the node whose neighbors will be acted on
+     * @fn: the function to perform on each neighbor of the node
+     */
+    Graph.prototype.eachNeighbor = function(id, fn) {
+        if (!this.exists(id)) {
+            return; // return if node does not exist
+        }
+
+        var node = this.find(id);
+        // jshint forin: false
+        for (var nID in node.neighbors) {
+            var neigh = this.find(nID);
+            if (!!neigh) {
+                fn(neigh);
+            } else {
+                continue;
+            }
+        }
+    };
+
+    /**
      * Graph.addEdge: connect two nodes (undirected edge) that both exist
      * do not allow self edges (by nature of being a simple graph)
      * @source: ID of one end of the edge
@@ -219,7 +199,7 @@
     Graph.prototype.addEdge = function(source, target) {
         // is this a self edge?
         if (source === target) {
-            // console.log('Cannot add self edge in simple graph');
+            // console.warn('Cannot add self edge in simple graph');
             return false;
         }
 
@@ -227,9 +207,9 @@
         var s = this.find(source);
         var t = this.find(target);
 
-        // continue if invalid edge (i.e., either source or target does not exist)
+        // return if invalid edge (i.e., either source or target does not exist)
         if (!s || !t) {
-            // console.log('Unable to add edge (' + source + ',' + target + '): node does not exist');
+            // console.warn('Unable to add edge (' + source + ',' + target + '): node DNE');
             return false;
         }
 
@@ -250,14 +230,34 @@
     };
 
     /**
+     * Graph.addOrCreateEdge: the same as addEdge(), but will create nodes that do not exist
+     * do not allow self edges (by nature of being a simple graph)
+     * @source: ID of one end of the edge
+     * @target: ID of the other end of the edge
+     * return true if able to add or create the edge, false otherwise (i.e., self edge, invalid, or redundant)
+     */
+    Graph.prototype.addOrCreateEdge = function(source, target) {
+        // create nodes if necessary
+        if (!this.exists(source)) {
+            this.addNode(source);
+        }
+        if (!this.exists(target)) {
+            this.addNode(target);
+        }
+
+        // add the edge
+        return this.addEdge(source, target);
+    };
+
+    /**
      * Graph.deleteEdge: delete an edge from the graph
      * @source: ID of one end of the edge to delete
      * @target: ID of the other end of the edge to delete
      * return true if successful, false otherwise
      */
     Graph.prototype.deleteEdge = function(source, target) {
-        var s = this.nodes[source]; // the node corresponding to source ID
-        var t = this.nodes[target]; // the node corresponding to target ID
+        var s = this.find(source); // the node corresponding to source ID
+        var t = this.find(target); // the node corresponding to target ID
 
         // ensure the edge exists (i.e., connected)
         if (!this.connected(source, target)) {
@@ -278,10 +278,12 @@
      * return true is yes, false if no
      */
     Graph.prototype.connected = function(source, target) {
-        if (!this.exists(source) || !this.exists(target)) {
+        var s = this.find(source); // get source node
+        var t = this.find(target); // get target node
+        if (!s || !t) {
             return false; // clearly not connected if does not exist
         }
-        return this.find(source).neighbors.indexOf(target) >= 0 && this.find(target).neighbors.indexOf(source) >= 0;
+        return s.neighbors.indexOf(target) >= 0 && t.neighbors.indexOf(source) >= 0;
     };
 
     /**
@@ -294,10 +296,11 @@
      * return the updated node on success, or null if unable to update/find
      */
     Graph.prototype.update = function(id, props) {
-        if (!this.exists(id)) {
+        var node = this.find(id);
+
+        if (!node) {
             return null;
         }
-        var node = this.find(id);
 
         node.weight = props.weight || node.weight;
         node.nType = props.nType || node.nType;
@@ -307,6 +310,66 @@
     };
 
     module.exports = Graph;
+
+    //------------------------------------------------//
+
+    /** initializeGraph: helper function for Graph constructor to handle supplied @params */
+    function _initializeGraph(graph, params) {
+        var i = 0;
+
+        // add each of the nodes in the supplied graph
+        for (i = 0; i < params.graph.nodes.length; i++) {
+            var nodeVals = params.graph.nodes[i];
+            if (graph.exists(nodeVals.id)) {
+                // update node (was created earlier by a neighbor specification)
+                var node = graph.find(nodeVals.id);
+                nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
+                graph.update(nodeVals.id, nodeVals.props);
+                _fixConsistency(graph, node);
+            }
+            else {
+                graph.addNode(nodeVals.id, nodeVals.props); // create new
+            }
+        }
+
+        if ('edges' in params.graph) {
+            // add each of the edges in the supplied graph
+            for (i = 0; i < params.graph.edges.length; i++) {
+                var source = params.graph.edges[i][0];
+                var target = params.graph.edges[i][1];
+                graph.addOrCreateEdge(source, target);
+            }
+        }
+        else {
+            console.warn('Deprecation Warning: ');
+            console.warn(' Initializing graph object by only specifying nodes is ' +
+                'deprecated and will be removed in v1.0.0');
+            console.warn('  * To solve this please supply both nodes and edges in the graph object');
+            console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
+        }
+
+        // verify the graph if debug is true
+        if (params.debug && !!params.graph) {
+            _verify(graph);
+        }
+
+        return true;
+    }
+
+    /** _fixConsistency: fixes the inconsistencies in @graph caused by the neighbors
+     * of @node by adding the necessary edges
+     */
+    function _fixConsistency(graph, node) {
+        // ensure consistency of graph by adding necessary edges to specified neighbors
+        for (var i = 0; i < node.neighbors.length; i++) {
+            var neigh = graph.addNode(node.neighbors[i]); // create neighbor (if necessary)
+
+            // fix inconsistent edge between new node and its neighbor
+            if (graph.addEdge(node.id, neigh.id)) {
+                ++graph.edgeCount; // one more edge! (add edge will not account for it)
+            }
+        }
+    }
 
     /**
      * _verify: ensure that the graph is consistent (debugging)

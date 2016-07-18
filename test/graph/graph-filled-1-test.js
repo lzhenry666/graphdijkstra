@@ -1,58 +1,42 @@
+// graph-filled-1-test.js
 'use strict';
 
 /* global it, describe, beforeEach, after */
 /* jshint expr: true */
 
 import {expect} from 'chai';
-import Graph from './src/graph.js';
+import Graph from '../src/graph.js';
 
 // initialize empty graph tests
-describe('graph tests (initialized nodes & edges)', () => {
+describe('graph tests (initialized nodes with neighbors)', () => {
 
     const GRAPH = {
         nodes: [
-            {id:  1, props: {weight: 1, nType: 4} },
-            {id:  2, props: {weight: 3, nType: 1} },
-            {id:  3, props: {weight: 2, nType: 0} },
-            {id:  4, props: {weight: 2, nType: 6} },
-            {id:  5, props: {weight: 0, nType: 4} },
-            {id:  6, props: {weight: 5, nType: 3} },
-            {id:  7, props: {weight: 0, nType: 3} },
-            {id:  8, props: {weight: 9, nType: 3} },
-            {id:  9, props: {weight: 0, nType: 4} },
-            {id: 10, props: {weight: 1, nType: 7} },
-            {id: 11, props: {weight: 2, nType: 4} },
-            {id: 12, props: {weight: 0, nType: 0} },
-            {id: 13, props: {weight: 6, nType: 9} },
-            {id: 14, props: {weight: 7, nType: 8} },
-            {id: 15, props: {weight: 5, nType: 9} },
-            {id: 16, props: {weight: 1, nType: 1} },
-            {id: 17, props: {weight: 7, nType: 1} },
-            {id: 18, props: {weight: 9, nType: 6} },
-            {id: 19, props: {weight: 1, nType: 1} },
-            {id: 20, props: {weight: 5, nType: 2} }
+            {id:  1, props: {weight: 1, neighbors: [2, 3, 6], nType: 4} },
+            {id:  2, props: {weight: 3, neighbors: [8, 9, 10], nType: 1} },
+            {id:  3, props: {weight: 2, neighbors: [1, 7], nType: 0} },
+            {id:  4, props: {weight: 2, neighbors: [], nType: 6} },
+            {id:  5, props: {weight: 0, neighbors: [10], nType: 4} },
+            {id:  6, props: {weight: 5, neighbors: [1, 8, 10], nType: 3} },
+            {id:  7, props: {weight: 0, neighbors: [3, 6, 10], nType: 3} },
+            {id:  8, props: {weight: 9, neighbors: [2, 7, 9], nType: 3} },
+            {id:  9, props: {weight: 0, neighbors: [], nType: 4} },
+            {id: 10, props: {weight: 1, neighbors: [6], nType: 7} },
+            {id: 11, props: {weight: 2, neighbors: [], nType: 4} },
+            {id: 12, props: {weight: 0, neighbors: [], nType: 0} },
+            {id: 13, props: {weight: 6, neighbors: [], nType: 9} },
+            {id: 14, props: {weight: 7, neighbors: [], nType: 8} },
+            {id: 15, props: {weight: 5, neighbors: [], nType: 9} },
+            {id: 16, props: {weight: 1, neighbors: [], nType: 1} },
+            {id: 17, props: {weight: 7, neighbors: [], nType: 1} },
+            {id: 18, props: {weight: 9, neighbors: [], nType: 6} },
+            {id: 19, props: {weight: 1, neighbors: [], nType: 1} },
+            {id: 20, props: {weight: 5, neighbors: [], nType: 2} }
         ],
-        edges: [
-            [1,  2],
-            [1,  3],
-            [1,  4],
-            [2,  3],
-            [2,  6],
-            [2,  7],
-            [3,  8],
-            [3,  9],
-            [3,  10],
-            [5,  9],
-            [5,  10],
-            [6,  7],
-            [7,  10],
-            [8,  9],
-            [8,  10],
-            [9,  10]
-        ]
+        edges: []
     };
     const INIT_NODES = 20;
-    const INIT_EDGES = 16;
+    const INIT_EDGES = 14;
 
     let graph;
     let props;
@@ -69,8 +53,8 @@ describe('graph tests (initialized nodes & edges)', () => {
 
         // check initialized graph
         expect(graph.nodes).to.not.be.empty;
-        expect(graph.nodeCount).to.equal(INIT_NODES);
         expect(graph.edgeCount).to.equal(INIT_EDGES);
+        expect(graph.nodeCount).to.equal(INIT_NODES);
     });
 
     after(() => graph = undefined);
@@ -87,14 +71,19 @@ describe('graph tests (initialized nodes & edges)', () => {
     it('it should initialize with the correct nodes', () => {
         for (var i = 0; i < GRAPH.nodes.length; i++) {
             var node = graph.find(GRAPH.nodes[i].id);
+            expect(node.neighbors).to.include.members(GRAPH.nodes[i].props.neighbors);
             GRAPH.nodes[i].props.neighbors = node.neighbors;
             _testNode(GRAPH.nodes[i].id, GRAPH.nodes[i].props, node);
         }
     });
 
     it('it should initialize with the correct edges', () => {
-        for (var i = 0; i < GRAPH.edges.length; i++) {
-            _testEdge(GRAPH.edges[i][0], GRAPH.edges[i][1]);
+        for (var i = 1; i <= GRAPH.nodes.length; i++) {
+            for (var j = 1; j <= GRAPH.nodes.length; j++) {
+                if (GRAPH.nodes[i-1].props.neighbors.indexOf(j) >= 0) {
+                    expect(graph.connected(i, j)).to.be.true;
+                }
+            }
         }
     });
 
@@ -148,10 +137,17 @@ describe('graph tests (initialized nodes & edges)', () => {
         var propsNode = {
             weight: 1,
             nType: 4,
-            neighbors: [2, 3, 4]
+            neighbors: [2, 3, 6]
         };
         expect(node).to.eql(graph.find(1));
         _nodeHelper(1, propsNode, node);
+    });
+
+    it('it should iterate through all nodes', () => {
+        graph.eachNode((node) => {
+            expect(graph.find(node.id)).to.not.be.null;
+            expect(node.id).to.not.be.null;
+        });
     });
 
     it('it should add edges', () => {
