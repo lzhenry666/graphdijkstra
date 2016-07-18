@@ -71,29 +71,21 @@ describe('graph tests (initialized nodes with neighbors)', () => {
     it('it should initialize with the correct nodes', () => {
         for (var i = 0; i < GRAPH.nodes.length; i++) {
             var node = graph.find(GRAPH.nodes[i].id);
+            expect(node.neighbors).to.include.members(GRAPH.nodes[i].props.neighbors);
             GRAPH.nodes[i].props.neighbors = node.neighbors;
             _testNode(GRAPH.nodes[i].id, GRAPH.nodes[i].props, node);
         }
     });
 
-    // it('it should initialize with the corrent edges', () => {
-    //     for (var i = 1; i <= GRAPH.nodes.length; i++) {
-    //         for (var j = 1; j <= GRAPH.nodes.length; j++) {
-    //             // var node = graph.find(i);
-    //             // var neigh = graph.find(j);
-
-    //             if (GRAPH.nodes[i].props.neighbors.indexOf(j) >= 0) {
-    //                 expect(graph.connected(i, j)).to.be.true;
-    //             } else {
-    //                 expect(graph.connected(i, j)).to.be.false;
-    //             }
-    //         }
-
-    //         // for (var j = 0; j <= node.neighbors.length; j++) {
-    //         //     expect(graph.connected(node.id, node.neighbors[j])).to.be.true;
-    //         // }
-    //     }
-    // });
+    it('it should initialize with the correct edges', () => {
+        for (var i = 1; i <= GRAPH.nodes.length; i++) {
+            for (var j = 1; j <= GRAPH.nodes.length; j++) {
+                if (GRAPH.nodes[i-1].props.neighbors.indexOf(j) >= 0) {
+                    expect(graph.connected(i, j)).to.be.true;
+                }
+            }
+        }
+    });
 
     it('it should add a node (without neighbors)', () => {
         var node = graph.addNode(INIT_NODES+1, props);
