@@ -139,7 +139,7 @@
                 // if both are set, calculate the shortest path
                 if (!!$scope.source && !!$scope.target) {
                     // run Dijkstra's algorithm, calculating distance and previous
-                    var dijResults = Graphing.runDijkstra($scope.source, $scope.target, PATH_TYPE);
+                    var dijResults = Graphing.runDijkstra(PATH_TYPE, $scope.source, $scope.target);
 
                     // only get path and rehighlight if it is not cached
                     if (!dijResults.cached) {
@@ -221,7 +221,7 @@
                     service.cache.target = target;
                 }
 
-                var results = Dijkstra.run(service.graph, source, target, pathType);
+                var results = Dijkstra.run(service.graph, pathType, source, target);
 
                 // cache results
                 service.cache = results;

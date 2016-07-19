@@ -25,11 +25,16 @@
      * and previous (prev) for the nodes as calculated or null if source/target do not exist
      * @graph: the graph on which to run algorithm
      * by Dijkstra's algorithm from source to target
+     * @pathType: which values of node type (nType) are valid paths for the algorithm
      * @source: the starting point for the path (a node ID)
      * @target: the ending point for the path (a node ID)
-     * @pathType: which values of node type (nType) are valid paths for the algorithm
      */
-    function run(graph, source, target, pathType) {
+    function run(graph, pathType, source, target) {
+        // return null if source or target does not exist (hence no path)
+        if (!graph.exists(source) || !graph.exists(target)) {
+            return null;
+        }
+
         // return object
         var ret = {
             source: source,
@@ -47,11 +52,6 @@
         );
         var dist = {}; // distance of the node from source
         var prev = {}; // previous node of the form 'node_id': 'prev_node_id'
-
-        // return null if source or target does not exist (hence no path)
-        if (!graph.exists(source) || !graph.exists(target)) {
-            return null;
-        }
 
         // Initialization
         dist[source] = 0; // source is distance 0 from source

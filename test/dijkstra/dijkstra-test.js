@@ -205,9 +205,9 @@ describe('dijkstra tests', () => {
     });
 
     it('it should handle non-existant source or target', () => {
-        expect(Dijkstra.run.bind(Dijkstra, graph, 1, 37, 1)).to.throw('Target does not exist (37)');
-        expect(Dijkstra.run.bind(Dijkstra, graph, 37, 1, 1)).to.throw('Source does not exist (37)');
-        expect(Dijkstra.run.bind(Dijkstra, graph, 38, 37, 1)).to.throw('Source does not exist (38)');
+        expect(Dijkstra.run(graph, 1, 37, 1)).to.be.null;
+        expect(Dijkstra.run(graph, 37, 1, 1)).to.be.null;
+        expect(Dijkstra.run(graph, 38, 37, 1)).to.be.null;
     });
 
 
