@@ -22,7 +22,7 @@
     /**
      * run: run Dijkstra's shortest path algorithm
      * @return an object with the source (source), target (target), distance (dist)
-     * and previous (prev) for the nodes as calculated
+     * and previous (prev) for the nodes as calculated or null if source/target do not exist
      * @graph: the graph on which to run algorithm
      * by Dijkstra's algorithm from source to target
      * @source: the starting point for the path (a node ID)
@@ -48,11 +48,10 @@
         var dist = {}; // distance of the node from source
         var prev = {}; // previous node of the form 'node_id': 'prev_node_id'
 
-        // throw error if source or target is undefined
-        _assert(graph.exists(source), 'Source does not exist (' +
-            source + ')');
-        _assert(graph.exists(target), 'Target does not exist (' +
-            target + ')');
+        // return null if source or target does not exist (hence no path)
+        if (!graph.exists(source) || !graph.exists(target)) {
+            return null;
+        }
 
         // Initialization
         dist[source] = 0; // source is distance 0 from source
@@ -138,18 +137,18 @@
 
     module.exports = Dijkstra;
 
-    /**
-     * assert: debugging function that throws an error if condition is false
-     * @condition: condition to test truth value
-     * @message: error message to display in failure
-     */
-    function _assert(condition, message) {
-        if (!condition) {
-            message = message || 'Assertion failed';
-            if (typeof Error !== 'undefined') {
-                throw new Error(message);
-            }
-            throw message; // Fallback
-        }
-    }
+    // /**
+    //  * assert: debugging function that throws an error if condition is false
+    //  * @condition: condition to test truth value
+    //  * @message: error message to display in failure
+    //  */
+    // function _assert(condition, message) {
+    //     if (!condition) {
+    //         message = message || 'Assertion failed';
+    //         if (typeof Error !== 'undefined') {
+    //             throw new Error(message);
+    //         }
+    //         throw message; // Fallback
+    //     }
+    // }
 })();
