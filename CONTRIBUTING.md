@@ -17,7 +17,7 @@ Fork, then clone the repo:
 Set up your machine:
 
    1. Install Packages
-        * `npm install`
+      * `npm install`
    2. Installing Gulp
         * This doc assumes gulp is installed globally
         * `npm install -g gulp`
