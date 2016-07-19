@@ -69,10 +69,6 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
    the underlying graph of location objects (nodes) on which we run **Dijkstra**
    to find the shortest paths between them and generate directions.
 
-## Dependencies
-
-This library assumes that `angular` is available globally and it relies angular's `$http` service.
-
 ## Public API
 
 See [wiki pages]() for more detail
@@ -80,22 +76,22 @@ See [wiki pages]() for more detail
 #### Graph
 ###### (prototype)
 * **Graph(params)** (*constructor*)
-* **nodes** - property **{Node}**
+* **nodes** - property **{GraphNode}**
 * **nodeCount** - property **integer**
 * **edgeCount** - property **integer**
-* **find(id)**  -  returns **Node**
+* **find(id)**  -  returns **GraphNode**
 * **exists(id)**  -  returns **boolean**
-* **addNode(id, props)**  -  returns **Node**
-* **deleteNode(id)**  -  returns **Node**
+* **addNode(id, props)**  -  returns **GraphNode**
+* **deleteNode(id)**  -  returns **GraphNode**
 * **eachNode(fn)**
 * **eachNeighbor(id, fn)**
 * **addEdge(source, target)**  -  returns **boolean**
 * **addOrCreateEdge(source, target)**  -  returns **boolean**
 * **deleteEdge(source, target)**  -  returns **boolean**
 * **connected(source, target)**  -  returns **boolean**
-* **update(id, props)** -             returns **Node**
+* **update(id, props)** -             returns **GraphNode**
 
-#### Node
+#### GraphNode
 ###### (prototype)
 * **id** - property **integer**
 * **weight** - property **integer**
