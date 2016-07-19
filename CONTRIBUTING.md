@@ -19,18 +19,18 @@ Set up your machine:
    1. Install Packages
       * `npm install`
    2. Installing Gulp
-        * This doc assumes gulp is installed globally
-        * `npm install -g gulp`
+      * This doc assumes gulp is installed globally
+      * `npm install -g gulp`
    3. Testing and Building with Gulp
-        * Run `gulp` to start the development build process
-           * Compiling, browserifying required `*.js` files
-           * Linting `*.js` files
-           * Running tests
-           * Start watchers to automatically rebuild on source file changes
-        * Run `gulp test` to perform the above but not watch for changes
-        * Run `gulp build` to start the production build process
-           * Follows the same path as the develop process, but does not watch for changes
-           * Compiles production ready `graph-dijkstra.js`, minifies, and copies to `dist/`
+      * Run `gulp` to start the development build process
+         * Compiling, browserifying required `*.js` files
+         * Linting `*.js` files
+         * Running tests
+         * Start watchers to automatically rebuild on source file changes
+      * Run `gulp test` to perform the above but not watch for changes
+      * Run `gulp build` to start the production build process
+         * Follows the same path as the develop process, but does not watch for changes
+         * Compiles production ready `graph-dijkstra.js`, minifies, and copies to `dist/`
 
 Make your change. Test your change. Make sure everything is working as intended.
 
