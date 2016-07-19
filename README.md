@@ -30,9 +30,12 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
    var results = Dijkstra.run(graph, 1, 3);
    var path = Dijkstra.getPath(results.prev, 3);
 
-   console.log(results); // logs: { source: 1, target: 3, dist: { '1': 0, '2': Infinity, '3': 1 }, prev: { '1': 1, '2': null, '3': 1 } }
-   console.log(path); // logs: [ 1, 3 ]
-   console.log('node 1 is ' + results.dist[3] + ' unit from node 3'); // logs: node 1 is 1 unit from 3
+   console.log(results);
+   // logs: { source: 1, target: 3, dist: { '1': 0, '2': Infinity, '3': 1 }, prev: { '1': 1, '2': null, '3': 1 } }
+   console.log(path);
+   // logs: [ 1, 3 ]
+   console.log('node 1 is ' + results.dist[3] + ' unit from node 3');
+   // logs: node 1 is 1 unit from 3
    ```
 
 ## Demos
@@ -60,26 +63,6 @@ This library assumes that `angular` is available globally and it relies angular'
 
 See [wiki pages]() for more detail
 
-#### graphDijkstra
-###### (angular module)
-* **Graphing** (*angular service*)
-* **Dijkstra** (*angular service*)
-
----
-
-#### Graphing
-###### (angular service)
-* **graph** - variable **Graph**
-* **createGraph(url, debug)** - returns **Graph**
-
----
-
-#### Dijkstra
-###### (angular service)
-* **RUN(graph)** - returns **{dist, prev}**
-
----
-
 #### Graph
 ###### (object)
 * **Graph(params)** (*constructor*)
@@ -97,6 +80,19 @@ See [wiki pages]() for more detail
 * **deleteEdge(source, target)**  -  returns **boolean**
 * **connected(source, target)**  -  returns **boolean**
 * **update(id, props)** -             returns **Node**
+
+#### Node
+###### (object)
+* **Node(id, props)** (*constructor*)
+* **id** - variable **integer**
+* **weight** - variable **integer**
+* **nType** - variable **integer**
+* **neighbors** - variable **[integer]**
+
+#### Dijkstra
+###### (object)
+* **run(graph, source, target, pathType)** - returns **{source, target, dist, prev}**
+* **getPath(prevList, target)** - returns **[integer]**
 
 ## Important!
 
