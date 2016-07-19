@@ -194,14 +194,13 @@
      * do not allow self edges (by nature of being a simple graph)
      * @source: ID of one end of the edge
      * @target: ID of the other end of the edge
-     * @return true if able to add edge, false if redundant; throw error for self edge or invalid
+     * return true if able to add edge, false otherwise (i.e., self edge, invalid, or redundant)
      */
     Graph.prototype.addEdge = function(source, target) {
         // is this a self edge?
         if (source === target) {
             // console.warn('Cannot add self edge in simple graph');
-            throw new Error('Cannot add self edge in simple graph');
-            // return false;
+            return false;
         }
 
         // find the source & target nodes
@@ -211,8 +210,7 @@
         // return if invalid edge (i.e., either source or target does not exist)
         if (!s || !t) {
             // console.warn('Unable to add edge (' + source + ',' + target + '): node DNE');
-            throw new Error('Unable to add edge (' + source + ',' + target + '): node DNE');
-            // return false;
+            return false;
         }
 
         // do not add redundant edges (but fix edge if inconsistent)
