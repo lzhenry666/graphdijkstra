@@ -73,7 +73,7 @@ See [wiki pages]() for more detail
 
 #### Graph
 ###### (prototype)
-* **Graph(params)** (*constructor*)
+* **Graph(graph)** (*constructor*)
 * **nodes** - property **{GraphNode}**
 * **nodeCount** - property **integer**
 * **edgeCount** - property **integer**
