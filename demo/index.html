@@ -99,6 +99,21 @@
                 $scope.graph = Graphing.graph;
             });
 
+            var graph = new Graph();
+            graph.addNode(1, {weight: 1, nType: 1});
+            graph.addNode(2, {weight: 1, nType: 1});
+            graph.addNode(3, {weight: 4, nType: 1});
+            graph.addEdge(1, 2);
+            graph.addEdge(2, 3);
+            graph.addEdge(1, 3);
+
+            var results = Dijkstra.run(graph, 1, 3);
+            var path    = Dijkstra.getPath(results.prev, 3);
+            var printDist   = 'node 1 is ' + results.dist[3] + ' unit from node 3'
+
+            console.log(results);
+
+
             var PATH_TYPE = 1; // node nType that represents a valid path
             var isSource = true;  // click should set source or target ?
             $scope.source = null; // path source

@@ -43,9 +43,9 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
    // graph.nodes     => { '1': GraphNode { id: 1, ..., neighbors: [ 2, 3 ] }, '2': GraphNode { id: 2, ... }, '3': GraphNode { id: 3, ..., neighbors: [ 2, 1 ] } }
    // graph.edgeCount => 3
 
-   var results = Dijkstra.run(graph, 1, 3);
-   var path    = Dijkstra.getPath(results.prev, 3);
-   var printDist   = 'node 1 is ' + results.dist[3] + ' unit from node 3'
+   var results   = Dijkstra.run(graph, 1, 3);
+   var path      = Dijkstra.getPath(results.prev, 3);
+   var printDist = 'node 1 is ' + results.dist[3] + ' unit from node 3'
 
    // results   => { source: 1, target: 3, dist: { '1': 0, '2': Infinity, '3': 1 }, prev: { '1': 1, '2': null, '3': 1 } }
    // path      => [ 1, 3 ]
@@ -104,7 +104,7 @@ See [wiki pages]() for more detail
 
 #### Dijkstra
 ###### (prototype)
-* **run(graph, source, target, pathType)** - returns **{source, target, dist, prev}**
+* **run(graph, pathType, source, target)** - returns **{source, target, dist, prev}**
 * **getPath(prevList, target)** - returns **[integer]**
 
 ## Important!

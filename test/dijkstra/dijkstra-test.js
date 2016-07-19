@@ -121,61 +121,61 @@ describe('dijkstra tests', () => {
     after(() => graph = undefined);
 
     it('it should find the shortest path (1)', () => {
-        var results = Dijkstra.run(graph, 1, 6, 1);
+        var results = Dijkstra.run(graph, 1, 1, 6);
 
         _testResults(results, 1, 6, [1, 2, 3, 4, 5, 6], [1, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5]);
     });
 
     it('it should find the shortest path (2)', () => {
-        var results = Dijkstra.run(graph, 1, 12, 1);
+        var results = Dijkstra.run(graph, 1, 1, 12);
 
         _testResults(results, 1, 12, [1, 2, 3, 4, 5, 6, 12], [1, 1, 2, 3, 4, 5, 6], [0, 1, 2, 3, 4, 5, 6]);
     });
 
     it('it should find the shortest path (3)', () => {
-        var results = Dijkstra.run(graph, 1, 17, 1);
+        var results = Dijkstra.run(graph, 1, 1, 17);
 
         _testResults(results, 1, 17, [1, 2, 3, 4, 10, 16, 17], [1, 1, 2, 3, 4, 10, 16], [0, 1, 2, 3, 4, 5, 6]);
     });
 
     it('it should avoid node 7 (which has weight 100)', () => {
         // node 7 has weight 100
-        var results = Dijkstra.run(graph, 1, 13, 1);
+        var results = Dijkstra.run(graph, 1, 1, 13);
 
         _testResults(results, 1, 13, [1, 2, 8, 14, 13], [1,1, 2, 8, 14], [0, 1, 2, 3, 4, 5]);
     });
 
     it('it should avoid node 32 (which has nType 2)', () => {
         // node 32 has nType 2
-        var results = Dijkstra.run(graph, 1, 33, 1);
+        var results = Dijkstra.run(graph, 1, 1, 33);
 
         _testResults(results, 1, 33, [1, 2, 8, 14, 20, 21, 27, 33], [1, 1, 2, 8, 14, 20, 21, 27],
             [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     });
 
     it('it should return the shortest path as an array (1)', () => {
-       var results = Dijkstra.run(graph, 1, 6, 1);
+       var results = Dijkstra.run(graph, 1, 1, 6);
        var path = Dijkstra.getPath(results.prev, results.target);
 
        expect(path).to.eql([1, 2, 3, 4, 5, 6]);
     });
 
     it('it should return the shortest path as an array (2)', () => {
-       var results = Dijkstra.run(graph, 1, 12, 1);
+       var results = Dijkstra.run(graph, 1, 1, 12);
        var path = Dijkstra.getPath(results.prev, results.target);
 
        expect(path).to.eql([1, 2, 3, 4, 5, 6, 12]);
     });
 
     it('it should return the shortest path as an array (3)', () => {
-       var results = Dijkstra.run(graph, 1, 17, 1);
+       var results = Dijkstra.run(graph, 1, 1, 17);
        var path = Dijkstra.getPath(results.prev, results.target);
 
        expect(path).to.eql([1, 2, 3, 4, 10, 16, 17]);
     });
 
     it('there should not be a path to node 36 (it has no edges)', () => {
-        var results = Dijkstra.run(graph, 1, 36, 1);
+        var results = Dijkstra.run(graph, 1, 1, 36);
         var path = Dijkstra.getPath(results.prev, results.target);
 
         expect(results.dist[36]).to.be.equal(Infinity);
@@ -186,7 +186,7 @@ describe('dijkstra tests', () => {
 
     it('there should not be any paths to node 36 (it has no edges)', () => {
         for (var i = 1; i < 36; i++) {
-            var results = Dijkstra.run(graph, i, 36, 1);
+            var results = Dijkstra.run(graph, 1, i, 36);
             var path = Dijkstra.getPath(results.prev, results.target);
 
             expect(results.dist[36]).to.be.equal(Infinity);
@@ -197,7 +197,7 @@ describe('dijkstra tests', () => {
     });
 
     it('it should handle self paths', () => {
-        var results = Dijkstra.run(graph, 15, 15, 1);
+        var results = Dijkstra.run(graph, 1, 15, 15);
         var path = Dijkstra.getPath(results.prev, results.target);
 
         _testResults(results, 15, 15, [15], [15], [0]);
@@ -205,9 +205,9 @@ describe('dijkstra tests', () => {
     });
 
     it('it should handle non-existant source or target', () => {
+        expect(Dijkstra.run(graph, 1, 1, 37)).to.be.null;
         expect(Dijkstra.run(graph, 1, 37, 1)).to.be.null;
-        expect(Dijkstra.run(graph, 37, 1, 1)).to.be.null;
-        expect(Dijkstra.run(graph, 38, 37, 1)).to.be.null;
+        expect(Dijkstra.run(graph, 1, 38, 37)).to.be.null;
     });
 
 

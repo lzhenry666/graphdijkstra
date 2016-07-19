@@ -29,6 +29,7 @@
      * @source: the starting point for the path (a node ID)
      * @target: the ending point for the path (a node ID)
      */
+    // jshint maxcomplexity: 10
     function run(graph, pathType, source, target) {
         // return null if source or target does not exist (hence no path)
         if (!graph.exists(source) || !graph.exists(target)) {
@@ -40,6 +41,8 @@
             source: source,
             target: target
         };
+        var dist = {}; // distance of the node from source
+        var prev = {}; // previous node of the form 'node_id': 'prev_node_id'
         // binary min heap of the unvisited nodes (on distance)
         var unvisited = new MinHeap(
             function(e) {
@@ -50,8 +53,6 @@
             },
             'distance'
         );
-        var dist = {}; // distance of the node from source
-        var prev = {}; // previous node of the form 'node_id': 'prev_node_id'
 
         // Initialization
         dist[source] = 0; // source is distance 0 from source
