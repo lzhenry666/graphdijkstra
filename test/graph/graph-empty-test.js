@@ -149,11 +149,11 @@ describe('graph tests (empty)', () => {
         graph.addEdge(1, 2);
         graph.addEdge(2, 3);
 
-        expect(graph.addEdge(3,11)).to.be.false;
+        expect(graph.addEdge.bind(graph, 3, 11)).to.throw('Unable to add edge (3,11): node DNE');
         expect(graph.find(3).neighbors).to.not.include.members([11]);
-        expect(graph.addEdge(14,7)).to.be.false;
+        expect(graph.addEdge.bind(graph, 14, 7)).to.throw('Unable to add edge (14,7): node DNE');
         expect(graph.find(7).neighbors).to.not.include.members([14]);
-        expect(graph.addEdge(14,17)).to.be.false;
+        expect(graph.addEdge.bind(graph, 14, 17)).to.throw('Unable to add edge (14,17): node DNE');
 
         expect(graph.edgeCount).to.equal(2);
     });
@@ -191,7 +191,7 @@ describe('graph tests (empty)', () => {
     it('it should not allow self edges', () => {
         graph.addNode(1, props);
 
-        expect(graph.addEdge(1, 1)).to.be.false;
+        expect(graph.addEdge.bind(graph, 1, 1)).to.throw('Cannot add self edge in simple graph');
         expect(graph.edgeCount).to.equal(0);
     });
 

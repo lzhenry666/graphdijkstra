@@ -20,22 +20,36 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
    ```javascript
    var graph = new Graph();
    graph.addNode(1, {weight: 1, nType: 1});
+   // graph.nodes     => { '1': GraphNode { id: 1, weight: 1, nType: 1, neighbors: [] } }
+   // graph.nodeCount => 1
+
    graph.addNode(2, {weight: 1, nType: 1});
+   // graph.nodes     => { '1': GraphNode { id: 1, ... }, '2': GraphNode { id: 2, ... } }
+   // graph.nodeCount =>  2
+
    graph.addNode(3, {weight: 4, nType: 1});
+   // graph.nodes     => { '1': GraphNode { id: 1, ... }, '2': GraphNode { id: 2, ... }, '3': GraphNode { id: 3, weight: 4, ... } }
+   // graph.nodeCount => 3
 
    graph.addEdge(1, 2);
+   // graph.nodes     => { '1': GraphNode { id: 1, ..., neighbors: [ 2 ] }, '2': GraphNode { id: 2, ..., neighbors: [ 1 ] }, '3': GraphNode { id: 3, ...} }
+   // graph.edgeCount => 1
+
    graph.addEdge(2, 3);
+   // graph.nodes     => { '1': GraphNode { id: 1, ... }, '2': GraphNode { id: 2, ..., neighbors: [ 1, 3 ] }, '3': GraphNode { id: 3, ..., neighbors: [ 2 ] } }
+   // graph.edgeCount => 2
+
    graph.addEdge(1, 3);
+   // graph.nodes     => { '1': GraphNode { id: 1, ..., neighbors: [ 2, 3 ] }, '2': GraphNode { id: 2, ... }, '3': GraphNode { id: 3, ..., neighbors: [ 2, 1 ] } }
+   // graph.edgeCount => 3
 
    var results = Dijkstra.run(graph, 1, 3);
-   var path = Dijkstra.getPath(results.prev, 3);
+   var path    = Dijkstra.getPath(results.prev, 3);
+   var printDist   = 'node 1 is ' + results.dist[3] + ' unit from node 3'
 
-   console.log(results);
-   // logs: { source: 1, target: 3, dist: { '1': 0, '2': Infinity, '3': 1 }, prev: { '1': 1, '2': null, '3': 1 } }
-   console.log(path);
-   // logs: [ 1, 3 ]
-   console.log('node 1 is ' + results.dist[3] + ' unit from node 3');
-   // logs: node 1 is 1 unit from 3
+   // results   => { source: 1, target: 3, dist: { '1': 0, '2': Infinity, '3': 1 }, prev: { '1': 1, '2': null, '3': 1 } }
+   // path      => [ 1, 3 ]
+   // printDist => node 1 is 1 unit from node 3
    ```
 
 ## Demos
@@ -66,9 +80,9 @@ See [wiki pages]() for more detail
 #### Graph
 ###### (prototype)
 * **Graph(params)** (*constructor*)
-* **nodes** - variable **{Node}**
-* **nodeCount** - variable **integer**
-* **edgeCount** - variable **integer**
+* **nodes** - property **{Node}**
+* **nodeCount** - property **integer**
+* **edgeCount** - property **integer**
 * **find(id)**  -  returns **Node**
 * **exists(id)**  -  returns **boolean**
 * **addNode(id, props)**  -  returns **Node**
@@ -83,11 +97,10 @@ See [wiki pages]() for more detail
 
 #### Node
 ###### (prototype)
-* **Node(id, props)** (*constructor*)
-* **id** - variable **integer**
-* **weight** - variable **integer**
-* **nType** - variable **integer**
-* **neighbors** - variable **[integer]**
+* **id** - property **integer**
+* **weight** - property **integer**
+* **nType** - property **integer**
+* **neighbors** - property **[integer]**
 
 #### Dijkstra
 ###### (prototype)
