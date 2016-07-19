@@ -191,14 +191,12 @@
 
             //------------------------------------------------//
 
-            function createGraph(url, debug) {
+            function createGraph(url) {
                 // use http to get the graph json
                 return $http.get(url)
                     .success(function(data) {
                         // create the new graph
-                        service.graph = new Graph({
-                            graph: data
-                        });
+                        service.graph = new Graph(data);
 
                         return service.graph;
                     })

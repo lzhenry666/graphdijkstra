@@ -40,7 +40,7 @@ describe('graph tests (initialized nodes with neighbors)', () => {
     const INIT_EDGES = 14;
 
     function runBefore() {
-        let graph = new Graph({graph: GRAPH}); // initialize graph
+        let graph = new Graph(GRAPH); // initialize graph
 
         // initialize default properties
         let props = {

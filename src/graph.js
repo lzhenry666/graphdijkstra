@@ -12,39 +12,37 @@
 
     /**
      * Graph
-     * @params: (optional) object of parameters for initializing graph, valid keys are:
-     *    @graph: a JSON representation of the graph to initialize
-     *    * the graph should an object with two arrays, nodes and edges.
-     *    * nodes: an array of objects with integer id and object props (keys: weight, nType, and neighbors)
-     *    * edges: an array of length 2 arrays representing the source and target ids for the edge
+     * @graph: a JSON representation of the graph to initialize; should an object with two arrays, nodes and edges.
+     *   nodes: an array of objects with integer id and object props (keys: weight, nType, neighbors)
+     *   edges: an array whose elements are 2-length arrays representing the source and target ids for the edge
      */
-    var Graph = function(params) {
+    var Graph = function(graph) {
         var i = 0;
 
-        params = params || {};
+        graph = graph || {};
         this._nodes = {}; // initialize nodes to empty
         this._nodeCount = 0; // initialize node count to 0
         this._edgeCount = 0; // initialize edge count to 0
 
         // no graph supplied, return
-        if (!params.graph) {
+        if (!graph) {
             return;
         }
 
         // handle invalid graph parameter format
-        if (!('nodes' in params.graph)) {
+        if (!('nodes' in graph)) {
             throw new Error('Invalid graph format: must specify array \'nodes\' with keys' +
                 ' \'id\' and \'props\'\n *\'props\' has keys \'weight\', \'nType\', \'neighbors\'');
         }
-        if (!('edges' in params.graph)) {
+        if (!('edges' in graph)) {
             throw new Error('Invalid graph format: must specify array \'edges\' with elements' +
                 ' of the form [ sourceID, targetID ]');
         }
 
         // graph is supplied, initialize to that
         // add each of the nodes in the supplied graph
-        for (i = 0; i < params.graph.nodes.length; i++) {
-            var nodeVals = params.graph.nodes[i];
+        for (i = 0; i < graph.nodes.length; i++) {
+            var nodeVals = graph.nodes[i];
             if (this.exists(nodeVals.id)) {
                 // update node (was created earlier by a neighbor specification)
                 var node = this.find(nodeVals.id);
@@ -56,9 +54,9 @@
             }
         }
         // add each of the edges in the supplied graph
-        for (i = 0; i < params.graph.edges.length; i++) {
-            var source = params.graph.edges[i][0];
-            var target = params.graph.edges[i][1];
+        for (i = 0; i < graph.edges.length; i++) {
+            var source = graph.edges[i][0];
+            var target = graph.edges[i][1];
             this.addOrCreateEdge(source, target);
         }
     };

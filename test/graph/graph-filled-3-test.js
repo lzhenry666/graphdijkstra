@@ -57,7 +57,7 @@ describe('graph tests (initialized nodes & edges)', () => {
     const INIT_EDGES = 16;
 
     function runBefore() {
-        let graph = new Graph({graph: GRAPH}); // initialize graph
+        let graph = new Graph(GRAPH); // initialize graph
 
         // initialize default properties
         let props = {
