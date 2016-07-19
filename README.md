@@ -64,7 +64,7 @@ This library assumes that `angular` is available globally and it relies angular'
 See [wiki pages]() for more detail
 
 #### Graph
-###### (object)
+###### (prototype)
 * **Graph(params)** (*constructor*)
 * **nodes** - variable **{Node}**
 * **nodeCount** - variable **integer**
@@ -82,7 +82,7 @@ See [wiki pages]() for more detail
 * **update(id, props)** -             returns **Node**
 
 #### Node
-###### (object)
+###### (prototype)
 * **Node(id, props)** (*constructor*)
 * **id** - variable **integer**
 * **weight** - variable **integer**
@@ -90,7 +90,7 @@ See [wiki pages]() for more detail
 * **neighbors** - variable **[integer]**
 
 #### Dijkstra
-###### (object)
+###### (prototype)
 * **run(graph, source, target, pathType)** - returns **{source, target, dist, prev}**
 * **getPath(prevList, target)** - returns **[integer]**
 

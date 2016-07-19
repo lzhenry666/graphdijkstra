@@ -12,14 +12,14 @@
     };
 
     /**
-     * Node
+     * GraphNode
      * create a new node with @id @neighbors, @weight, and @nType
      * @props: object of properties for the node (optional), valid keys are:
      *    @weight: the weight of the node to create (i.e., distance in path algorithm)
      *    @nType:  an integer that represents the type of nodes (e.g., an enumeration)
      *    @neighbors: list of node ids that are the neighbors
      */
-    var Node = function(id, props) {
+    var GraphNode = function(id, props) {
         props = props || {};
         this._id = id;
         this._weight = props.weight || DEFAULTS.weight;
@@ -28,9 +28,9 @@
     };
 
     /**
-     * Node define properties
+     * GraphNode define properties
      */
-    Object.defineProperties(Node.prototype, {
+    Object.defineProperties(GraphNode.prototype, {
         // id
         id: {
             get: function() {
@@ -66,5 +66,5 @@
         }
     });
 
-    module.exports = Node;
+    module.exports = GraphNode;
 })();

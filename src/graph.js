@@ -7,7 +7,7 @@
 (function() {
     'use strict';
 
-    var Node = require('./graph-node.js');
+    var GraphNode = require('./graph-node.js');
     var union = require('lodash/union');
 
     /**
@@ -90,7 +90,7 @@
      * returns true if it is a node, false otherwise
      */
     Graph.prototype.exists = function(id) {
-        return (id in this.nodes) && (this.nodes[id] instanceof Node);
+        return (id in this.nodes) && (this.nodes[id] instanceof GraphNode);
     };
 
     /**
@@ -110,7 +110,7 @@
         // do not overwrite existing properties (TODO: might change)
         if (!this.exists(id)) {
             // create & add new node
-            var node = new Node(id, props);
+            var node = new GraphNode(id, props);
             this.nodes[id] = node;
 
             ++this.nodeCount;

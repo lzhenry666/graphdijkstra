@@ -95,8 +95,8 @@
         function myCtrl($scope, Graphing) {
             $scope._ = window._; // load lodash
             // create and store graph using graph.json
-            Graphing.createGraph('./graph.json', true).then(function() {
-                $scope.graph = Graphing.graph;
+            Graphing.createGraph('./graph.json', true).then(function(response) {
+                $scope.graph = response.data;
             });
 
             var PATH_TYPE = 1; // node nType that represents a valid path
