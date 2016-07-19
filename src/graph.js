@@ -285,10 +285,10 @@
      * Graph.update: set the properties of the node specified by @id
      * @id: id of the node to update
      * @props: object of properties for the node, valid keys are:
-     *    @neighbors: the neighbors of the node to add (create node if it does not exist)
      *    @weight: the weight of the node to create
      *    @nType: the type of the node to create
-     * return the updated node on success, or null if unable to update/find
+     *    @neighbors: the neighbors of the node to add (create node if it does not exist)
+     * @return the updated node on success, or null if unable to update/find
      */
     Graph.prototype.update = function(id, props) {
         var node = this.find(id);
