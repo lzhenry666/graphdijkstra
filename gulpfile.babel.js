@@ -112,9 +112,7 @@ gulp.task('test-graph', ['babel'], () =>
 
 gulp.task('test-dijkstra', ['babel'], () =>
     gulp.src([config.paths.test.dijkstra])
-        .pipe(mocha({
-            reporter: 'spec'
-        }))
+        .pipe(mocha({ reporter: 'spec' }))
         .on('error', err => console.log(err.stack))
 );
 
