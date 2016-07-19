@@ -217,14 +217,11 @@ describe('graph tests (initialized nodes & edges)', () => {
         graph.addEdge(INIT_NODES+1, INIT_NODES+2);
         graph.addEdge(INIT_NODES+2, INIT_NODES+3);
 
-        expect(graph.addEdge.bind(graph, INIT_NODES+3, INIT_NODES+11)).to.throw('Unable to add edge ('+
-            (INIT_NODES+3)+','+(INIT_NODES+11)+'): node DNE');
+        expect(graph.addEdge(INIT_NODES+3,INIT_NODES+11)).to.be.false;
         expect(graph.find(INIT_NODES+3).neighbors).to.not.include.members([INIT_NODES+11]);
-        expect(graph.addEdge.bind(graph, INIT_NODES+14, INIT_NODES+7)).to.throw('Unable to add edge ('+
-            (INIT_NODES+14)+','+(INIT_NODES+7)+'): node DNE');
+        expect(graph.addEdge(INIT_NODES+14,INIT_NODES+7)).to.be.false;
         expect(graph.find(INIT_NODES+7).neighbors).to.not.include.members([INIT_NODES+14]);
-        expect(graph.addEdge.bind(graph, INIT_NODES+14, INIT_NODES+17)).to.throw('Unable to add edge ('+
-            (INIT_NODES+14)+','+(INIT_NODES+17)+'): node DNE');
+        expect(graph.addEdge(INIT_NODES+14,INIT_NODES+17)).to.be.false;
 
         expect(graph.edgeCount).to.equal(INIT_EDGES+2);
     });
@@ -262,7 +259,7 @@ describe('graph tests (initialized nodes & edges)', () => {
     it('it should not allow self edges', () => {
         graph.addNode(INIT_NODES+1, props);
 
-        expect(graph.addEdge.bind(graph, INIT_NODES+1, INIT_NODES+1)).to.throw('Cannot add self edge in simple graph');
+        expect(graph.addEdge(INIT_NODES+1, INIT_NODES+1)).to.be.false;
         expect(graph.edgeCount).to.equal(INIT_EDGES);
     });
 
