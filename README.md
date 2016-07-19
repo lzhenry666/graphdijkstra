@@ -12,10 +12,10 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 ## Installation & Typical Usage
 
 1. Install via npm
-   * `$ npm install --save-dev https://github.com/LincolnTechOpenSource/angular-graph-dijkstra`
+   * `$ npm install --save-dev https://github.com/LincolnTechOpenSource/graph-dijkstra`
 2. Include the JavaScript file
-   * `<link rel="stylesheet" href="node_modules/angular-graph-dijkstra/dist/graph-dijkstra.js">`
-   * or `<link rel="stylesheet" href="node_modules/angular-graph-dijkstra/dist/graph-dijkstra.min.js">`
+   * `<link rel="stylesheet" href="node_modules/graph-dijkstra/dist/graph-dijkstra.js">`
+   * or `<link rel="stylesheet" href="node_modules/graph-dijkstra/dist/graph-dijkstra.min.js">`
 3. Use the available API - for example:
    ```javascript
    var graph = new Graph();
@@ -30,9 +30,9 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
    var results = Dijkstra.run(graph, 1, 3);
    var path = Dijkstra.getPath(results.prev, 3);
 
-   console.log(results); // logs: #####
-   console.log(path);    // logs: #####
-   console.log('node 1 is ' + results.dist[3] + ' units from node 3'); // logs: ####
+   console.log(results); // logs: { source: 1, target: 3, dist: { '1': 0, '2': Infinity, '3': 1 }, prev: { '1': 1, '2': null, '3': 1 } }
+   console.log(path); // logs: [ 1, 3 ]
+   console.log('node 1 is ' + results.dist[3] + ' unit from node 3'); // logs: node 1 is 1 unit from 3
    ```
 
 ## Demos
