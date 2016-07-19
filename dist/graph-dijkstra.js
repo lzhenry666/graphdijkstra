@@ -1829,16 +1829,17 @@ var Dijkstra = require('./dijkstra.js');
 
     /**
      * run: run Dijkstra's shortest path algorithm
-     * @return an object with the source (source), target (target), distance (dist)
-     * and previous (prev) for the nodes as calculated or null if source/target do not exist
      * @graph: the graph on which to run algorithm
      * by Dijkstra's algorithm from source to target
      * @pathType: which values of node type (nType) are valid paths for the algorithm
      * @source: the starting point for the path (a node ID)
      * @target: the ending point for the path (a node ID)
+     * @return an object with the source (source), target (target), distance (dist)
+     * and previous (prev) for the nodes as calculated or null if source/target do not exist
      */
-    // jshint maxcomplexity: 10
     function run(graph, pathType, source, target) {
+        // jshint maxcomplexity: 10
+
         // return null if source or target does not exist (hence no path)
         if (!graph.exists(source) || !graph.exists(target)) {
             return null;
@@ -1945,21 +1946,6 @@ var Dijkstra = require('./dijkstra.js');
     }
 
     module.exports = Dijkstra;
-
-    // /**
-    //  * assert: debugging function that throws an error if condition is false
-    //  * @condition: condition to test truth value
-    //  * @message: error message to display in failure
-    //  */
-    // function _assert(condition, message) {
-    //     if (!condition) {
-    //         message = message || 'Assertion failed';
-    //         if (typeof Error !== 'undefined') {
-    //             throw new Error(message);
-    //         }
-    //         throw message; // Fallback
-    //     }
-    // }
 })();
 
 },{"./min_heap.js":71}],69:[function(require,module,exports){
@@ -1970,6 +1956,7 @@ var Dijkstra = require('./dijkstra.js');
 (function() {
     'use strict';
 
+    // default node properties
     var DEFAULTS = {
         weight: 0,
         nType: 0,
@@ -2049,34 +2036,54 @@ var Dijkstra = require('./dijkstra.js');
 
     /**
      * Graph
-     * @params: (optional) object of parameters for initializing graph, valid keys are:
-     *    @debug: only verify if debug is set to true (defaults to false)
-     *    @graph: a JSON representation of the graph to initialize
-     *    * the graph should an object with two arrays, nodes and edges.
-     *    * nodes: an array of objects with integer id and object props (keys: weight, nType, and neighbors)
-     *    * edges: an array of length 2 arrays representing the source and target ids for the edge
-     * return true if successfully constructed
+     * @graph (optional): a JSON representation of the graph to initialize;
+     * should an object with two arrays, nodes and edges.
+     *   nodes: an array of objects with integer id and object props (keys: weight, nType, neighbors)
+     *   edges: an array whose elements are 2-length arrays representing the source and target ids for the edge
      */
-    var Graph = function(params) {
-        params = params || {};
-        params.debug = params.debug || false;
+    var Graph = function(graph) {
+        var i = 0;
+
+        graph = graph || { nodes: [], edges: [] }; // empty graph if no parameter
         this._nodes = {}; // initialize nodes to empty
         this._nodeCount = 0; // initialize node count to 0
         this._edgeCount = 0; // initialize edge count to 0
 
-        // no graph supplied, skip
-        if (!params.graph) {
-            return true;
+        // no graph supplied, return
+        if (!graph) {
+            return;
         }
 
         // handle invalid graph parameter format
-        if (!('nodes' in params.graph)) {
-            _assert(true, 'Invalid graph format: must specify array \'nodes\' with keys' +
-            'id\' and \'props\'\n *\'props\' has keys \'weight\', \'nType\', \'neighbors\'');
+        if (!('nodes' in graph)) {
+            throw new Error('Invalid graph format: must specify array \'nodes\' with keys' +
+                ' \'id\' and \'props\' (\'props\' has keys \'weight\', \'nType\', \'neighbors\')');
+        }
+        if (!('edges' in graph)) {
+            throw new Error('Invalid graph format: must specify array \'edges\' with elements' +
+                ' of the form [ sourceID, targetID ]');
         }
 
         // graph is supplied, initialize to that
-        return _initializeGraph(this, params);
+        // add each of the nodes in the supplied graph
+        for (i = 0; i < graph.nodes.length; i++) {
+            var nodeVals = graph.nodes[i];
+            if (this.exists(nodeVals.id)) {
+                // update node (was created earlier by a neighbor specification)
+                var node = this.find(nodeVals.id);
+                nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
+                this.update(nodeVals.id, nodeVals.props);
+                _fixConsistency(this, node);
+            } else {
+                this.addNode(nodeVals.id, nodeVals.props); // create new
+            }
+        }
+        // add each of the edges in the supplied graph
+        for (i = 0; i < graph.edges.length; i++) {
+            var source = graph.edges[i][0];
+            var target = graph.edges[i][1];
+            this.addOrCreateEdge(source, target);
+        }
     };
 
     /**
@@ -2109,7 +2116,7 @@ var Dijkstra = require('./dijkstra.js');
             set: function(value) {
                 this._nodes = value;
             }
-        },
+        }
     });
 
     /**
@@ -2124,7 +2131,7 @@ var Dijkstra = require('./dijkstra.js');
     /**
      * Graph.exists: checks if the specified ID already exists in the graph
      * @id: the ID of the node to check
-     * returns true if it is a node, false otherwise
+     * @return true if it is a node, false otherwise
      */
     Graph.prototype.exists = function(id) {
         return (id in this.nodes) && (this.nodes[id] instanceof GraphNode);
@@ -2137,14 +2144,13 @@ var Dijkstra = require('./dijkstra.js');
      *    @neighbors: the neighbors of the node to add (create node if it does not exist)
      *    @weight: the weight of the node to create
      *    @nType: the type of the node to create
-     * return the added (or existing) node with @id
+     * @return the added (or existing) node with @id
      */
     Graph.prototype.addNode = function(id, props) {
-        _assert(!!id, 'Cannot create a node without an id');
         props = props || {};
 
         // only add node if it does not already exist
-        // do not overwrite existing properties (TODO: might change)
+        // do not overwrite existing properties
         if (!this.exists(id)) {
             // create & add new node
             var node = new GraphNode(id, props);
@@ -2159,11 +2165,9 @@ var Dijkstra = require('./dijkstra.js');
     /**
      * Graph.deleteNode: delete a node from the graph. true if successful
      * @id: the ID of the node to delete (required)
-     * return the node that was deleted or null if it does not exist
+     * @return the node that was deleted or null if it does not exist
      */
     Graph.prototype.deleteNode = function(id) {
-         _assert(!!id, 'Cannot delete a node without an id');
-
         // only remove if it exists
         if (this.exists(id)) {
             var node = this.nodes[id]; // node to delete
@@ -2231,7 +2235,7 @@ var Dijkstra = require('./dijkstra.js');
      * do not allow self edges (by nature of being a simple graph)
      * @source: ID of one end of the edge
      * @target: ID of the other end of the edge
-     * return true if able to add edge, false otherwise (i.e., self edge, invalid, or redundant)
+     * @return true if able to add edge, false otherwise (i.e., self edge, invalid, or redundant)
      */
     Graph.prototype.addEdge = function(source, target) {
         // is this a self edge?
@@ -2271,16 +2275,12 @@ var Dijkstra = require('./dijkstra.js');
      * do not allow self edges (by nature of being a simple graph)
      * @source: ID of one end of the edge
      * @target: ID of the other end of the edge
-     * return true if able to add or create the edge, false otherwise (i.e., self edge, invalid, or redundant)
+     * @return true if able to add or create the edge, false otherwise (i.e., self edge, invalid, or redundant)
      */
     Graph.prototype.addOrCreateEdge = function(source, target) {
-        // create nodes if necessary
-        if (!this.exists(source)) {
-            this.addNode(source);
-        }
-        if (!this.exists(target)) {
-            this.addNode(target);
-        }
+        // add source/target nodes if necessary
+        this.addNode(source);
+        this.addNode(target);
 
         // add the edge
         return this.addEdge(source, target);
@@ -2290,7 +2290,7 @@ var Dijkstra = require('./dijkstra.js');
      * Graph.deleteEdge: delete an edge from the graph
      * @source: ID of one end of the edge to delete
      * @target: ID of the other end of the edge to delete
-     * return true if successful, false otherwise
+     * @return true if successful, false otherwise
      */
     Graph.prototype.deleteEdge = function(source, target) {
         var s = this.find(source); // the node corresponding to source ID
@@ -2310,9 +2310,9 @@ var Dijkstra = require('./dijkstra.js');
     };
 
     /**
-     * Graph.connected: return whether there is a consistent edge connecting
+     * Graph.connected: is there an edge connecting
      * the @source and @target (note only returns true if it is consistent)
-     * return true is yes, false if no
+     * @return true if yes, false if no
      */
     Graph.prototype.connected = function(source, target) {
         var s = this.find(source); // get source node
@@ -2327,10 +2327,10 @@ var Dijkstra = require('./dijkstra.js');
      * Graph.update: set the properties of the node specified by @id
      * @id: id of the node to update
      * @props: object of properties for the node, valid keys are:
-     *    @neighbors: the neighbors of the node to add (create node if it does not exist)
      *    @weight: the weight of the node to create
      *    @nType: the type of the node to create
-     * return the updated node on success, or null if unable to update/find
+     *    @neighbors: the neighbors of the node to add (create node if it does not exist)
+     * @return the updated node on success, or null if unable to update/find
      */
     Graph.prototype.update = function(id, props) {
         var node = this.find(id);
@@ -2350,49 +2350,6 @@ var Dijkstra = require('./dijkstra.js');
 
     //------------------------------------------------//
 
-    /** initializeGraph: helper function for Graph constructor to handle supplied @params */
-    function _initializeGraph(graph, params) {
-        var i = 0;
-
-        // add each of the nodes in the supplied graph
-        for (i = 0; i < params.graph.nodes.length; i++) {
-            var nodeVals = params.graph.nodes[i];
-            if (graph.exists(nodeVals.id)) {
-                // update node (was created earlier by a neighbor specification)
-                var node = graph.find(nodeVals.id);
-                nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
-                graph.update(nodeVals.id, nodeVals.props);
-                _fixConsistency(graph, node);
-            }
-            else {
-                graph.addNode(nodeVals.id, nodeVals.props); // create new
-            }
-        }
-
-        if ('edges' in params.graph) {
-            // add each of the edges in the supplied graph
-            for (i = 0; i < params.graph.edges.length; i++) {
-                var source = params.graph.edges[i][0];
-                var target = params.graph.edges[i][1];
-                graph.addOrCreateEdge(source, target);
-            }
-        }
-        else {
-            console.warn('Deprecation Warning: ');
-            console.warn(' Initializing graph object by only specifying nodes is ' +
-                'deprecated and will be removed in v1.0.0');
-            console.warn('  * To solve this please supply both nodes and edges in the graph object');
-            console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
-        }
-
-        // verify the graph if debug is true
-        if (params.debug && !!params.graph) {
-            _verify(graph);
-        }
-
-        return true;
-    }
-
     /** _fixConsistency: fixes the inconsistencies in @graph caused by the neighbors
      * of @node by adding the necessary edges
      */
@@ -2407,68 +2364,9 @@ var Dijkstra = require('./dijkstra.js');
             }
         }
     }
-
-    /**
-     * _verify: ensure that the graph is consistent (debugging)
-     * i.e., nodes and edges exist and that all edges are bi-directional
-     */
-    function _verify(graph) {
-        console.info('Verifying Graph');
-        // the number of nodes should be the same as the nodeCount
-        var numNodes = Object.keys(graph.nodes).length;
-        _assert(numNodes === graph.nodeCount, 'Inconsistent nodeCount (' +
-            numNodes + ' != ' + graph.nodeCount + ')');
-
-        // verify each node
-        var numEdges = 0;
-        // var keys = Object.keys(graph.nodes);
-        // for (var i = 0; i < keys.length; i++) {
-        for (var id in graph.nodes) {
-            if (!graph.nodes.hasOwnProperty(id)) {
-                continue; // ensure we are getting the right property
-            }
-            var n = graph.nodes[id];
-            // should have non-negative weight and type between 1 and 6
-            _assert(n.weight >= 0, 'Negative Weight (' + n.weight + ')');
-            _assert(n.nType > 0 && n.nType <= 9, 'Irregular Type (' +
-                n.nType + ')');
-
-            // should have consistent edges and no self edges
-            for (var j = 0; j < n.neighbors.length; j++) {
-                numEdges++; // count number of edges (should be double)
-                var k = graph.nodes[n.neighbors[j]];
-
-                _assert(k.id !== n.id, 'Cannot have self edge (' +
-                    n.id + ')');
-
-                _assert(k._neighbors.includes(n.id), 'Inconsisent Edge (' +
-                    n.id + ',' + k.id + ')');
-            }
-        }
-        // number of edges should be same as the edgeCount
-        _assert(numEdges / 2 === graph.edgeCount, 'Inconsistent edgeCount (' +
-            numEdges / 2 + ' != ' + graph.edgeCount + ')');
-
-        return true;
-    }
-
-    /**
-     * _assert: debugging function
-     * @condition: condition that should be true
-     * @message: error message to display in failure
-     */
-    function _assert(condition, message) {
-        if (!condition) {
-            message = message || 'Assertion failed';
-            if (typeof Error !== 'undefined') {
-                throw new Error(message);
-            }
-            throw message; // Fallback
-        }
-    }
 })();
-/*----------------------------------------------------------------------------*/
 
+/*----------------------------------------------------------------------------*/
 },{"./graph-node.js":69,"lodash/union":66}],71:[function(require,module,exports){
 /**
  * min_heap.js

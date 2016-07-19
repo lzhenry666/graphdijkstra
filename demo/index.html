@@ -40,9 +40,6 @@
                 stroke: black;
                 stroke-width: 10px;
             }
-            .node-rect.path ~ .node-line {
-                /*stroke: #fff;*/
-            }
         </style>
     </head>
 
@@ -194,15 +191,12 @@
 
             //------------------------------------------------//
 
-            function createGraph(url, debug) {
+            function createGraph(url) {
                 // use http to get the graph json
                 return $http.get(url)
                     .success(function(data) {
                         // create the new graph
-                        service.graph = new Graph({
-                            graph: data,
-                            debug: debug || false // default to false
-                        });
+                        service.graph = new Graph(data);
 
                         return service.graph;
                     })
@@ -211,7 +205,7 @@
                     });
             }
 
-            function runDijkstra(source, target, pathType) {
+            function runDijkstra(pathType, source, target) {
                 // caching should be done by the wrapper
                 if (source === service.cache.source && target === service.cache.target) {
                     service.cache.cached = true;

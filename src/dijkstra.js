@@ -21,16 +21,17 @@
 
     /**
      * run: run Dijkstra's shortest path algorithm
-     * @return an object with the source (source), target (target), distance (dist)
-     * and previous (prev) for the nodes as calculated or null if source/target do not exist
      * @graph: the graph on which to run algorithm
      * by Dijkstra's algorithm from source to target
      * @pathType: which values of node type (nType) are valid paths for the algorithm
      * @source: the starting point for the path (a node ID)
      * @target: the ending point for the path (a node ID)
+     * @return an object with the source (source), target (target), distance (dist)
+     * and previous (prev) for the nodes as calculated or null if source/target do not exist
      */
-    // jshint maxcomplexity: 10
     function run(graph, pathType, source, target) {
+        // jshint maxcomplexity: 10
+
         // return null if source or target does not exist (hence no path)
         if (!graph.exists(source) || !graph.exists(target)) {
             return null;
