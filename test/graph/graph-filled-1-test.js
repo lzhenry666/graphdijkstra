@@ -1,7 +1,7 @@
 // graph-filled-1-test.js
 'use strict';
 
-/* global it, describe, after */
+/* global it, describe, beforeEach, after */
 /* jshint expr: true */
 
 import {expect} from 'chai';
