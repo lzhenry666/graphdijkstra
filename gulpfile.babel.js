@@ -2,6 +2,7 @@ import gulp from 'gulp';
 import babel from 'gulp-babel';
 import mocha from 'gulp-mocha';
 import jshint from 'gulp-jshint';
+import taskListing from 'gulp-task-listing';
 import del from 'del';
 import runSequence from 'run-sequence';
 
@@ -27,11 +28,16 @@ var config = {
         },
         test: {
             src: 'test/**/*.js',
+            graph: 'test-dist/graph/**/*.js',
+            dijkstra: 'test-dist/dijkstra/**/*.js',
             dist: 'test-dist/',
             run: 'test-dist/**/*.js'
         }
     }
 };
+
+// List the available gulp tasks
+gulp.task('help', taskListing);
 
 gulp.task('clean', () =>
     del(config.paths.test.dist)
@@ -93,6 +99,20 @@ gulp.task('test', ['babel'], () =>
         .pipe(mocha({
             reporter: 'spec'
         }))
+        .on('error', err => console.log(err.stack))
+);
+
+gulp.task('test-graph', ['babel'], () =>
+    gulp.src([config.paths.test.graph])
+        .pipe(mocha({
+            reporter: 'spec'
+        }))
+        .on('error', err => console.log(err.stack))
+);
+
+gulp.task('test-dijkstra', ['babel'], () =>
+    gulp.src([config.paths.test.dijkstra])
+        .pipe(mocha({ reporter: 'spec' }))
         .on('error', err => console.log(err.stack))
 );
 
