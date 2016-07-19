@@ -7,7 +7,7 @@ This portable package can easily be wrapper into an angular service (as seen in 
 Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 
 ## Installation & Typical Usage
 
