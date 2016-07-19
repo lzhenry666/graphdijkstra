@@ -115,7 +115,7 @@ describe('dijkstra tests', () => {
     let graph;
 
     beforeEach(() => {
-        graph = new Graph({graph: GRAPH}); // initialize basic graph for use with algo
+        graph = new Graph(GRAPH); // initialize basic graph for use with algo
     });
 
     after(() => graph = undefined);

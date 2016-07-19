@@ -12,14 +12,15 @@
 
     /**
      * Graph
-     * @graph: a JSON representation of the graph to initialize; should an object with two arrays, nodes and edges.
+     * @graph (optional): a JSON representation of the graph to initialize;
+     * should an object with two arrays, nodes and edges.
      *   nodes: an array of objects with integer id and object props (keys: weight, nType, neighbors)
      *   edges: an array whose elements are 2-length arrays representing the source and target ids for the edge
      */
     var Graph = function(graph) {
         var i = 0;
 
-        graph = graph || {};
+        graph = graph || { nodes: [], edges: [] }; // empty graph if no parameter
         this._nodes = {}; // initialize nodes to empty
         this._nodeCount = 0; // initialize node count to 0
         this._edgeCount = 0; // initialize edge count to 0
@@ -32,7 +33,7 @@
         // handle invalid graph parameter format
         if (!('nodes' in graph)) {
             throw new Error('Invalid graph format: must specify array \'nodes\' with keys' +
-                ' \'id\' and \'props\'\n *\'props\' has keys \'weight\', \'nType\', \'neighbors\'');
+                ' \'id\' and \'props\' (\'props\' has keys \'weight\', \'nType\', \'neighbors\')');
         }
         if (!('edges' in graph)) {
             throw new Error('Invalid graph format: must specify array \'edges\' with elements' +
