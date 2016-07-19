@@ -27,7 +27,8 @@
     "path",
     "dijkstra",
     "undirected",
-    "nodes"
+    "nodes",
+    "simple"
   ],
   "devDependencies": {
     "babel": "^6.3.26",
