@@ -51,8 +51,7 @@
                 nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
                 this.update(nodeVals.id, nodeVals.props);
                 _fixConsistency(this, node);
-            }
-            else {
+            } else {
                 this.addNode(nodeVals.id, nodeVals.props); // create new
             }
         }
@@ -94,7 +93,7 @@
             set: function(value) {
                 this._nodes = value;
             }
-        },
+        }
     });
 
     /**
@@ -109,7 +108,7 @@
     /**
      * Graph.exists: checks if the specified ID already exists in the graph
      * @id: the ID of the node to check
-     * returns true if it is a node, false otherwise
+     * @return true if it is a node, false otherwise
      */
     Graph.prototype.exists = function(id) {
         return (id in this.nodes) && (this.nodes[id] instanceof GraphNode);
@@ -122,13 +121,13 @@
      *    @neighbors: the neighbors of the node to add (create node if it does not exist)
      *    @weight: the weight of the node to create
      *    @nType: the type of the node to create
-     * return the added (or existing) node with @id
+     * @return the added (or existing) node with @id
      */
     Graph.prototype.addNode = function(id, props) {
         props = props || {};
 
         // only add node if it does not already exist
-        // do not overwrite existing properties (TODO: might change)
+        // do not overwrite existing properties
         if (!this.exists(id)) {
             // create & add new node
             var node = new GraphNode(id, props);
@@ -143,7 +142,7 @@
     /**
      * Graph.deleteNode: delete a node from the graph. true if successful
      * @id: the ID of the node to delete (required)
-     * return the node that was deleted or null if it does not exist
+     * @return the node that was deleted or null if it does not exist
      */
     Graph.prototype.deleteNode = function(id) {
         // only remove if it exists
@@ -213,7 +212,7 @@
      * do not allow self edges (by nature of being a simple graph)
      * @source: ID of one end of the edge
      * @target: ID of the other end of the edge
-     * return true if able to add edge, false otherwise (i.e., self edge, invalid, or redundant)
+     * @return true if able to add edge, false otherwise (i.e., self edge, invalid, or redundant)
      */
     Graph.prototype.addEdge = function(source, target) {
         // is this a self edge?
@@ -253,16 +252,12 @@
      * do not allow self edges (by nature of being a simple graph)
      * @source: ID of one end of the edge
      * @target: ID of the other end of the edge
-     * return true if able to add or create the edge, false otherwise (i.e., self edge, invalid, or redundant)
+     * @return true if able to add or create the edge, false otherwise (i.e., self edge, invalid, or redundant)
      */
     Graph.prototype.addOrCreateEdge = function(source, target) {
-        // create nodes if necessary
-        if (!this.exists(source)) {
-            this.addNode(source);
-        }
-        if (!this.exists(target)) {
-            this.addNode(target);
-        }
+        // add source/target nodes if necessary
+        this.addNode(source);
+        this.addNode(target);
 
         // add the edge
         return this.addEdge(source, target);
@@ -272,7 +267,7 @@
      * Graph.deleteEdge: delete an edge from the graph
      * @source: ID of one end of the edge to delete
      * @target: ID of the other end of the edge to delete
-     * return true if successful, false otherwise
+     * @return true if successful, false otherwise
      */
     Graph.prototype.deleteEdge = function(source, target) {
         var s = this.find(source); // the node corresponding to source ID
@@ -292,9 +287,9 @@
     };
 
     /**
-     * Graph.connected: return whether there is a consistent edge connecting
+     * Graph.connected: is there an edge connecting
      * the @source and @target (note only returns true if it is consistent)
-     * return true is yes, false if no
+     * @return true if yes, false if no
      */
     Graph.prototype.connected = function(source, target) {
         var s = this.find(source); // get source node
