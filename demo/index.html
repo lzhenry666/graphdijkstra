@@ -200,8 +200,7 @@
                     .success(function(data) {
                         // create the new graph
                         service.graph = new Graph({
-                            graph: data,
-                            debug: debug || false // default to false
+                            graph: data
                         });
 
                         return service.graph;

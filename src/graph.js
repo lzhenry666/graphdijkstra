@@ -17,7 +17,6 @@
      *    * the graph should an object with two arrays, nodes and edges.
      *    * nodes: an array of objects with integer id and object props (keys: weight, nType, and neighbors)
      *    * edges: an array of length 2 arrays representing the source and target ids for the edge
-     * @return true if successfully constructed
      */
     var Graph = function(params) {
         var i = 0;
@@ -27,9 +26,9 @@
         this._nodeCount = 0; // initialize node count to 0
         this._edgeCount = 0; // initialize edge count to 0
 
-        // no graph supplied, skip
+        // no graph supplied, return
         if (!params.graph) {
-            return true;
+            return;
         }
 
         // handle invalid graph parameter format
@@ -63,8 +62,6 @@
             var target = params.graph.edges[i][1];
             this.addOrCreateEdge(source, target);
         }
-
-        return true;
     };
 
     /**
