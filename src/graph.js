@@ -20,6 +20,8 @@
      * @return true if successfully constructed
      */
     var Graph = function(params) {
+        var i = 0;
+
         params = params || {};
         this._nodes = {}; // initialize nodes to empty
         this._nodeCount = 0; // initialize node count to 0
@@ -41,7 +43,28 @@
         }
 
         // graph is supplied, initialize to that
-        return _initializeGraph(this, params);
+        // add each of the nodes in the supplied graph
+        for (i = 0; i < params.graph.nodes.length; i++) {
+            var nodeVals = params.graph.nodes[i];
+            if (this.exists(nodeVals.id)) {
+                // update node (was created earlier by a neighbor specification)
+                var node = this.find(nodeVals.id);
+                nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
+                this.update(nodeVals.id, nodeVals.props);
+                _fixConsistency(this, node);
+            }
+            else {
+                this.addNode(nodeVals.id, nodeVals.props); // create new
+            }
+        }
+        // add each of the edges in the supplied graph
+        for (i = 0; i < params.graph.edges.length; i++) {
+            var source = params.graph.edges[i][0];
+            var target = params.graph.edges[i][1];
+            this.addOrCreateEdge(source, target);
+        }
+
+        return true;
     };
 
     /**
@@ -311,35 +334,6 @@
     module.exports = Graph;
 
     //------------------------------------------------//
-
-    /** initializeGraph: helper function for Graph constructor to handle supplied @params */
-    function _initializeGraph(graph, params) {
-        var i = 0;
-
-        // add each of the nodes in the supplied graph
-        for (i = 0; i < params.graph.nodes.length; i++) {
-            var nodeVals = params.graph.nodes[i];
-            if (graph.exists(nodeVals.id)) {
-                // update node (was created earlier by a neighbor specification)
-                var node = graph.find(nodeVals.id);
-                nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
-                graph.update(nodeVals.id, nodeVals.props);
-                _fixConsistency(graph, node);
-            }
-            else {
-                graph.addNode(nodeVals.id, nodeVals.props); // create new
-            }
-        }
-
-        // add each of the edges in the supplied graph
-        for (i = 0; i < params.graph.edges.length; i++) {
-            var source = params.graph.edges[i][0];
-            var target = params.graph.edges[i][1];
-            graph.addOrCreateEdge(source, target);
-        }
-
-        return true;
-    }
 
     /** _fixConsistency: fixes the inconsistencies in @graph caused by the neighbors
      * of @node by adding the necessary edges
