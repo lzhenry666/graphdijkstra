@@ -47,7 +47,7 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
    var path      = Dijkstra.getPath(results.prev, 3);
    var printDist = 'node 1 is ' + results.dist[3] + ' unit from node 3'
 
-   // results   => { source: 1, target: 3, dist: { '1': 0, '2': Infinity, '3': 1 }, prev: { '1': 1, '2': null, '3': 1 } }
+   // results   => { source: 1, target: 3, dist: { '1': 0, '2': 1, '3': 1 }, prev: { '1': 1, '2': 1, '3': 1 } }
    // path      => [ 1, 3 ]
    // printDist => node 1 is 1 unit from node 3
    ```

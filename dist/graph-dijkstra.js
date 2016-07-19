@@ -1830,19 +1830,27 @@ var Dijkstra = require('./dijkstra.js');
     /**
      * run: run Dijkstra's shortest path algorithm
      * @return an object with the source (source), target (target), distance (dist)
-     * and previous (prev) for the nodes as calculated
+     * and previous (prev) for the nodes as calculated or null if source/target do not exist
      * @graph: the graph on which to run algorithm
      * by Dijkstra's algorithm from source to target
+     * @pathType: which values of node type (nType) are valid paths for the algorithm
      * @source: the starting point for the path (a node ID)
      * @target: the ending point for the path (a node ID)
-     * @pathType: which values of node type (nType) are valid paths for the algorithm
      */
-    function run(graph, source, target, pathType) {
+    // jshint maxcomplexity: 10
+    function run(graph, pathType, source, target) {
+        // return null if source or target does not exist (hence no path)
+        if (!graph.exists(source) || !graph.exists(target)) {
+            return null;
+        }
+
         // return object
         var ret = {
             source: source,
             target: target
         };
+        var dist = {}; // distance of the node from source
+        var prev = {}; // previous node of the form 'node_id': 'prev_node_id'
         // binary min heap of the unvisited nodes (on distance)
         var unvisited = new MinHeap(
             function(e) {
@@ -1853,14 +1861,6 @@ var Dijkstra = require('./dijkstra.js');
             },
             'distance'
         );
-        var dist = {}; // distance of the node from source
-        var prev = {}; // previous node of the form 'node_id': 'prev_node_id'
-
-        // throw error if source or target is undefined
-        _assert(graph.exists(source), 'Source does not exist (' +
-            source + ')');
-        _assert(graph.exists(target), 'Target does not exist (' +
-            target + ')');
 
         // Initialization
         dist[source] = 0; // source is distance 0 from source
@@ -1946,20 +1946,20 @@ var Dijkstra = require('./dijkstra.js');
 
     module.exports = Dijkstra;
 
-    /**
-     * assert: debugging function that throws an error if condition is false
-     * @condition: condition to test truth value
-     * @message: error message to display in failure
-     */
-    function _assert(condition, message) {
-        if (!condition) {
-            message = message || 'Assertion failed';
-            if (typeof Error !== 'undefined') {
-                throw new Error(message);
-            }
-            throw message; // Fallback
-        }
-    }
+    // /**
+    //  * assert: debugging function that throws an error if condition is false
+    //  * @condition: condition to test truth value
+    //  * @message: error message to display in failure
+    //  */
+    // function _assert(condition, message) {
+    //     if (!condition) {
+    //         message = message || 'Assertion failed';
+    //         if (typeof Error !== 'undefined') {
+    //             throw new Error(message);
+    //         }
+    //         throw message; // Fallback
+    //     }
+    // }
 })();
 
 },{"./min_heap.js":71}],69:[function(require,module,exports){
@@ -2231,14 +2231,13 @@ var Dijkstra = require('./dijkstra.js');
      * do not allow self edges (by nature of being a simple graph)
      * @source: ID of one end of the edge
      * @target: ID of the other end of the edge
-     * @return true if able to add edge, false if redundant; throw error for self edge or invalid
+     * return true if able to add edge, false otherwise (i.e., self edge, invalid, or redundant)
      */
     Graph.prototype.addEdge = function(source, target) {
         // is this a self edge?
         if (source === target) {
             // console.warn('Cannot add self edge in simple graph');
-            throw new Error('Cannot add self edge in simple graph');
-            // return false;
+            return false;
         }
 
         // find the source & target nodes
@@ -2248,8 +2247,7 @@ var Dijkstra = require('./dijkstra.js');
         // return if invalid edge (i.e., either source or target does not exist)
         if (!s || !t) {
             // console.warn('Unable to add edge (' + source + ',' + target + '): node DNE');
-            throw new Error('Unable to add edge (' + source + ',' + target + '): node DNE');
-            // return false;
+            return false;
         }
 
         // do not add redundant edges (but fix edge if inconsistent)
