@@ -5,6 +5,7 @@
 (function() {
     'use strict';
 
+    // default node properties
     var DEFAULTS = {
         weight: 0,
         nType: 0,

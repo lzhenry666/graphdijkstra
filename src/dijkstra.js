@@ -137,19 +137,4 @@
     }
 
     module.exports = Dijkstra;
-
-    // /**
-    //  * assert: debugging function that throws an error if condition is false
-    //  * @condition: condition to test truth value
-    //  * @message: error message to display in failure
-    //  */
-    // function _assert(condition, message) {
-    //     if (!condition) {
-    //         message = message || 'Assertion failed';
-    //         if (typeof Error !== 'undefined') {
-    //             throw new Error(message);
-    //         }
-    //         throw message; // Fallback
-    //     }
-    // }
 })();

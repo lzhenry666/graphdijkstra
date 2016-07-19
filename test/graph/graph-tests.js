@@ -7,7 +7,6 @@
 import {expect} from 'chai';
 
 // helper functions
-
 var nodeHelper = function(id, props, node) {
     expect(node).to.eql({
         _id: id,

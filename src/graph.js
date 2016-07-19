@@ -34,8 +34,8 @@
 
         // handle invalid graph parameter format
         if (!('nodes' in params.graph)) {
-            _assert(true, 'Invalid graph format: must specify array \'nodes\' with keys' +
-            'id\' and \'props\'\n *\'props\' has keys \'weight\', \'nType\', \'neighbors\'');
+            throw new Error('Invalid graph format: must specify array \'nodes\' with keys' +
+                'id\' and \'props\'\n *\'props\' has keys \'weight\', \'nType\', \'neighbors\'');
         }
 
         // graph is supplied, initialize to that
@@ -103,7 +103,6 @@
      * return the added (or existing) node with @id
      */
     Graph.prototype.addNode = function(id, props) {
-        _assert(!!id, 'Cannot create a node without an id');
         props = props || {};
 
         // only add node if it does not already exist
@@ -125,8 +124,6 @@
      * return the node that was deleted or null if it does not exist
      */
     Graph.prototype.deleteNode = function(id) {
-         _assert(!!id, 'Cannot delete a node without an id');
-
         // only remove if it exists
         if (this.exists(id)) {
             var node = this.nodes[id]; // node to delete
@@ -350,7 +347,7 @@
 
         // verify the graph if debug is true
         if (params.debug && !!params.graph) {
-            _verify(graph);
+            _verify(graph, params.graph);
         }
 
         return true;
@@ -371,63 +368,6 @@
         }
     }
 
-    /**
-     * _verify: ensure that the graph is consistent (debugging)
-     * i.e., nodes and edges exist and that all edges are bi-directional
-     */
-    function _verify(graph) {
-        console.info('Verifying Graph');
-        // the number of nodes should be the same as the nodeCount
-        var numNodes = Object.keys(graph.nodes).length;
-        _assert(numNodes === graph.nodeCount, 'Inconsistent nodeCount (' +
-            numNodes + ' != ' + graph.nodeCount + ')');
 
-        // verify each node
-        var numEdges = 0;
-        // var keys = Object.keys(graph.nodes);
-        // for (var i = 0; i < keys.length; i++) {
-        for (var id in graph.nodes) {
-            if (!graph.nodes.hasOwnProperty(id)) {
-                continue; // ensure we are getting the right property
-            }
-            var n = graph.nodes[id];
-            // should have non-negative weight and type between 1 and 6
-            _assert(n.weight >= 0, 'Negative Weight (' + n.weight + ')');
-            _assert(n.nType > 0 && n.nType <= 9, 'Irregular Type (' +
-                n.nType + ')');
-
-            // should have consistent edges and no self edges
-            for (var j = 0; j < n.neighbors.length; j++) {
-                numEdges++; // count number of edges (should be double)
-                var k = graph.nodes[n.neighbors[j]];
-
-                _assert(k.id !== n.id, 'Cannot have self edge (' +
-                    n.id + ')');
-
-                _assert(k._neighbors.includes(n.id), 'Inconsisent Edge (' +
-                    n.id + ',' + k.id + ')');
-            }
-        }
-        // number of edges should be same as the edgeCount
-        _assert(numEdges / 2 === graph.edgeCount, 'Inconsistent edgeCount (' +
-            numEdges / 2 + ' != ' + graph.edgeCount + ')');
-
-        return true;
-    }
-
-    /**
-     * _assert: debugging function
-     * @condition: condition that should be true
-     * @message: error message to display in failure
-     */
-    function _assert(condition, message) {
-        if (!condition) {
-            message = message || 'Assertion failed';
-            if (typeof Error !== 'undefined') {
-                throw new Error(message);
-            }
-            throw message; // Fallback
-        }
-    }
 })();
 /*----------------------------------------------------------------------------*/
