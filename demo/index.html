@@ -40,9 +40,6 @@
                 stroke: black;
                 stroke-width: 10px;
             }
-            .node-rect.path ~ .node-line {
-                /*stroke: #fff;*/
-            }
         </style>
     </head>
 
@@ -210,7 +207,7 @@
                     });
             }
 
-            function runDijkstra(source, target, pathType) {
+            function runDijkstra(pathType, source, target) {
                 // caching should be done by the wrapper
                 if (source === service.cache.source && target === service.cache.target) {
                     service.cache.cached = true;

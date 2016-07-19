@@ -58,16 +58,16 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
 [demo]: demo/index.html
 
-   Here we create a simple service to wrap the **Graph**. Using this service we make a
-   36 node graph to serve as a grid and demonstrate how to go about finding and
-   acting on the shortest path.
+   Here we create a simple service to wrap the **Graph** and **Dijkstra** libraries.
+   Using this service we make a 36 node graph to serve as a grid and demonstrate
+   how to go about finding and acting on the shortest path.
 
 * For an example of this package at work in a larger project, see our
 [Lincoln Employee Locator](lincoln-gps) application.
 
-   In this project we again create a service to wrap **Graph**, which serves as
-   the underlying graph of location objects (nodes) on which we run **Dijkstra**
-   to find the shortest paths between them and generate directions.
+   In this project we again create a service to wrap **Graph** and **Dijkstra**.
+   **Graph** serves as the underlying graph of location objects (nodes) on which
+   we run **Dijkstra** to find the shortest paths between them and generate directions.
 
 ## Public API
 
