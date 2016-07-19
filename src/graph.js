@@ -33,7 +33,11 @@
         // handle invalid graph parameter format
         if (!('nodes' in params.graph)) {
             throw new Error('Invalid graph format: must specify array \'nodes\' with keys' +
-                'id\' and \'props\'\n *\'props\' has keys \'weight\', \'nType\', \'neighbors\'');
+                ' \'id\' and \'props\'\n *\'props\' has keys \'weight\', \'nType\', \'neighbors\'');
+        }
+        if (!('edges' in params.graph)) {
+            throw new Error('Invalid graph format: must specify array \'edges\' with elements' +
+                ' of the form [ sourceID, targetID ]');
         }
 
         // graph is supplied, initialize to that
@@ -327,20 +331,11 @@
             }
         }
 
-        if ('edges' in params.graph) {
-            // add each of the edges in the supplied graph
-            for (i = 0; i < params.graph.edges.length; i++) {
-                var source = params.graph.edges[i][0];
-                var target = params.graph.edges[i][1];
-                graph.addOrCreateEdge(source, target);
-            }
-        }
-        else {
-            console.warn('Deprecation Warning: ');
-            console.warn(' Initializing graph object by only specifying nodes is ' +
-                'deprecated and will be removed in v1.0.0');
-            console.warn('  * To solve this please supply both nodes and edges in the graph object');
-            console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
+        // add each of the edges in the supplied graph
+        for (i = 0; i < params.graph.edges.length; i++) {
+            var source = params.graph.edges[i][0];
+            var target = params.graph.edges[i][1];
+            graph.addOrCreateEdge(source, target);
         }
 
         return true;
