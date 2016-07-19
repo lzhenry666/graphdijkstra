@@ -13,16 +13,14 @@
     /**
      * Graph
      * @params: (optional) object of parameters for initializing graph, valid keys are:
-     *    @debug: only verify if debug is set to true (defaults to false)
      *    @graph: a JSON representation of the graph to initialize
      *    * the graph should an object with two arrays, nodes and edges.
      *    * nodes: an array of objects with integer id and object props (keys: weight, nType, and neighbors)
      *    * edges: an array of length 2 arrays representing the source and target ids for the edge
-     * return true if successfully constructed
+     * @return true if successfully constructed
      */
     var Graph = function(params) {
         params = params || {};
-        params.debug = params.debug || false;
         this._nodes = {}; // initialize nodes to empty
         this._nodeCount = 0; // initialize node count to 0
         this._edgeCount = 0; // initialize edge count to 0
@@ -345,11 +343,6 @@
             console.warn('  * To remove this message: add \"edges: []\" to the supplied graph object');
         }
 
-        // verify the graph if debug is true
-        if (params.debug && !!params.graph) {
-            _verify(graph, params.graph);
-        }
-
         return true;
     }
 
@@ -367,7 +360,6 @@
             }
         }
     }
-
-
 })();
+
 /*----------------------------------------------------------------------------*/
