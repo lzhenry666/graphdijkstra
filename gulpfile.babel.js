@@ -13,6 +13,7 @@ import rename from 'gulp-rename';
 import uglify from 'gulp-uglify';
 
 import shell from 'gulp-shell';
+import pkg from './package.json';
 
 var config = {
     paths: {
@@ -70,7 +71,7 @@ gulp.task('dist', ['lint-src'], () => {
 gulp.task('docs',
     shell.task(
         './node_modules/documentation/bin/documentation.js build ' + config.paths.docs +
-        ' -f html -o ./docs -c documentation.yml --github'
+        ' -f html -o ./docs -c documentation.yml --github --name ' + pkg.name
     )
 );
 
