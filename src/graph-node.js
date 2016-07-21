@@ -1,4 +1,4 @@
- /**
+/**
  * @file Provides a data structure for the nodes of the graph
  * @name graph-node.js
  */

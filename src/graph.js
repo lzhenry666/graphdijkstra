@@ -20,7 +20,8 @@
      * @param {Object} [graph] The graph to initialize
      * @param {Array<GraphNode>} graph.nodes The nodes of the graph - must have **id**, and
      * can optionally have **weight**, **nType**, and **neighbors**
-     * @param {Array<Array>} graph.edges The edges of the graph - two element array of IDs of the nodes on each end of the edge
+     * @param {Array<Array>} graph.edges The edges of the graph - two element array
+     * of IDs of the nodes on each end of the edge
      *
      * @example <caption>Example valid graph parameter</caption>
      * { nodes: [
@@ -244,7 +245,8 @@
      * @param {number} source ID of one end of the edge
      * @param {number} target ID of the other edge of the edge
      *
-     * @returns {boolean} True if able to add edge, false otherwise (i.e., self edge, redundant, or invalid source/target)
+     * @returns {boolean} True if able to add edge, false otherwise (i.e., self
+     * edge, redundant, or invalid source/target)
      */
     Graph.prototype.addEdge = function(source, target) {
         // is this a self edge?
@@ -285,7 +287,8 @@
      * @param {number} source ID of one end of the edge
      * @param {number} target ID of the other edge of the edge
      *
-     * @returns {boolean} True if able to add edge, false otherwise (i.e., self edge, redundant, or invalid source/target)
+     * @returns {boolean} True if able to add edge, false otherwise (i.e., self
+     * edge, redundant, or invalid source/target)
      */
     Graph.prototype.addOrCreateEdge = function(source, target) {
         // add source/target nodes if necessary

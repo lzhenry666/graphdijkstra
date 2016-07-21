@@ -1,15 +1,18 @@
 /**
- * dijkstra.js
- * 06/01/16
- *
- * runs Dijkstra's shortest path algorithm on a graph
- * relies on the graph defined in graph.js
- /*---------------------------------------------------------------------------*/
+ * @file Provides an implementation of Dijkstra's shortest path algorithm on a graph
+ * @name dijkstra.js
+ */
 (function() {
     'use strict';
 
     var MinHeap = require('./min_heap.js');
 
+    /**
+     * Dijkstra's algorithm
+     *
+     * @property {function} run Run Dijkstra's shortest path algorithm
+     * @property {function} getPath Get a shortest path from a previous run of Dijkstra's
+     */
     var Dijkstra = {
         run: run,
         getPath: getPath
@@ -20,6 +23,7 @@
     //------------------------------------------------//
 
     /**
+     * Run Dijkstra's shortest path algorithm
      * run: run Dijkstra's shortest path algorithm
      * @graph: the graph on which to run algorithm
      * by Dijkstra's algorithm from source to target
@@ -73,12 +77,12 @@
         });
 
         // return if source is the same as target (i.e., already there)
-        if (source === target) {
-            // console.info('Same source and target');
-            ret.dist = dist;
-            ret.prev = prev;
-            return ret;
-        }
+        // if (source === target) {
+        //     // console.info('Same source and target');
+        //     ret.dist = dist;
+        //     ret.prev = prev;
+        //     return ret;
+        // }
 
         // Run the loop of the algorithm
         // while there are still unvisited nodes
@@ -86,12 +90,15 @@
             var min = unvisited.pop(); // get minimum node dist and ID
             var minNode = graph.find(min.id); // get the minimum node
 
+            if (minNode.nType !== pathType) {
+                continue;
+            }
             // for each neighbor of minNode that is in the unvisited queue
             for (var i = 0; i < minNode.neighbors.length; i++) {
                 var n = graph.find(minNode.neighbors[i]); // node for the neighbor
 
                 // ensure node exists, is in unvisited, and it is a valid path (unless it is the target)
-                if (!n || !unvisited.exists(n) || (n.nType !== pathType && n.id !== parseInt(target, 10))) {
+                if (!n || !unvisited.exists(n)) {// || (n.nType !== pathType && n.id !== parseInt(target, 10))) {
                     continue;
                 }
 
