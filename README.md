@@ -101,11 +101,10 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 * **run(graph, pathType, source, target)** - returns **{source, target, dist, prev}**
 * **getPath(prevList, target)** - returns **[integer]**
 
-## Important!
+## Note
 
-This project is tailored for use in the [Lincoln Employee Locator](lincoln-gps) and may not yet
-be optimally portable. We encourage and appreciate any contributions that aim to
-enhance the generality/portability of this module.
+This project was created for use in the [Lincoln Employee Locator](lincoln-gps).
+We encourage and appreciate any contributions that aim to enhance the robustness of this module.
 
 [lincoln-gps]: https://github.com/LincolnTechOpenSource/lincoln-gps
 
