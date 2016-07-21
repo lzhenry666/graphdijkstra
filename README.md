@@ -69,7 +69,7 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
 ## Public API
 
-See LITOSI's project page for the [full documentation](docs/index.html)
+See LITOSI's project page for the [full documentation](https://lincolntechopensource.github.io/graph-dijkstra/)
 
 #### Graph
 ###### (prototype)
