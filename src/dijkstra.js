@@ -11,7 +11,7 @@
     var MinHeap = require('./min_heap.js');
 
     /**
-     * An runner for Dijkstra's shortest path algorithm
+     * A runner for Dijkstra's shortest path algorithm
      */
     var Dijkstra = function() { };
 
