@@ -12,6 +12,8 @@ import buffer from 'vinyl-buffer';
 import rename from 'gulp-rename';
 import uglify from 'gulp-uglify';
 
+import docs from 'gulp-documentation';
+
 var config = {
     paths: {
         build: {
@@ -32,7 +34,11 @@ var config = {
             dijkstra: 'test-dist/dijkstra/**/*.js',
             dist: 'test-dist/',
             run: 'test-dist/**/*.js'
-        }
+        },
+        docs: [
+            'src/*.js',
+            '!src/browserify.js'
+        ]
     }
 };
 
@@ -43,7 +49,7 @@ gulp.task('clean', () =>
     del(config.paths.test.dist)
 );
 
-gulp.task('dist', ['lint-src'], function() {
+gulp.task('dist', ['lint-src'], () => {
     del(config.paths.build.dist); // clean build path
 
     // browserify source
@@ -61,6 +67,16 @@ gulp.task('dist', ['lint-src'], function() {
         .pipe(rename('graph-dijkstra.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest(config.paths.build.dist));
+});
+
+gulp.task('docs', [], () => {
+    gulp.src(config.paths.docs)
+        .pipe(docs({
+            format: 'html',
+            config: './documentation.yml',
+            github: true
+        }))
+        .pipe(gulp.dest('docs'));
 });
 
 gulp.task('babel', ['babel-src', 'babel-test']);
