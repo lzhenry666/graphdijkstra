@@ -74,34 +74,31 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 See our project page for the [full documentation](https://lincolntechopensource.github.io/graph-dijkstra/docs)
 
 #### Graph
-###### (prototype)
-* **Graph(graph)** (*constructor*)
-* **nodes** - property **{GraphNode}**
-* **nodeCount** - property **integer**
-* **edgeCount** - property **integer**
-* **find(id)**  -  returns **GraphNode**
-* **exists(id)**  -  returns **boolean**
-* **addNode(id, props)**  -  returns **GraphNode**
-* **deleteNode(id)**  -  returns **GraphNode**
+* **Graph(graph)**
+* **nodes**
+* **nodeCount**
+* **edgeCount**
+* **find(id)**
+* **exists(id)**
+* **addNode(id, props)**
+* **deleteNode(id)**
 * **eachNode(fn)**
 * **eachNeighbor(id, fn)**
-* **addEdge(source, target)**  -  returns **boolean**
-* **addOrCreateEdge(source, target)**  -  returns **boolean**
-* **deleteEdge(source, target)**  -  returns **boolean**
-* **connected(source, target)**  -  returns **boolean**
-* **update(id, props)** -             returns **GraphNode**
+* **addEdge(source, target)**
+* **addOrCreateEdge(source, target)**
+* **deleteEdge(source, target)**
+* **connected(source, target)**
+* **update(id, props)**
 
 #### GraphNode
-###### (prototype)
-* **id** - property **integer**
-* **weight** - property **integer**
-* **nType** - property **integer**
-* **neighbors** - property **[integer]**
+* **id**
+* **weight**
+* **nType**
+* **neighbors**
 
 #### Dijkstra
-###### (prototype)
-* **run(graph, pathType, source, target)** - returns **{source, target, dist, prev}**
-* **getPath(prevList, target)** - returns **[integer]**
+* **run(graph, pathType, source, target)**
+* **getPath(prevList, target)**
 
 ## Note
 
