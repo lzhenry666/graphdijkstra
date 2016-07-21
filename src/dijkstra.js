@@ -1,6 +1,7 @@
 /**
- * @file Provides an implementation of Dijkstra's shortest path algorithm on a graph
+ * @file Implements Dijkstra's shortest path algorithm on a graph
  * @name dijkstra.js
+ * @ignore
  */
 (function() {
     'use strict';
@@ -8,7 +9,7 @@
     /**
      * @ignore
      */
-    var MinHeap = require('./min_heap.js');
+    var MinHeap = require('./min-heap.js');
 
     /**
      * A runner for Dijkstra's shortest path algorithm

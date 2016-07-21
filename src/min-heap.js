@@ -1,24 +1,41 @@
 /**
- * min_heap.js
- * adapted from https://github.com/rombdn/js-binaryheap-decreasekey
- * 06/01/16
- *
-=================================
-js-binaryheap-decreasekey - v0.1
-https://github.com/rombdn/js-binaryheap-decreasekey
+ * @file Provides a data structure for a binary min heap
+ * @name min-heap.js
+ * @ignore
+ */
+/*
+ adapted from https://github.com/rombdn/js-binaryheap-decreasekey
+ =================================
+ js-binaryheap-decreasekey - v0.1
+ https://github.com/rombdn/js-binaryheap-decreasekey
 
-Based on a Binary Heap implementation found in the book
-Eloquent Javascript by Marijn Haverbeke
-http://eloquentjavascript.net/appendix2.html
+ Based on a Binary Heap implementation found in the book
+ Eloquent Javascript by Marijn Haverbeke
+ http://eloquentjavascript.net/appendix2.html
 
-(c) 2013 Romain BEAUDON
-BinaryHeap code may be freely distributed under the MIT License
-=================================
-/*----------------------------------------------------------------------------*/
-
+ (c) 2013 Romain BEAUDON
+ BinaryHeap code may be freely distributed under the MIT License
+ =================================
+ */
 (function() {
     'use strict';
 
+    /**
+     * A binary min heap implemented with an array
+     *
+     * @constructor
+     *
+     * @property {Array} content The elements in the array-implemented heap
+     * @property {function} scoreFunction A function that returns the property
+     * used for ordering the elements
+     * @property {function} idFunction A function that returns the property
+     * used as the key of the elements
+     * @property {Object} map A map between the element IDs and their index in `content`
+     *
+     * @param {function} scoreFunction Must return the property used for ordering
+     * @param {function} idFunction Must return the property used as the key
+     * @param {string} valueProp The name of the property to be modified in `decreaseKey()`
+     */
     var MinHeap = function(scoreFunction, idFunction, valueProp) {
         this.content = [];
         this.scoreFunction = scoreFunction;
@@ -28,17 +45,35 @@ BinaryHeap code may be freely distributed under the MIT License
     };
 
     MinHeap.prototype = {
+        /**
+         * Get the size of the heap
+         *
+         * @returns {number} The size of the heap
+         */
         size: function() {
             return this.content.length;
         },
 
+        /**
+         * Check if an element exists in the heap
+         *
+         * @param {Object} elt The element to check
+         *
+         * @returns {boolean} True if the element exists, false otherwise
+         */
         exists: function(elt) {
             return this.map[this.idFunction(elt)] !== undefined;
         },
 
+        /**
+         * Add a new element to the heap
+         *
+         * @param {Object} elt The element to add to the heap
+         * @throws {Error} Will throw an error if the element is already present in the heap
+         */
         push: function(elt) {
             if (this.map[this.idFunction(elt)] !== undefined) {
-                throw 'Error: id "' + this.idFunction(elt) + '" already present in heap';
+                throw new Error('id "' + this.idFunction(elt) + '" already present in heap');
             }
 
             this.content.push(elt);
@@ -47,6 +82,13 @@ BinaryHeap code may be freely distributed under the MIT License
             //this.map[this.idFunction(elt)] = index;
         },
 
+
+        /**
+         * Removes the minimum element from the heap
+         *
+         * @returns {Object} The minimum element that was removed
+         *
+         */
         pop: function() {
             var result = this.content[0];
             var end = this.content.pop();
@@ -64,6 +106,13 @@ BinaryHeap code may be freely distributed under the MIT License
             return result;
         },
 
+        /**
+         * Bubbles an element up the heap to restore order
+         *
+         * @param {number} n The index of the element to shift upward
+         *
+         * @returns {number} The new index of the element
+         */
         bubbleUp: function(n) {
             var element = this.content[n];
             var score = this.scoreFunction(element);
@@ -89,6 +138,13 @@ BinaryHeap code may be freely distributed under the MIT License
             return n;
         },
 
+        /**
+         * Sinks an element down the heap to restore order
+         *
+         * @param {number} n The index of the element to shift downward
+         *
+         * @returns {number} The new index of the element
+         */
         sinkDown: function(n) {
             var element = this.content[n];
             var score = this.scoreFunction(element);
@@ -132,6 +188,12 @@ BinaryHeap code may be freely distributed under the MIT License
             return n;
         },
 
+        /**
+         * Decreases the value of a key and the maintains heap order
+         *
+         * @param {number} id The ID of the element whose value is decreased
+         * @param {number} value What the value should decrease to
+         */
         decreaseKey: function(id, value) {
             var n = this.map[id];
             this.content[n][this.valueProp] = value;

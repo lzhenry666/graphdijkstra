@@ -1,6 +1,7 @@
 /**
  * @file Provides a data structure for a simple undirected graph
  * @name graph.js
+ * @ignore
  */
 (function() {
     'use strict';
