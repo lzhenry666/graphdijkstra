@@ -1,9 +1,9 @@
 /**
- * graph.js
- * 05/31/16
- *
- * a simple undirected graph to represent the office
- /*---------------------------------------------------------------------------*/
+ * @file Provides a data structure for a simple undirected graph
+ * @name Graph
+ * @license MIT
+ * @copyright 2016 LITOSI
+ */
 (function() {
     'use strict';
 
@@ -11,11 +11,31 @@
     var union = require('lodash/union');
 
     /**
-     * Graph
-     * @graph (optional): a JSON representation of the graph to initialize;
-     * should an object with two arrays, nodes and edges.
-     *   nodes: an array of objects with integer id and object props (keys: weight, nType, neighbors)
-     *   edges: an array whose elements are 2-length arrays representing the source and target ids for the edge
+     * Graph object with basic properties
+     *
+     * @constructor
+     *
+     * @property {object} nodes The nodes in the graph
+     * @property {number} nodeCount The number of nodes
+     * @property {number} edgeCount The number of edges
+     *
+     * @param {object} [graph={}] A JSON representation of a graph to initialize;
+     * this should be an object with two arrays, nodes and edges, where nodes is an
+     * array of objects with integer id and object props with keys weight, and nType;
+     * edges is an array of two element arrays of the IDs of the nodes on each end of the edge
+     *
+     * @example <caption>Example graph parameter</caption>
+     * { nodes: [
+     *     { id: 1, props: { weight: 0, nType: 5 } }, // Office 1
+     *     { id: 2, props: { weight: 0, nType: 5 } }, // Office 2
+     *     { id: 3, props: { weight: 1, nType: 3 } }, // short path
+     *     { id: 4, props: { weight: 2, nType: 3 } }  // long  path
+     * ],
+     * edges: [
+     *     [1, 3],
+     *     [3, 4],
+     *     [4, 2]
+     * ] }
      */
     var Graph = function(graph) {
         var i = 0;
