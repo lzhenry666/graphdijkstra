@@ -34,7 +34,7 @@ describe('dijkstra tests', () => {
             {id: 19, weight: 1, nType: 1},
             {id: 20, weight: 1, nType: 1},
             {id: 21, weight: 1, nType: 1},
-            {id: 22, weight: 1, nType: 1},
+            {id: 22, weight: 1, nType: 2},
             {id: 23, weight: 1, nType: 1},
             {id: 24, weight: 1, nType: 1},
             {id: 25, weight: 1, nType: 1},
@@ -43,7 +43,7 @@ describe('dijkstra tests', () => {
             {id: 28, weight: 1, nType: 1},
             {id: 29, weight: 1, nType: 1},
             {id: 30, weight: 1, nType: 1},
-            {id: 31, weight: 1, nType: 1},
+            {id: 31, weight: 1, nType: 2},
             {id: 32, weight: 1, nType: 2},
             {id: 33, weight: 1, nType: 1},
             {id: 34, weight: 1, nType: 1},
@@ -119,6 +119,16 @@ describe('dijkstra tests', () => {
     });
 
     after(() => graph = undefined);
+
+    // No it should not
+    // it('it should calculate for all nodes it can reach', () => {
+    //     var results = Dijkstra.run(graph, 1, 1, 6);
+
+    //     for (var i = 1; i <= 35; i++) {
+    //         expect(results.dist[i]).to.not.equal(Infinity);
+    //         expect(results.prev[i]).to.not.be.null;
+    //     }
+    // });
 
     it('it should find the shortest path (1)', () => {
         var results = Dijkstra.run(graph, 1, 1, 6);
