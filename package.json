@@ -1,0 +1,64 @@
+{
+  "name": "graph-dijkstra",
+  "version": "1.0.1",
+  "author": "LITOSI",
+  "main": "dist/graph-dijkstra.js",
+  "description": "A simple undirected graph that allows for finding the shortest path between nodes via Dijkstra's algorithm",
+  "contributors": [
+    {
+      "name": "Matthew Vasseur",
+      "email": "mattvasseur@gmail.com"
+    },
+    {
+      "name": "David Tahvildaran",
+      "email": "dtahvildaran.lincolninvestment@gmail.com"
+    }
+  ],
+  "scripts": {
+    "test": "node node_modules/.bin/mocha --reporter spec test-dist/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:LincolnTechOpenSource/graph-dijkstra.git"
+  },
+  "keywords": [
+    "graph",
+    "shortest",
+    "path",
+    "dijkstra",
+    "undirected",
+    "nodes",
+    "simple"
+  ],
+  "devDependencies": {
+    "babel": "^6.3.26",
+    "babel-core": "^6.4.0",
+    "babel-preset-es2015": "^6.9.0",
+    "browserify": "^13.0.1",
+    "chai": "^3.4.1",
+    "del": "^2.2.0",
+    "documentation": "^4.0.0-beta9",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.1",
+    "gulp-jshint": "^2.0.0",
+    "gulp-mocha": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-shell": "^0.5.2",
+    "gulp-task-listing": "^1.0.1",
+    "gulp-uglify": "^1.5.4",
+    "jshint": "^2.9.1",
+    "jshint-stylish": "^2.2.0",
+    "lodash": "^4.13.1",
+    "mocha": "^2.3.4",
+    "run-sequence": "^1.1.5",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "engine": "node >= 4.4.x",
+  "bugs": {
+    "url": "https://github.com/LincolnTechOpenSource/graph-dijkstra-lib/issues"
+  },
+  "private": false,
+  "license": "MIT",
+  "dependencies": {}
+}
