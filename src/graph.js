@@ -10,7 +10,7 @@
     var union = require('lodash/union');
 
     /**
-     * A simple undirected graph with nodes and implicit edges
+     * A simple undirected graph object with nodes and implicit edges
      *
      * @constructor
      *
