@@ -34,3 +34,6 @@ npm-debug.log
 
 # sources for tests
 test-dist
+
+# documentation is only in gh-pages
+docs
