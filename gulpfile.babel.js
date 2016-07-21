@@ -69,8 +69,6 @@ gulp.task('dist', ['lint-src'], () => {
 
 // gulp-documentation was outdated... using command line documentation instead
 gulp.task('docs', () => {
-    del('./docs'); // clean docs
-
     exec(
         './node_modules/documentation/bin/documentation.js build ' + config.paths.docs +
         ' -f html -o ./docs -c documentation.yml --github --name ' + pkg.name, function(){}
