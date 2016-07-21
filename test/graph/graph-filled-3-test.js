@@ -13,26 +13,26 @@ describe('graph tests (initialized nodes & edges)', () => {
 
     const GRAPH = {
         nodes: [
-            {id:  1, props: {weight: 1, nType: 4} },
-            {id:  2, props: {weight: 3, nType: 1} },
-            {id:  3, props: {weight: 2, nType: 0} },
-            {id:  4, props: {weight: 2, nType: 6} },
-            {id:  5, props: {weight: 0, nType: 4} },
-            {id:  6, props: {weight: 5, nType: 3} },
-            {id:  7, props: {weight: 0, nType: 3} },
-            {id:  8, props: {weight: 9, nType: 3} },
-            {id:  9, props: {weight: 0, nType: 4} },
-            {id: 10, props: {weight: 1, nType: 7} },
-            {id: 11, props: {weight: 2, nType: 4} },
-            {id: 12, props: {weight: 0, nType: 0} },
-            {id: 13, props: {weight: 6, nType: 9} },
-            {id: 14, props: {weight: 7, nType: 8} },
-            {id: 15, props: {weight: 5, nType: 9} },
-            {id: 16, props: {weight: 1, nType: 1} },
-            {id: 17, props: {weight: 7, nType: 1} },
-            {id: 18, props: {weight: 9, nType: 6} },
-            {id: 19, props: {weight: 1, nType: 1} },
-            {id: 20, props: {weight: 5, nType: 2} }
+            {id:  1, weight: 1, nType: 4},
+            {id:  2, weight: 3, nType: 1},
+            {id:  3, weight: 2, nType: 0},
+            {id:  4, weight: 2, nType: 6},
+            {id:  5, weight: 0, nType: 4},
+            {id:  6, weight: 5, nType: 3},
+            {id:  7, weight: 0, nType: 3},
+            {id:  8, weight: 9, nType: 3},
+            {id:  9, weight: 0, nType: 4},
+            {id: 10, weight: 1, nType: 7},
+            {id: 11, weight: 2, nType: 4},
+            {id: 12, weight: 0, nType: 0},
+            {id: 13, weight: 6, nType: 9},
+            {id: 14, weight: 7, nType: 8},
+            {id: 15, weight: 5, nType: 9},
+            {id: 16, weight: 1, nType: 1},
+            {id: 17, weight: 7, nType: 1},
+            {id: 18, weight: 9, nType: 6},
+            {id: 19, weight: 1, nType: 1},
+            {id: 20, weight: 5, nType: 2}
         ],
         edges: [
             [1,  2],
@@ -88,8 +88,12 @@ describe('graph tests (initialized nodes & edges)', () => {
     it('it should initialize with the correct nodes', () => {
         for (var i = 0; i < GRAPH.nodes.length; i++) {
             var node = graph.find(GRAPH.nodes[i].id);
-            GRAPH.nodes[i].props.neighbors = node.neighbors;
-            GraphTests.testNode(graph, GRAPH.nodes[i].id, GRAPH.nodes[i].props, node);
+            var props = {
+                weight: GRAPH.nodes[i].weight,
+                nType: GRAPH.nodes[i].nType,
+                neighbors: node.neighbors
+            };
+            GraphTests.testNode(graph, GRAPH.nodes[i].id, props, node);
         }
     });
 

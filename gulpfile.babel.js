@@ -12,6 +12,8 @@ import buffer from 'vinyl-buffer';
 import rename from 'gulp-rename';
 import uglify from 'gulp-uglify';
 
+import shell from 'gulp-shell';
+
 var config = {
     paths: {
         build: {
@@ -32,7 +34,8 @@ var config = {
             dijkstra: 'test-dist/dijkstra/**/*.js',
             dist: 'test-dist/',
             run: 'test-dist/**/*.js'
-        }
+        },
+        docs: './src'
     }
 };
 
@@ -43,7 +46,7 @@ gulp.task('clean', () =>
     del(config.paths.test.dist)
 );
 
-gulp.task('dist', ['lint-src'], function() {
+gulp.task('dist', ['lint-src'], () => {
     del(config.paths.build.dist); // clean build path
 
     // browserify source
@@ -62,6 +65,14 @@ gulp.task('dist', ['lint-src'], function() {
         .pipe(uglify())
         .pipe(gulp.dest(config.paths.build.dist));
 });
+
+// gulp-documentation was outdated... using command line documentation instead
+gulp.task('docs',
+    shell.task(
+        './node_modules/documentation/bin/documentation.js build ' + config.paths.docs +
+        ' -f html -o ./docs -c documentation.yml --github'
+    )
+);
 
 gulp.task('babel', ['babel-src', 'babel-test']);
 
@@ -118,7 +129,7 @@ gulp.task('test-dijkstra', ['babel'], () =>
 
 // Build Task
 gulp.task('build', () =>
-    runSequence('clean', ['test'], 'dist')
+    runSequence('clean', ['test', 'docs'], 'dist')
 );
 
 // Default Task
