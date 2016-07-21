@@ -74,6 +74,7 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 See our project page for the [full documentation](https://lincolntechopensource.github.io/graph-dijkstra/docs)
 
 #### Graph
+###### (prototype)
 * **Graph(graph)**
 * **nodes**
 * **nodeCount**
@@ -91,12 +92,14 @@ See our project page for the [full documentation](https://lincolntechopensource.
 * **update(id, props)**
 
 #### GraphNode
+###### (prototype)
 * **id**
 * **weight**
 * **nType**
 * **neighbors**
 
 #### Dijkstra
+###### (static)
 * **run(graph, pathType, source, target)**
 * **getPath(prevList, target)**
 
