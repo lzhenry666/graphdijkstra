@@ -12,7 +12,7 @@ import buffer from 'vinyl-buffer';
 import rename from 'gulp-rename';
 import uglify from 'gulp-uglify';
 
-import shell from 'gulp-shell';
+import {exec} from 'child_process';
 import pkg from './package.json';
 
 var config = {
@@ -68,12 +68,14 @@ gulp.task('dist', ['lint-src'], () => {
 });
 
 // gulp-documentation was outdated... using command line documentation instead
-gulp.task('docs',
-    shell.task(
+gulp.task('docs', () => {
+    del('./docs'); // clean docs
+
+    exec(
         './node_modules/documentation/bin/documentation.js build ' + config.paths.docs +
-        ' -f html -o ./docs -c documentation.yml --github --name ' + pkg.name
-    )
-);
+        ' -f html -o ./docs -c documentation.yml --github --name ' + pkg.name, function(){}
+    );
+});
 
 gulp.task('babel', ['babel-src', 'babel-test']);
 
