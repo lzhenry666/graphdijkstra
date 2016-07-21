@@ -1,8 +1,6 @@
 /**
  * @file Provides a data structure for a simple undirected graph
  * @name Graph
- * @license MIT
- * @copyright 2016 LITOSI
  */
 (function() {
     'use strict';
@@ -19,7 +17,12 @@
      * @property {number} nodeCount The number of nodes
      * @property {number} edgeCount The number of edges
      *
-     * @param {object} [graph={}] A JSON representation of a graph to initialize;
+     * @param {object} [graph] A JSON representation of a graph to initialize
+     * @param {object[]} graph.nodes The nodes of the graph - must have id, and can optionally specify props
+     * @param {number} graph.nodes[].id ID of the node
+     * @param {number} graph.nodes[].id ID of the node
+     * @param {number} graph.nodes[].id ID of the node
+     *
      * this should be an object with two arrays, nodes and edges, where nodes is an
      * array of objects with integer id and object props with keys weight, and nType;
      * edges is an array of two element arrays of the IDs of the nodes on each end of the edge
@@ -64,14 +67,19 @@
         // add each of the nodes in the supplied graph
         for (i = 0; i < graph.nodes.length; i++) {
             var nodeVals = graph.nodes[i];
+            var nodeProps = {
+                weight: nodeVals.weight,
+                nType: nodeVals.nType,
+                neighbors: nodeVals.neighbors
+            };
             if (this.exists(nodeVals.id)) {
                 // update node (was created earlier by a neighbor specification)
                 var node = this.find(nodeVals.id);
-                nodeVals.props.neighbors = union(node.neighbors, nodeVals.props.neighbors);
-                this.update(nodeVals.id, nodeVals.props);
+                nodeProps.neighbors = union(node.neighbors, nodeProps.neighbors);
+                this.update(nodeVals.id, nodeProps);
                 _fixConsistency(this, node);
             } else {
-                this.addNode(nodeVals.id, nodeVals.props); // create new
+                this.addNode(nodeVals.id, nodeProps); // create new
             }
         }
         // add each of the edges in the supplied graph
