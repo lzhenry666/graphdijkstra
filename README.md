@@ -2,9 +2,9 @@
 
 A simple undirected graph that allows for finding the shortest path between nodes
 via [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#Using_a_priority_queue).
-This portable package can easily be wrapper into an angular service (as seen in our [demo](demo-page)).
+This portable package can easily be wrapper into an angular service (as seen in our [demo][demo]).
 
-[demo-page]: https://lincolntechopensource.github.io/graph-dijkstra/demo
+[demo]: https://lincolntechopensource.github.io/graph-dijkstra/demo
 
 Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
@@ -56,14 +56,14 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
 ## Demos
 
-* See the package in an angular application with our simple [demo](demo-page).
+* See the package in an angular application with our simple [demo][demo-page].
 
    Here we create a simple angular service to wrap the **Graph** and **Dijkstra** libraries.
    Using this service we make a 36 node graph to serve as a grid and demonstrate
    how to go about finding and acting on the shortest path.
 
 * For an example of this package at work in a larger project, see our
-[Lincoln Employee Locator](lincoln-gps) application.
+[Lincoln Employee Locator][lincoln-gps] application.
 
    In this project we again create a service to wrap **Graph** and **Dijkstra**.
    **Graph** serves as the underlying graph of location objects (nodes) on which
@@ -105,7 +105,7 @@ See our project page for the [full documentation](https://lincolntechopensource.
 
 ## Note
 
-This project was created for use in the [Lincoln Employee Locator](lincoln-gps).
+This project was created for use in the [Lincoln Employee Locator][lincoln-gps].
 We encourage and appreciate any contributions that aim to enhance the robustness of this module.
 
 [lincoln-gps]: https://github.com/LincolnTechOpenSource/lincoln-gps
