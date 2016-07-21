@@ -1,6 +1,6 @@
-/**
- * graph-node.js
- * 07/08/16
+ /**
+ * @file Provides a data structure for the nodes of the graph
+ * @name graph-node.js
  */
 (function() {
     'use strict';
@@ -12,13 +12,21 @@
         neighbors: []
     };
 
-    /**
-     * GraphNode
-     * create a new node with @id @neighbors, @weight, and @nType
-     * @props: object of properties for the node (optional), valid keys are:
-     *    @weight: the weight of the node to create (i.e., distance in path algorithm)
-     *    @nType:  an integer that represents the type of nodes (e.g., an enumeration)
-     *    @neighbors: list of node ids that are the neighbors
+     /**
+     * A node in a graph
+     *
+     * @constructor
+     *
+     * @property {number} id The ID of the node
+     * @property {number} weight The weight of the node (*default 0*) (e.g., distance in path algorithm)
+     * @property {number} nType An integer that represents the type of node (*default 0*) (e.g., an enumeration)
+     * @property {Array<number>} neighbors A list of node IDs that are neighbors of the node (*default []*)
+     *
+     * @param {number} id The ID of the node to create
+     * @param {Object} [props] The properties to initialize the node with
+     * @param {number} props.weight The initial weight of the node
+     * @param {number} props.nType The initial nType of the node
+     * @param {Array<number>} props.neighbors The initial neighbors of the node
      */
     var GraphNode = function(id, props) {
         props = props || {};
@@ -28,17 +36,13 @@
         this._neighbors = (props.neighbors || DEFAULTS.neighbors).slice();
     };
 
-    /**
-     * GraphNode define properties
-     */
+    // define getters and setters for GraphNodes's properties
     Object.defineProperties(GraphNode.prototype, {
-        // id
         id: {
             get: function() {
                 return this._id;
             },
         },
-        // neighbors
         neighbors: {
             get: function() {
                 return this._neighbors;
@@ -47,7 +51,6 @@
                 this._neighbors = value.slice(); // use slice to create new reference
             }
         },
-        // weight
         weight: {
             get: function() {
                 return this._weight;
@@ -56,7 +59,6 @@
                 this._weight = value;
             }
         },
-        // nType
         nType: {
             get: function() {
                 return this._nType;

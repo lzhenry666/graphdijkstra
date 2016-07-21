@@ -1,6 +1,6 @@
 /**
  * @file Provides a data structure for a simple undirected graph
- * @name Graph
+ * @name graph.js
  */
 (function() {
     'use strict';
@@ -9,30 +9,25 @@
     var union = require('lodash/union');
 
     /**
-     * Graph object with basic properties
+     * A simple undirected graph object with nodes and implicit edges
      *
      * @constructor
      *
-     * @property {object} nodes The nodes in the graph
+     * @property {Object} nodes The nodes in the graph
      * @property {number} nodeCount The number of nodes
      * @property {number} edgeCount The number of edges
      *
-     * @param {object} [graph] A JSON representation of a graph to initialize
-     * @param {object[]} graph.nodes The nodes of the graph - must have id, and can optionally specify props
-     * @param {number} graph.nodes[].id ID of the node
-     * @param {number} graph.nodes[].id ID of the node
-     * @param {number} graph.nodes[].id ID of the node
+     * @param {Object} [graph] The graph to initialize
+     * @param {Array<GraphNode>} graph.nodes The nodes of the graph - must have **id**, and
+     * can optionally have **weight**, **nType**, and **neighbors**
+     * @param {Array<Array>} graph.edges The edges of the graph - two element array of IDs of the nodes on each end of the edge
      *
-     * this should be an object with two arrays, nodes and edges, where nodes is an
-     * array of objects with integer id and object props with keys weight, and nType;
-     * edges is an array of two element arrays of the IDs of the nodes on each end of the edge
-     *
-     * @example <caption>Example graph parameter</caption>
+     * @example <caption>Example valid graph parameter</caption>
      * { nodes: [
-     *     { id: 1, props: { weight: 0, nType: 5 } }, // Office 1
-     *     { id: 2, props: { weight: 0, nType: 5 } }, // Office 2
-     *     { id: 3, props: { weight: 1, nType: 3 } }, // short path
-     *     { id: 4, props: { weight: 2, nType: 3 } }  // long  path
+     *     { id: 1, props: { weight: 0, nType: 1 } },
+     *     { id: 2, props: { weight: 0, nType: 1 } },
+     *     { id: 3, props: { weight: 1, nType: 2 } },
+     *     { id: 4, props: { weight: 2, nType: 2 } }
      * ],
      * edges: [
      *     [1, 3],
@@ -90,9 +85,8 @@
         }
     };
 
-    /**
-     * Graph define properties
-     */
+
+    // define getters and setters for Graph's properties
     Object.defineProperties(Graph.prototype, {
         // nodeCount
         nodeCount: {
@@ -124,31 +118,35 @@
     });
 
     /**
-     * Graph.find: finds the node specified by id. ID should exist (and not be an invalid property)
-     * @id: the ID of the node to find
-     * @return the node if found, null otherwise
+     * Find a node in the graph
+     *
+     * @param {number} id The ID of the node to find
+     * @returns {GraphNode} The node if found, null otherwise
      */
     Graph.prototype.find = function(id) {
         return this.exists(id) ? this.nodes[id] : null;
     };
 
     /**
-     * Graph.exists: checks if the specified ID already exists in the graph
-     * @id: the ID of the node to check
-     * @return true if it is a node, false otherwise
+     * Check if a node exists in the graph
+     *
+     * @param {number} id The ID of the node to check
+     * @returns {boolean} True if a node with the ID exists, false otherwise
      */
     Graph.prototype.exists = function(id) {
         return (id in this.nodes) && (this.nodes[id] instanceof GraphNode);
     };
 
     /**
-     * Graph.addNode: add a new node to the graph
-     * @id: the node's ID (a number) (required)
-     * @props: object of properties for the node (optional), valid keys are:
-     *    @neighbors: the neighbors of the node to add (create node if it does not exist)
-     *    @weight: the weight of the node to create
-     *    @nType: the type of the node to create
-     * @return the added (or existing) node with @id
+     * Add a new {@link GraphNode} but do not overwrite an existing one
+     *
+     * @param {number} id The ID of the node to add
+     * @param {Object} props The properties of the new node
+     * @param {number} props.weight The weight of the node
+     * @param {number} props.nType The type of the node
+     * @param {Array<number>} props.neighbors The neighbors of the node
+     *
+     * @returns {GraphNode} The added (or pre-existing) node
      */
     Graph.prototype.addNode = function(id, props) {
         props = props || {};
@@ -167,9 +165,11 @@
     };
 
     /**
-     * Graph.deleteNode: delete a node from the graph. true if successful
-     * @id: the ID of the node to delete (required)
-     * @return the node that was deleted or null if it does not exist
+     * Delete a node from the graph
+     *
+     * @param {number} id The ID of the node to delete
+     *
+     * @returns {GraphNode} The deleted node or null it one with that ID does not exist
      */
     Graph.prototype.deleteNode = function(id) {
         // only remove if it exists
@@ -197,8 +197,9 @@
     };
 
     /**
-     * Graph.eachNode: perform a function on each node in the graph
-     * @fn: the function to perform on each node in the graph
+     * Perform a function on each node in the graph
+     *
+     * @param {function} fn The function to perform on each node
      */
     Graph.prototype.eachNode = function(fn) {
         // jshint forin: false
@@ -213,9 +214,10 @@
     };
 
     /**
-     * Graph.eachNeighbor: perform a function on each neighbor of the node
-     * @id: the id of the node whose neighbors will be acted on
-     * @fn: the function to perform on each neighbor of the node
+     * Perform a function on each neighbor of a node
+     *
+     * @param {number} id The ID of the node whose neighbors should be acted on
+     * @param {function} fn The function to perform on each neighbor of the node
      */
     Graph.prototype.eachNeighbor = function(id, fn) {
         if (!this.exists(id)) {
@@ -235,11 +237,14 @@
     };
 
     /**
-     * Graph.addEdge: connect two nodes (undirected edge) that both exist
-     * do not allow self edges (by nature of being a simple graph)
-     * @source: ID of one end of the edge
-     * @target: ID of the other end of the edge
-     * @return true if able to add edge, false otherwise (i.e., self edge, invalid, or redundant)
+     * Add a new undirected edge by connecting two nodes that both exist.
+     *
+     * Does **not** allow self edges by way of being a simple graph
+     *
+     * @param {number} source ID of one end of the edge
+     * @param {number} target ID of the other edge of the edge
+     *
+     * @returns {boolean} True if able to add edge, false otherwise (i.e., self edge, redundant, or invalid source/target)
      */
     Graph.prototype.addEdge = function(source, target) {
         // is this a self edge?
@@ -275,11 +280,12 @@
     };
 
     /**
-     * Graph.addOrCreateEdge: the same as addEdge(), but will create nodes that do not exist
-     * do not allow self edges (by nature of being a simple graph)
-     * @source: ID of one end of the edge
-     * @target: ID of the other end of the edge
-     * @return true if able to add or create the edge, false otherwise (i.e., self edge, invalid, or redundant)
+     * The same as **addEdge**, but will create new nodes if source or target does not exist
+     *
+     * @param {number} source ID of one end of the edge
+     * @param {number} target ID of the other edge of the edge
+     *
+     * @returns {boolean} True if able to add edge, false otherwise (i.e., self edge, redundant, or invalid source/target)
      */
     Graph.prototype.addOrCreateEdge = function(source, target) {
         // add source/target nodes if necessary
@@ -291,10 +297,12 @@
     };
 
     /**
-     * Graph.deleteEdge: delete an edge from the graph
-     * @source: ID of one end of the edge to delete
-     * @target: ID of the other end of the edge to delete
-     * @return true if successful, false otherwise
+     * Delete an edge from the graph
+     *
+     * @param {number} source ID of one end of the edge to delete
+     * @param {number} target ID of the other edge of the edge to delete
+     *
+     * @returns {boolean} True if able to delete edge, false otherwise (i.e., edge does not exist)
      */
     Graph.prototype.deleteEdge = function(source, target) {
         var s = this.find(source); // the node corresponding to source ID
@@ -314,9 +322,12 @@
     };
 
     /**
-     * Graph.connected: is there an edge connecting
-     * the @source and @target (note only returns true if it is consistent)
-     * @return true if yes, false if no
+     * Check if two nodes are connected by an edge
+     *
+     * @param {number} source ID of one node
+     * @param {number} target ID of the other node
+     *
+     * @returns {boolean} True if they are connected, false otherwise
      */
     Graph.prototype.connected = function(source, target) {
         var s = this.find(source); // get source node
@@ -328,13 +339,15 @@
     };
 
     /**
-     * Graph.update: set the properties of the node specified by @id
-     * @id: id of the node to update
-     * @props: object of properties for the node, valid keys are:
-     *    @weight: the weight of the node to create
-     *    @nType: the type of the node to create
-     *    @neighbors: the neighbors of the node to add (create node if it does not exist)
-     * @return the updated node on success, or null if unable to update/find
+     * Update the properties of a node
+     *
+     * @param {number} id The ID of the node to update
+     * @param {Object} props The new properties of the node
+     * @param {number} props.weight The new weight of the node
+     * @param {number} props.nType The new type of the node
+     * @param {Array<number>} props.neighbors The new neighbors of the node
+     *
+     * @returns {GraphNode} The updated node, or null if unable to update or find
      */
     Graph.prototype.update = function(id, props) {
         var node = this.find(id);
@@ -354,8 +367,13 @@
 
     //------------------------------------------------//
 
-    /** _fixConsistency: fixes the inconsistencies in @graph caused by the neighbors
-     * of @node by adding the necessary edges
+    /**
+     * Fixes the inconsistencies in the specified graph caused by the neighbors
+     * of node by adding the necessary edges
+     * @private
+     *
+     * @param {Graph} graph The graph to work on
+     * @param {GraphNode} node The node whose inconsistencies should be fixed
      */
     function _fixConsistency(graph, node) {
         // ensure consistency of graph by adding necessary edges to specified neighbors
@@ -368,6 +386,7 @@
             }
         }
     }
+
 })();
 
 /*----------------------------------------------------------------------------*/
