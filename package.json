@@ -37,6 +37,7 @@
     "browserify": "^13.0.1",
     "chai": "^3.4.1",
     "del": "^2.2.0",
+    "documentation": "^4.0.0-beta9",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
     "gulp-jshint": "^2.0.0",
