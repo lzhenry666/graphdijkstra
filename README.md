@@ -2,9 +2,9 @@
 
 A simple undirected graph that allows for finding the shortest path between nodes
 via [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#Using_a_priority_queue).
-This portable package can easily be wrapper into an angular service (as seen in our [demo](demo)).
+This portable package can easily be wrapper into an angular service (as seen in our [demo](demo-page)).
 
-[demo]: https://lincolntechopensource.github.io/graph-dijkstra/demo
+[demo-page]: https://lincolntechopensource.github.io/graph-dijkstra/demo
 
 Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
@@ -56,7 +56,7 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
 ## Demos
 
-* See the package in an angular application with our simple [demo](demo).
+* See the package in an angular application with our simple [demo](demo-page).
 
    Here we create a simple angular service to wrap the **Graph** and **Dijkstra** libraries.
    Using this service we make a 36 node graph to serve as a grid and demonstrate
