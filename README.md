@@ -69,7 +69,7 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
 ## Public API
 
-<!--See [wiki pages]() for the full documentation -->
+See LITOSI's project page for the [full documentation](docs/index.html)
 
 #### Graph
 ###### (prototype)
