@@ -56,7 +56,7 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
 ## Demos
 
-* See the package in an angular application with our simple [demo][demo-page].
+* See the package in an angular application with our simple [demo][demo].
 
    Here we create a simple angular service to wrap the **Graph** and **Dijkstra** libraries.
    Using this service we make a 36 node graph to serve as a grid and demonstrate
