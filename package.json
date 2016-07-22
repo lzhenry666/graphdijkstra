@@ -1,6 +1,6 @@
 {
   "name": "graph-dijkstra",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "LITOSI",
   "main": "dist/graph-dijkstra.js",
   "description": "A simple undirected graph that allows for finding the shortest path between nodes via Dijkstra's algorithm",
