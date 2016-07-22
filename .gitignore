@@ -29,8 +29,5 @@ node_modules
 # npm log file
 npm-debug.log
 
-# dist folder
-# dist/   <--- THIS IS COMMENTED ON PURPOSE. FOR REAL PROJECT UNCOMMENT THIS
-
 # sources for tests
 test-dist

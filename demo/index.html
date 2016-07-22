@@ -170,8 +170,6 @@
          * @runDijkstra runs dijkstra's algorithm
          * @getShortestPath finds the shortest path from the previous run of dijkstra's
          * @clearCache clears the cache
-         * graph (in this case ./graph.json) and debug allows the enable or disable
-         * verification during graph construction
          */
         function Graphing($http) {
             var service = {
@@ -184,7 +182,7 @@
                 createGraph: createGraph,
                 runDijkstra: runDijkstra,
                 getShortestPath: getShortestPath,
-                clearCache: clearCache,
+                clearCache: clearCache
             };
 
             return service;

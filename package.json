@@ -1,13 +1,13 @@
 {
   "name": "graph-dijkstra",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "LITOSI",
   "main": "dist/graph-dijkstra.js",
   "description": "A simple undirected graph that allows for finding the shortest path between nodes via Dijkstra's algorithm",
   "contributors": [
     {
       "name": "Matthew Vasseur",
-      "email": "mvasseur.lincolninvestment@gmail.com"
+      "email": "mattvasseur@gmail.com"
     },
     {
       "name": "David Tahvildaran",
@@ -37,8 +37,10 @@
     "browserify": "^13.0.1",
     "chai": "^3.4.1",
     "del": "^2.2.0",
+    "documentation": "^4.0.0-beta9",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
+    "gulp-exec": "^2.1.2",
     "gulp-jshint": "^2.0.0",
     "gulp-mocha": "^2.2.0",
     "gulp-rename": "^1.2.2",

@@ -2,12 +2,14 @@
 
 A simple undirected graph that allows for finding the shortest path between nodes
 via [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#Using_a_priority_queue).
-This portable package can easily be wrapper into an angular service (as seen in our [demo](demo)).
+This portable package can easily be wrapper into an angular service (as seen in our [demo][demo]).
+
+[demo]: https://lincolntechopensource.github.io/graph-dijkstra/demo
 
 Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
 
-**Version:** 1.0.1
+**Version:** 1.1.0
 
 ## Installation & Typical Usage
 
@@ -54,14 +56,14 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
 ## Demos
 
-* See the package in an angular application with our simple [demo](demo/index.html).
+* See the package in an angular application with our simple [demo][demo-page].
 
    Here we create a simple angular service to wrap the **Graph** and **Dijkstra** libraries.
    Using this service we make a 36 node graph to serve as a grid and demonstrate
    how to go about finding and acting on the shortest path.
 
 * For an example of this package at work in a larger project, see our
-[Lincoln Employee Locator](lincoln-gps) application.
+[Lincoln Employee Locator][lincoln-gps] application.
 
    In this project we again create a service to wrap **Graph** and **Dijkstra**.
    **Graph** serves as the underlying graph of location objects (nodes) on which
@@ -69,43 +71,42 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
 
 ## Public API
 
-<!--See [wiki pages]() for more detail-->
+See our project page for the [full documentation](https://lincolntechopensource.github.io/graph-dijkstra/docs)
 
 #### Graph
 ###### (prototype)
-* **Graph(graph)** (*constructor*)
-* **nodes** - property **{GraphNode}**
-* **nodeCount** - property **integer**
-* **edgeCount** - property **integer**
-* **find(id)**  -  returns **GraphNode**
-* **exists(id)**  -  returns **boolean**
-* **addNode(id, props)**  -  returns **GraphNode**
-* **deleteNode(id)**  -  returns **GraphNode**
+* **Graph(graph)**
+* **nodes**
+* **nodeCount**
+* **edgeCount**
+* **find(id)**
+* **exists(id)**
+* **addNode(id, props)**
+* **deleteNode(id)**
 * **eachNode(fn)**
 * **eachNeighbor(id, fn)**
-* **addEdge(source, target)**  -  returns **boolean**
-* **addOrCreateEdge(source, target)**  -  returns **boolean**
-* **deleteEdge(source, target)**  -  returns **boolean**
-* **connected(source, target)**  -  returns **boolean**
-* **update(id, props)** -             returns **GraphNode**
+* **addEdge(source, target)**
+* **addOrCreateEdge(source, target)**
+* **deleteEdge(source, target)**
+* **connected(source, target)**
+* **update(id, props)**
 
 #### GraphNode
 ###### (prototype)
-* **id** - property **integer**
-* **weight** - property **integer**
-* **nType** - property **integer**
-* **neighbors** - property **[integer]**
+* **id**
+* **weight**
+* **nType**
+* **neighbors**
 
 #### Dijkstra
-###### (prototype)
-* **run(graph, pathType, source, target)** - returns **{source, target, dist, prev}**
-* **getPath(prevList, target)** - returns **[integer]**
+###### (static)
+* **run(graph, pathType, source, target)**
+* **getPath(prevList, target)**
 
-## Important!
+## Note
 
-This project is tailored for use in the [Lincoln Employee Locator](lincoln-gps) and may not yet
-be optimally portable. We encourage and appreciate any contributions that aim to
-enhance the generality/portability of this module.
+This project was created for use in the [Lincoln Employee Locator][lincoln-gps].
+We encourage and appreciate any contributions that aim to enhance the robustness of this module.
 
 [lincoln-gps]: https://github.com/LincolnTechOpenSource/lincoln-gps
 
