@@ -6,7 +6,7 @@ This portable package can easily be wrapper into an angular service (as seen in 
 
 [demo]: https://lincolntechopensource.github.io/graph-dijkstra/demo
 
-Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
+Developed for use in our [Office Employee Locator][oel] application.
 
 
 **Version:** 1.1.0
@@ -63,7 +63,7 @@ Developed for use in our [Lincoln Employee Locator][lincoln-gps] application.
    how to go about finding and acting on the shortest path.
 
 * For an example of this package at work in a larger project, see our
-[Lincoln Employee Locator][lincoln-gps] application.
+[Office Employee Locator][oel] application.
 
    In this project we again create a service to wrap **Graph** and **Dijkstra**.
    **Graph** serves as the underlying graph of location objects (nodes) on which
@@ -104,17 +104,15 @@ See our project page for the [full documentation](https://lincolntechopensource.
 * **run(graph, pathType, source, target)**
 * **getPath(prevList, target)**
 
-## Note
-
-This project was created for use in the [Lincoln Employee Locator][lincoln-gps].
-We encourage and appreciate any contributions that aim to enhance the robustness of this module.
-
-[lincoln-gps]: https://github.com/LincolnTechOpenSource/lincoln-gps
-
 
 ## How to Contribute
 
 Please see our [Contributing Guide](CONTRIBUTING.md)
+
+This project was created for use in the [Office Employee Locator][oel] application.
+We encourage and appreciate any contributions that aim to enhance the robustness of this module.
+
+[oel]: https://github.com/LincolnTechOpenSource/lincoln-gps
 
 
 ## Credits
