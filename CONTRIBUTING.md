@@ -34,6 +34,9 @@ Set up your machine:
          * Follows the same path as the develop process, but does not watch for changes
          * Compiles production ready `graph-dijkstra.js`, minifies, and copies to `dist/`
          * Generates documentation
+      * Run `gulp docs` to output HTML documentation to `docs/`
+
+
 
 Make your change. Test your change. Make sure everything is working as intended.
 
