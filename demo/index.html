@@ -47,13 +47,13 @@
         <div class="container">
             <div class="row">
                 <div class="col col-xs-5">
-                    <button class="btn btn-primary" ng-click="select(true)">Source: {{ graph.find(source) || 'N/A'}}</button>
+                    <button class="btn btn-primary" ng-click="select(true)">Source: {{ graph.find(source) || 'Click to set Source'}}</button>
                 </div>
                 <div class="col col-xs-1">
                     <button class="btn btn-warning" ng-click="clear()">Clear Path</button>
                 </div>
                 <div class="col col-xs-5">
-                    <button class="btn btn-success" ng-click="select(false)">Target: {{ graph.find(target) || 'N/A'}}</button>
+                    <button class="btn btn-success" ng-click="select(false)">Target: {{ graph.find(target) || 'Click to set Target'}}</button>
                 </div>
                 <div class="col col-xs-1">
                     <button class="btn">Distance {{ dist || 0 }}</button>
@@ -96,11 +96,20 @@
                 $scope.graph = Graphing.graph;
             });
 
+            angular.element(document).ready(function() {
+                alert('Instructions:\n\nThis is a simple demo of graph-dijkstra\n\nThe Source and Target buttons' +
+                ' toggle whether you set the source or the target for running dijkstra\'s.\n\n' +
+                'Clicking on the graph will select that node and run Dijkstra\'s if both source and target are set.\n\n' +
+                'Clear Path will reset source and target.\n\n' +
+                'The shortest path between the source and the target will be highlighted.');
+            });
+
             var PATH_TYPE = 1; // node nType that represents a valid path
             var isSource = true;  // click should set source or target ?
             $scope.source = null; // path source
             $scope.target = null; // path target
             $scope.dist = 0;      // distance of path
+
 
             // use button to determine which to select (source vs. target)
             $scope.select = function(s) {
