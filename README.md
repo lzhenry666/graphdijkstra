@@ -9,7 +9,7 @@ This portable package can easily be wrapper into an angular service (as seen in 
 Developed for use in our [Office Employee Locator][oel] application.
 
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 ## Installation & Typical Usage
 
