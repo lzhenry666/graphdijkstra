@@ -1,5 +1,7 @@
 # graph-dijkstra
 
+2016 summer intern project
+
 A simple undirected graph that allows for finding the shortest path between nodes
 via [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm#Using_a_priority_queue).
 This portable package can easily be wrapper into an angular service (as seen in our [demo][demo]).
